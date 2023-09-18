@@ -9,7 +9,7 @@ pipeline {
             steps {
                 script {
                     // Build and start the services using Docker Compose
-                    sh "docker-compose -f ${DOCKER_COMPOSE_FILE} up -d --build"
+                    sh "docker build ./auth-service"
                     
                     // Wait for services to be up (adjust this as needed)
                     sh 'sleep 30'
