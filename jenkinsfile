@@ -12,9 +12,13 @@ pipeline {
                     
                     // Wait for services to be up (adjust this as needed)
                     sh 'sleep 30'
+
+                    sh 'docker ps -a'
+                    sh 'docker images'
+
                     
                     // Run tests here (replace with your actual test commands)
-                    sh 'docker-compose -f ${DOCKER_COMPOSE_FILE} exec auth npm run test'
+                    sh 'docker compose -f ${DOCKER_COMPOSE_FILE} exec auth npm run test'
                 }
             }
         }
@@ -28,13 +32,13 @@ pipeline {
         success {
             // If all stages are successful, stop and remove the containers
             script {
-                sh "docker-compose -f ${DOCKER_COMPOSE_FILE} down"
+                sh "docker compose -f ${DOCKER_COMPOSE_FILE} down"
             }
         }
         failure {
             // If the build fails, stop and remove the containers
             script {
-                sh "docker-compose -f ${DOCKER_COMPOSE_FILE} down"
+                sh "docker compose -f ${DOCKER_COMPOSE_FILE} down"
             }
         }
     }
