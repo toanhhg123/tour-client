@@ -1,6 +1,6 @@
 pipeline{
     agent{
-        label "node"
+        label "master"
     }
     environment {
         DOCKER_IMAGE = 'toanhhg123/tour-auth-service'
