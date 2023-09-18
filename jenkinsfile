@@ -32,7 +32,7 @@ pipeline {
                         GRPC_PORT_AUTH="10002"
 
                     """
-                    writeFile file: './auth-service/.env', text: envContent
+                    writeFile file: './tour-service/.env', text: envContent
                 }
             }
         }
@@ -49,7 +49,7 @@ pipeline {
                     NODE_ENV="production"
                     GRPC_PORT_AUTH="10002"
                     """
-                    writeFile file: './auth-service/.env', text: envContent
+                    writeFile file: './agent-service/.env', text: envContent
                 }
             }
         }
