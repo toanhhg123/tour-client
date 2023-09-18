@@ -19,6 +19,42 @@ pipeline {
                 }
             }
         }
+         stage('Create .env File to tour-service') {
+            steps {
+                script {
+                    sh "ls -a"
+
+                    def envContent = """\
+                        PORT="8082"
+                        URL_DB="mongodb://root:30122002@103.98.160.26:27020"
+                        DB_NAME="S3_TOUR"
+                        NODE_ENV="production"
+                        GRPC_PORT_AUTH="10002"
+
+                    """
+                    writeFile file: './auth-service/.env', text: envContent
+                }
+            }
+        }
+
+         stage('Create .env File to agent-service') {
+            steps {
+                script {
+                    sh "ls -a"
+
+                    def envContent = """\
+                    PORT="8083"
+                    URL_DB="mongodb://root:30122002@103.98.160.26:27020"
+                    DB_NAME="S3_BOOKING"
+                    NODE_ENV="production"
+                    GRPC_PORT_AUTH="10002"
+                    """
+                    writeFile file: './auth-service/.env', text: envContent
+                }
+            }
+        }
+
+
         stage('Build and Test') {
             steps {
                 script {
