@@ -2,6 +2,7 @@ pipeline {
     agent any
     environment {
         DOCKER_COMPOSE_FILE = 'docker-compose.yml'
+        PATH = "/usr/local/bin:$PATH"
     }
     stages {
         stage('Checkout') {
