@@ -1,0 +1,32 @@
+pipeline{
+    agent{
+        label "node"
+    }
+    environment {
+        DOCKER_IMAGE = 'toanhhg123/tour-auth-service'
+    }
+    stages{
+        stage("test"){
+           agent {
+            docker {
+                image 'node:16'
+                args '-u 0:0 -v /tmp:/root/.cache'
+            }
+           }
+           steps {
+                sh "npm i"
+           }
+        }
+    }
+    post{
+        always{
+            echo "========always========"
+        }
+        success{
+            echo "========pipeline executed successfully ========"
+        }
+        failure{
+            echo "========pipeline execution failed========"
+        }
+    }
+}
