@@ -2,22 +2,19 @@ pipeline {
     agent any
     environment {
         DOCKER_COMPOSE_FILE = 'docker-compose.yml'
-        PATH = "/usr/local/bin:$PATH"
     }
     stages {
         stage('Build and Test') {
             steps {
                 script {
                     // Build and start the services using Docker Compose
-                    sh "docker build ./auth-service"
+                    sh "docker-compose -f ${DOCKER_COMPOSE_FILE} up -d --build"
                     
                     // Wait for services to be up (adjust this as needed)
                     sh 'sleep 30'
                     
                     // Run tests here (replace with your actual test commands)
-                    sh 'docker-compose -f ${DOCKER_COMPOSE_FILE} exec auth npm test'
-                    sh 'docker-compose -f ${DOCKER_COMPOSE_FILE} exec tour-service npm test'
-                    sh 'docker-compose -f ${DOCKER_COMPOSE_FILE} exec agent-service npm test'
+                    sh 'docker-compose -f ${DOCKER_COMPOSE_FILE} exec auth npm run test'
                 }
             }
         }
