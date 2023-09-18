@@ -1,30 +1,48 @@
-pipeline{
-    
+pipeline {
+    agent any
     environment {
-        DOCKER_IMAGE = 'toanhhg123/tour-auth-service'
+        DOCKER_COMPOSE_FILE = 'docker-compose.yml'
     }
-    stages{
-        stage("test"){
-           agent {
-            docker {
-                image 'node:16'
-                args '-u 0:0 -v /tmp:/root/.cache'
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
             }
-           }
-           steps {
-                sh "npm i"
-           }
+        }
+        stage('Build and Test') {
+            steps {
+                script {
+                    // Build and start the services using Docker Compose
+                    sh "docker-compose -f ${DOCKER_COMPOSE_FILE} up -d --build"
+                    
+                    // Wait for services to be up (adjust this as needed)
+                    sh 'sleep 30'
+                    
+                    // Run tests here (replace with your actual test commands)
+                    sh 'docker-compose -f ${DOCKER_COMPOSE_FILE} exec auth npm test'
+                    sh 'docker-compose -f ${DOCKER_COMPOSE_FILE} exec tour-service npm test'
+                    sh 'docker-compose -f ${DOCKER_COMPOSE_FILE} exec agent-service npm test'
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                // You can add deployment steps here if needed
+            }
         }
     }
-    post{
-        always{
-            echo "========always========"
+    post {
+        success {
+            // If all stages are successful, stop and remove the containers
+            script {
+                sh "docker-compose -f ${DOCKER_COMPOSE_FILE} down"
+            }
         }
-        success{
-            echo "========pipeline executed successfully ========"
-        }
-        failure{
-            echo "========pipeline execution failed========"
+        failure {
+            // If the build fails, stop and remove the containers
+            script {
+                sh "docker-compose -f ${DOCKER_COMPOSE_FILE} down"
+            }
         }
     }
 }
