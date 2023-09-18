@@ -70,6 +70,12 @@ pipeline {
                     
                     // Run tests here (replace with your actual test commands)
                     // sh 'docker compose -f ${DOCKER_COMPOSE_FILE} exec auth npm run test'
+
+                    sh 'docker logs auth-service'
+                    sh 'docker logs tour-service'
+                    sh 'docker logs agent-service'
+
+
                 }
             }
         }
