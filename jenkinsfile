@@ -4,6 +4,20 @@ pipeline {
         DOCKER_COMPOSE_FILE = 'docker-compose.yml'
     }
     stages {
+        stage('Create .env File to auth-service') {
+            steps {
+                script {
+                    def envContent = """\
+                    PORT="8081"
+                    URL_DB="mongodb://root:30122002@103.98.160.26:27020"
+                    DB_NAME="S3_AUTH"
+                    NODE_ENV="production"
+                    """
+                    
+                    writeFile file: './auth-service/.env', text: envContent
+                }
+            }
+        }
         stage('Build and Test') {
             steps {
                 script {
