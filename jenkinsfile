@@ -1,20 +1,15 @@
 pipeline {
     agent any
     environment {
-        PATH = "/usr/local/bin:$PATH"
         DOCKER_COMPOSE_FILE = 'docker-compose.yml'
+        PATH = "/usr/local/bin:$PATH"
     }
     stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
         stage('Build and Test') {
             steps {
                 script {
                     // Build and start the services using Docker Compose
-                    sh "docker-compose -f ${DOCKER_COMPOSE_FILE} up -d --build"
+                    sh "docker build ./auth-service"
                     
                     // Wait for services to be up (adjust this as needed)
                     sh 'sleep 30'
