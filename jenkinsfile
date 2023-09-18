@@ -90,14 +90,14 @@ pipeline {
             // If all stages are successful, stop and remove the containers
             script {
                 sh "docker compose -f ${DOCKER_COMPOSE_FILE} down"
-                sh "docker-compose -f ${DOCKER_COMPOSE_FILE} down --rmi all"
+                sh "docker compose -f ${DOCKER_COMPOSE_FILE} down --rmi all"
             }
         }
         failure {
             // If the build fails, stop and remove the containers
             script {    
                 sh "docker compose -f ${DOCKER_COMPOSE_FILE} down"
-                sh "docker-compose -f ${DOCKER_COMPOSE_FILE} down --rmi all"
+                sh "docker compose -f ${DOCKER_COMPOSE_FILE} down --rmi all"
 
             }
         }
