@@ -28,7 +28,7 @@ pipeline {
                     // Wait for services to be up (adjust this as needed)
                     sh 'sleep 5'
 
-                    sh 'docker ps -a'
+                    sh 'docker ps'
                     sh 'docker images'
 
                     
@@ -52,7 +52,7 @@ pipeline {
         }
         failure {
             // If the build fails, stop and remove the containers
-            script {
+            script {    
                 sh "docker compose -f ${DOCKER_COMPOSE_FILE} down"
             }
         }
