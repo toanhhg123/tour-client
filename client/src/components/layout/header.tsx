@@ -1,0 +1,125 @@
+'use client'
+import Link from 'next/link'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { RoleType } from '@/features/role/type'
+import { useAppSelector } from '@/store/hooks'
+
+export function Header() {
+  const { userDetails } = useAppSelector((state) => state.auth)
+
+  const listMenu = navs.filter((x) => {
+    if (x.roles) {
+      return x.roles.some((role) => role === userDetails?.roleId.name)
+    }
+
+    return true
+  })
+
+  return (
+    <nav className={'flex items-center space-x-4 lg:space-x-6'}>
+      {listMenu.map((nav) => {
+        if (nav.childrens)
+          return (
+            <DropdownMenu key={nav.label}>
+              <DropdownMenuTrigger asChild>
+                <div className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary cursor-pointer flex justify-center gap-1">
+                  {nav.label}
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="center" forceMount>
+                <DropdownMenuGroup>
+                  {nav.childrens.map((link) => (
+                    <DropdownMenuItem key={link.label}>
+                      <Link
+                        href={link.href}
+                        className="text-sm w-full font-medium text-muted-foreground transition-colors hover:text-primary"
+                      >
+                        {link.label}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )
+
+        return (
+          <Link
+            key={nav.label}
+            href={nav.href}
+            className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+          >
+            {nav.label}
+          </Link>
+        )
+      })}
+    </nav>
+  )
+}
+
+interface INavItem {
+  href: string
+  label: string
+  childrens?: INavItem[]
+  roles?: RoleType[]
+}
+
+const navs: INavItem[] = [
+  {
+    href: '/',
+    label: 'Danh sách tour',
+    childrens: [
+      { label: 'Tour trong nước', href: '/tours' },
+      { label: 'Tour ngoài nước', href: '/' },
+    ],
+    roles: ['TourMan'],
+  },
+  {
+    href: '/user',
+    label: 'Quản lí người dùng',
+  },
+  {
+    href: '/agent',
+    label: 'Quản lí Agent',
+    roles: ['Oper.Sales'],
+  },
+  {
+    href: '/tourAgent',
+    label: 'Danh sách tour(agent)',
+    roles: ['Agent.Sales', 'Agent.Manager', 'Oper.Sales'],
+  },
+  {
+    href: '/booking',
+    label: 'Danh sách booking(agent)',
+    roles: ['Agent.Sales', 'Agent.Manager', 'Oper.Sales'],
+  },
+  {
+    href: '/',
+    label: 'Vé series',
+  },
+  {
+    href: '/',
+    label: 'Lịch dành cho khách',
+    childrens: [
+      { label: 'Tour trong nước', href: '/' },
+      { label: 'Tour ngoài nước', href: '/' },
+    ],
+    roles: ['TourMan'],
+  },
+  {
+    href: '/',
+    label: 'Giao dịch',
+    childrens: [
+      { label: 'Danh sách vé nước ngoài', href: '/' },
+      { label: 'Danh sách giữ chỗ vé nước ngoài', href: '/' },
+    ],
+
+    roles: ['TourMan'],
+  },
+]

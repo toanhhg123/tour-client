@@ -1,0 +1,12 @@
+export type RoleType =
+  | 'Manager'
+  | 'TourMan'
+  | 'Oper.Sales'
+  | 'Oper.Visa'
+  | 'Oper.Acct'
+  | 'Oper.Guide'
+  | 'Agent.Manager'
+  | 'Agent.Sales'
+  | 'Client'
+  | 'Sys.Admin'
+  | 'Oper.Admin'

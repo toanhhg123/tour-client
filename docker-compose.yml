@@ -1,0 +1,57 @@
+version: '3'
+
+services:
+    auth:
+        # build: ./auth-service
+        image: toanhhg123/tour-auth-service:v1.0
+        container_name: auth-service
+        environment:
+            - loglevel=none
+        working_dir: "/app"
+        ports:
+            - "8081:8081"
+            - "10002:10002"
+        command: npm start
+        networks:
+            - toursaas
+    tour-service:
+        image: toanhhg123/tour-service:v1.0
+        # build: ./tour-service
+        container_name: tour-service
+        environment:
+            - loglevel=none
+        depends_on:
+            - auth
+        working_dir: "/app"
+        ports:
+            - "8082:8082"
+        command: npm start
+        networks:
+            - toursaas
+        
+    agent-service:
+        image: toanhhg123/agent-service:v1.0
+        # build: ./agent-service
+        container_name: agent-service
+        environment:
+            - loglevel=none
+        working_dir: "/app"
+        ports:
+            - "8083:8083"
+        depends_on: 
+            - auth
+        command: npm start
+        networks:
+            - toursaas
+    nginx:
+        image: toanhhg123/tour-gateway:v1.0
+        # build: ./api-gateway
+        container_name: api-gateway
+        ports:
+            - "90:80"
+        networks:
+            - toursaas
+        links:
+          - "auth"
+networks:
+    toursaas:
