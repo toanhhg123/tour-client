@@ -8,9 +8,9 @@ import { DollarSign, Hotel, Map, StickyNote, Timer } from 'lucide-react'
 interface Props {
   data: TourService
 }
+
 const TourServiceCard = ({ data }: Props) => {
-  const { _id, name, type, desc, details, day, address, supplier, fee, qty } =
-    data
+  const { name, type, desc, details, day, address, supplier, fee, qty } = data
 
   return (
     <div className="rounded-sm bg-white border border-gray-300  mt-2 ">
