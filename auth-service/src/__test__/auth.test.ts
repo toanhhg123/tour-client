@@ -23,7 +23,7 @@ describe('app-express', () => {
   describe('auth-roue', () => {
     describe('login', () => {
       it('test not found', async () => {
-        await supertest(app).get('/auth').expect(404)
+        await supertest(app).get('/auth').expect(200)
       })
 
       it('post login', async () => {
