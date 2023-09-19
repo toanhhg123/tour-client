@@ -52,6 +52,33 @@ describe('app-express', () => {
 
         expect(response.statusCode).toBe(200)
       })
+
+      it('get supplier', async () => {
+        const response = await supertest(app)
+          .get('/supplier')
+          .set('Authorization', `Bearer ${token}`)
+          .send()
+
+        expect(response.statusCode).toBe(200)
+      })
+
+      it('get roles', async () => {
+        const response = await supertest(app)
+          .get('/role')
+          .set('Authorization', `Bearer ${token}`)
+          .send()
+
+        expect(response.statusCode).toBe(200)
+      })
+
+      it('get operator', async () => {
+        const response = await supertest(app)
+          .get('/operator')
+          .set('Authorization', `Bearer ${token}`)
+          .send()
+
+        expect(response.statusCode).toBe(200)
+      })
     })
   })
   //user route
