@@ -174,7 +174,7 @@ const Page = () => {
                 Tạo mới
               </Button>
             </SheetTrigger>
-            <SheetContent>
+            <SheetContent className=" overflow-y-auto">
               <SheetHeader>
                 <SheetTitle>Create User</SheetTitle>
                 <SheetDescription>

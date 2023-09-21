@@ -218,7 +218,11 @@ export const FormPassword = ({ handleSubmit }: PropsFormPassword) => {
   }
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+    <form
+      onSubmit={form.handleSubmit(onSubmit)}
+      className="space-y-8 p-1   overflow-auto"
+      style={{ height: '100%' }}
+    >
       <Form {...form}>
         <div className="grid  gap-2 mb-3">
           <FormField

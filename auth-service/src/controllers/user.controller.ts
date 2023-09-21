@@ -113,6 +113,7 @@ class UserController {
   createAgentManager = asyncHandler(
     async (req: Request<unknown, unknown, IUserCreate>, res) => {
       const { operatorId } = req.user
+      console.log(req.body)
 
       const data = await userService.createUserWithRoleName(
         { ...req.body, operatorId: new mongoose.Types.ObjectId(operatorId) },

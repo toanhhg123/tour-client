@@ -21,7 +21,7 @@ export type RolePermission = Record<RoleType, RoleType[]>
 export const rolePermission: RolePermission = {
   Manager: [],
   TourMan: [],
-  'Oper.Sales': ['Agent.Manager', 'Agent.Sales'],
+  'Oper.Sales': ['Agent.Sales'],
   'Oper.Visa': [],
   'Oper.Acct': [],
   'Oper.Guide': [],
