@@ -35,15 +35,15 @@ const handleRequest = (config: InternalAxiosRequestConfig<any>) => {
 }
 
 const apiAuth = axios.create({
-  baseURL: 'http://127.0.0.1:8081',
+  baseURL: 'http://103.98.160.26:8090',
 })
 
 const apiTour = axios.create({
-  baseURL: 'http://127.0.0.1:8082',
+  baseURL: 'http://103.98.160.26:8082',
 })
 
 const apiAgent = axios.create({
-  baseURL: 'http://127.0.0.1:8083',
+  baseURL: 'http://103.98.160.26:8083',
 })
 
 apiAuth.interceptors.request.use(handleRequest, handleError)
