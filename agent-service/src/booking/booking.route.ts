@@ -1,21 +1,40 @@
 import { Router } from 'express'
 import { authorize } from '~/middlewares/authen.middleware'
-// import { authorize } from '~/middlewares/authen.middleware'
 import bookingController from './booking.controller'
 
-const { get, getByTourId, create, update, deleteById, getMyBookings } =
-  bookingController
+const {
+  get,
+  getByTourId,
+  create,
+  update,
+  deleteById,
+  getMyBookings,
+  getBookingByAgentId,
+  getBookingMyAgent
+} = bookingController
 const router = Router()
 
 router.get(
   '/tour/:id',
-  authorize(['Agent.Manager', 'Oper.Sales', 'Agent.Sales']),
+  authorize(['Agent.Manager', 'Oper.Sales', 'Agent.Sales', 'TourMan']),
   getByTourId
 )
 
-router.get('/sales', authorize(['Agent.Manager', 'Agent.Sales']), getMyBookings)
+router.get(
+  '/sales',
+  authorize(['Agent.Manager', 'Agent.Sales', 'Oper.Sales']),
+  getMyBookings
+)
+
+router.get(
+  '/bookingInAgent',
+  authorize(['Agent.Manager', 'Agent.Sales']),
+  getBookingMyAgent
+)
 
 router.get('/', authorize(['Agent.Manager', 'Agent.Sales']), get)
+
+router.get('/agent/:id', authorize(['Oper.Sales']), getBookingByAgentId)
 
 router.post(
   '/',

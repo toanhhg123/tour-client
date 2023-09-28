@@ -12,6 +12,24 @@ class userRepositoty {
     return user as IUser
   }
 
+  async findUsersByOperatorid(id: string) {
+    return await User.find({ operatorId: id })
+      .populate('roleId')
+      .populate('operatorId')
+      .populate('agentId')
+      .exec()
+  }
+
+  async findUserByAgentId(id: string) {
+    const users = await User.find({ agentId: id })
+      .populate('roleId')
+      .populate('operatorId')
+      .populate('agentId')
+      .exec()
+
+    return users
+  }
+
   findUserByOperatorId(operatorId: string, roleId?: string) {
     const roleSelect: { roleId?: string } = {}
 

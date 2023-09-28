@@ -60,7 +60,7 @@ export default function FormBooking({
   return (
     <form
       onSubmit={form.handleSubmit(onSubmit)}
-      className="space-y-8  overflow-y-auto"
+      className="space-y-8  overflow-y-auto p-1"
       style={{ height: '100%' }}
     >
       <Form {...form}>

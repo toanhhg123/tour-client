@@ -1,7 +1,6 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,7 +20,6 @@ import { RoleType, rolePermission } from '@/features/role/type'
 import {
   changeUserPasswordThunk,
   createUserThunk,
-  getAgentsThunk,
   getUserThunks,
 } from '@/features/user/actions'
 import { IUser, IUserForm, initUserForm } from '@/features/user/type'
@@ -121,7 +119,6 @@ const Page = () => {
   }
 
   const handleChangePassword = (_data: string) => {
-    console.log(_data)
     const { curUser, type } = sheet
     if (type === 'changePassword' && curUser) {
       dispatchAsyncThunk(
@@ -133,7 +130,6 @@ const Page = () => {
 
   useEffect(() => {
     dispatchAsyncThunk(getUserThunks())
-    dispatchAsyncThunk(getAgentsThunk())
   }, [dispatchAsyncThunk])
 
   return (
@@ -186,11 +182,6 @@ const Page = () => {
                   handleSubmit={handleSubmitForm}
                   defaultValue={sheet.dataForm}
                   roles={roleFilter}
-                  agents={
-                    userDetails?.roleId.name === 'Oper.Sales'
-                      ? agents
-                      : undefined
-                  }
                 />
               )}
 

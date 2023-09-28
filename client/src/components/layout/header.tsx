@@ -83,6 +83,17 @@ const navs: INavItem[] = [
   {
     href: '/user',
     label: 'Quản lí người dùng',
+    roles: ['Oper.Admin'],
+  },
+  {
+    href: '/agentMan/user',
+    label: 'Người dùng Agent',
+    roles: ['Agent.Manager'],
+  },
+  {
+    href: '/agentMan/booking',
+    label: 'Danh sách Booking',
+    roles: ['Agent.Manager', 'Agent.Sales'],
   },
   {
     href: '/agent',
@@ -91,26 +102,17 @@ const navs: INavItem[] = [
   },
   {
     href: '/tourAgent',
-    label: 'Danh sách tour(agent)',
+    label: 'Tạo Booking Tour',
     roles: ['Agent.Sales', 'Agent.Manager', 'Oper.Sales'],
   },
   {
     href: '/booking',
-    label: 'Danh sách booking(agent)',
+    label: 'Lịch sử giữ chỗ',
     roles: ['Agent.Sales', 'Agent.Manager', 'Oper.Sales'],
   },
   {
     href: '/',
     label: 'Vé series',
-  },
-  {
-    href: '/',
-    label: 'Lịch dành cho khách',
-    childrens: [
-      { label: 'Tour trong nước', href: '/' },
-      { label: 'Tour ngoài nước', href: '/' },
-    ],
-    roles: ['TourMan'],
   },
   {
     href: '/',

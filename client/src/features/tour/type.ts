@@ -29,7 +29,7 @@ export interface ITour {
   hotelClass: number
   programLink: string
   commision: number
-  status: string
+  status: 'available' | 'soutOut' | 'cancel'
 
   tourMan?: {
     _id: string
@@ -71,7 +71,7 @@ export const initTour: ITour = {
   hotelClass: 1,
   programLink: '',
   commision: 0,
-  status: '',
+  status: 'available',
   tourMan: {
     _id: '',
     name: '',
@@ -111,7 +111,7 @@ export interface ITourForm {
   hotelClass: number
   programLink: string
   commision: number
-  status: string
+  status: 'available' | 'soutOut' | 'cancel'
   tourManId: string
   tourGuideId: string
   operatorId: string
@@ -131,7 +131,7 @@ export const initTourForm: ITourForm = {
   hotelClass: 1,
   programLink: '',
   commision: 0,
-  status: '',
+  status: 'available',
   tourManId: '',
   tourGuideId: '',
   operatorId: '',

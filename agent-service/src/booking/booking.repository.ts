@@ -27,6 +27,10 @@ class BookingRepository {
     return await bookingModel.find()
   }
 
+  async findByAgentId(id: string) {
+    return await bookingModel.find({ 'agent._id': id })
+  }
+
   async updateById(id: string, bookingParam: BookingCreate) {
     const booking = await bookingModel.findByIdAndUpdate(id, bookingParam)
     if (!booking) throw new Error('not found booking')

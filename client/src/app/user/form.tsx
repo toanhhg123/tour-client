@@ -31,6 +31,7 @@ import { IRole } from '@/features/role/type'
 import { IAgent, IUserForm } from '@/features/user/type'
 import { CalendarIcon } from 'lucide-react'
 import * as z from 'zod'
+import React from 'react'
 
 interface Props {
   defaultValue: IUserForm
@@ -43,7 +44,10 @@ interface Props {
 const FormUser = ({ defaultValue, roles, handleSubmit, agents }: Props) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: defaultValue,
+    defaultValues: {
+      ...defaultValue,
+      birthDay: new Date(defaultValue.birthDay),
+    },
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -56,7 +60,6 @@ const FormUser = ({ defaultValue, roles, handleSubmit, agents }: Props) => {
         <div className="grid  gap-2 mb-3">
           {Object.keys(defaultValue).map((x) => {
             const key = x as keyof IUserForm
-
             return (
               <FormField
                 key={key}

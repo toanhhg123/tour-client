@@ -5,6 +5,7 @@ import { Button, buttonVariants } from './ui/button'
 import { useEffect, useState } from 'react'
 import { IBooking } from '@/features/booking/type'
 import { getBookingByTourId } from '@/services/booking'
+import { ExclamationTriangleIcon, BookmarkIcon } from '@radix-ui/react-icons'
 import {
   TableBody,
   TableCell,
@@ -19,8 +20,9 @@ import { cn } from '@/lib/utils'
 interface Props {
   tour: ITour
   onClickBooking: (_tour: ITour) => void
+  showBtnDetailsBooking?: boolean
 }
-const CardTour = ({ tour, onClickBooking }: Props) => {
+const CardTour = ({ tour, onClickBooking, showBtnDetailsBooking }: Props) => {
   const [bookings, setBookings] = useState<IBooking[]>([])
 
   const reservations = bookings
@@ -83,9 +85,21 @@ const CardTour = ({ tour, onClickBooking }: Props) => {
           </Badge>
         </div>
         <div className=" font-bold italic text-sm">
+          số hiệu hãng bay đi:
+          <Badge className="mr-4" variant={'secondary'}>
+            {tour.goFlight}
+          </Badge>
+        </div>
+        <div className=" font-bold italic text-sm">
           ngày về:
           <Badge className="mr-4" variant={'secondary'}>
             {format(new Date(tour.returnDate), 'dd/MM/yyyy')}
+          </Badge>
+        </div>
+        <div className=" font-bold italic text-sm">
+          số hiệu hãng bay về:
+          <Badge className="mr-4" variant={'secondary'}>
+            {tour.returnFlight}
           </Badge>
         </div>
         <div className=" font-bold italic text-sm">
@@ -113,6 +127,15 @@ const CardTour = ({ tour, onClickBooking }: Props) => {
           Hang khách sạn:
           <Badge className="mr-4" variant={'secondary'}>
             {tour.hotelClass}
+          </Badge>
+        </div>
+
+        <div className=" font-bold italic text-sm">
+          Link đến chương trinh:
+          <Badge className="mr-4" variant={'default'}>
+            <Link href={tour.programLink} target="_blank">
+              xêm thêm
+            </Link>
           </Badge>
         </div>
       </div>
@@ -174,26 +197,45 @@ const CardTour = ({ tour, onClickBooking }: Props) => {
                 </TableCell>
                 <TableCell className="border border-slate-200">
                   {tour.totalPax - totalBooking}
+                  {tour.totalPax - totalBooking < 0 ? (
+                    <span className="text-sm bg-yellow-300 p-1 rounded-sm flex items-center gap-1">
+                      <ExclamationTriangleIcon />
+                      warning
+                    </span>
+                  ) : (
+                    ''
+                  )}
                 </TableCell>
               </TableRow>
             </TableBody>
           </Table>
         </div>
         <div className="space-y-1 ">
-          <Button
-            variant={'destructive'}
-            className="mr-2"
-            size={'sm'}
-            onClick={() => onClickBooking(tour)}
-          >
-            giữ chỗ
-          </Button>
-          <Link
-            className={cn(buttonVariants({ variant: 'outline', size: 'sm' }))}
-            href={`tourAgent/booking/${tour._id}`}
-          >
-            Chi tiết booking
-          </Link>
+          {totalBooking < tour.totalPax ? (
+            <Button
+              variant={'success'}
+              className="mr-2 flex gap-1"
+              size={'sm'}
+              onClick={() => {
+                onClickBooking(tour)
+              }}
+            >
+              <BookmarkIcon />
+              giữ chỗ
+            </Button>
+          ) : (
+            <div className=" font-bold border border-gray-100 rounded-sm bg-red-400 text-white text-lg p-1">
+              Hết chỗ
+            </div>
+          )}
+          {showBtnDetailsBooking && (
+            <Link
+              className={cn(buttonVariants({ variant: 'outline', size: 'sm' }))}
+              href={`tourAgent/booking/${tour._id}`}
+            >
+              Chi tiết booking
+            </Link>
+          )}
         </div>
       </div>
     </div>

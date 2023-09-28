@@ -2,13 +2,23 @@ import {
   changePassword,
   createAgent,
   createUser,
+  getAgentByOperSales,
   getAgentInOperator,
   getSuppliers,
+  getUserByAgentId,
+  getUserInOperator,
   getUsers,
   updateAgent,
 } from '@/services/auth'
 import { createAsyncThunk } from '@reduxjs/toolkit'
-import { getAgentsSuccess, getSuppliersSuccess, getUsersSuccess } from '.'
+import {
+  getAgentsSuccess,
+  getSuppliersSuccess,
+  getUsersSuccess,
+  getUsersAgentSuccess,
+  getAgentInOperSuccess,
+  getUserInOperatorSuccess,
+} from '.'
 import { AgentCreate, IUserForm } from './type'
 import { RoleType } from '../role/type'
 
@@ -29,10 +39,34 @@ export const changeUserPasswordThunk = createAsyncThunk(
 )
 
 export const getAgentsThunk = createAsyncThunk(
-  'userSlice/getUserThunks',
+  'userSlice/getAgentsThunk',
+  async (_: undefined, apiThunk) => {
+    const { data } = await getAgentByOperSales()
+    apiThunk.dispatch(getAgentsSuccess(data.element))
+  },
+)
+
+export const getAgentsInOperatorThunk = createAsyncThunk(
+  'userSlice/getAgentsInOperatorThunk',
   async (_: undefined, apiThunk) => {
     const { data } = await getAgentInOperator()
-    apiThunk.dispatch(getAgentsSuccess(data.element))
+    apiThunk.dispatch(
+      getAgentInOperSuccess(
+        data.element.reduce((a, b) => ({ ...a, [b._id]: b }), {}),
+      ),
+    )
+  },
+)
+
+export const getUsersInOperatorThunk = createAsyncThunk(
+  'userSlice/getUsersInOperatorThunk',
+  async (_: undefined, apiThunk) => {
+    const { data } = await getUserInOperator()
+    apiThunk.dispatch(
+      getUserInOperatorSuccess(
+        data.element.reduce((a, b) => ({ ...a, [b._id]: b }), {}),
+      ),
+    )
   },
 )
 
@@ -65,5 +99,13 @@ export const getSuppliersThunk = createAsyncThunk(
   async (params: undefined, apiThunk) => {
     const { data } = await getSuppliers()
     apiThunk.dispatch(getSuppliersSuccess(data.element))
+  },
+)
+
+export const getUserAgentsThunks = createAsyncThunk(
+  'userSlice/getUserAgentsThunks',
+  async (params: string, apiThunk) => {
+    const { data } = await getUserByAgentId(params)
+    apiThunk.dispatch(getUsersAgentSuccess(data.element))
   },
 )

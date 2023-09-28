@@ -13,20 +13,38 @@ const {
   createAgentManager,
   getMe,
   createAgentSales,
-  seedAdmin
+  seedAdmin,
+  getByAgentId,
+  getUserWithAgentManager,
+  getUserInOperator,
+  createOperGuide
 } = userController
 
 const router = Router()
 
 router.get('/seed', seedAdmin)
 
+router.get(
+  '/getUserWithAgentManager',
+  authorize(['Agent.Manager']),
+  getUserWithAgentManager
+)
+
 router.get('/me', authorize(), getMe)
+
+router.get('/operator', authorize(), getUserInOperator)
+
+router.get('/agent/:id', authorize(['Oper.Sales']), getByAgentId)
+
 router.get('/', authorize(), gets)
+
 router.post('/operAdmin', authorize(['Sys.Admin']), createUserOperAdmin)
 
 router.post('/tourMan', authorize(['Oper.Admin']), createTourMan)
 
 router.post('/operVisa', authorize(['Oper.Admin']), createOperVisa)
+
+router.post('/operGuide', authorize(['Oper.Admin']), createOperGuide)
 
 router.post('/operSales', authorize(['Oper.Admin']), createOperSales)
 

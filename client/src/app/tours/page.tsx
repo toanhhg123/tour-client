@@ -88,6 +88,18 @@ const PageClient = () => {
                   chi tiet
                 </Button>
               </DropdownMenuItem>
+
+              <DropdownMenuItem>
+                <Link
+                  href={`tourAgent/booking/${row.original._id}`}
+                  className={cn(
+                    buttonVariants({ variant: 'outline' }),
+                    'w-full',
+                  )}
+                >
+                  bookings
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuItem>
                 <Link
                   href={`tours/service/${row.original._id}`}

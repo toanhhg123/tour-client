@@ -1,6 +1,14 @@
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import { Card, CardContent, CardDescription } from '@/components/ui/card'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { IAgent } from '@/features/user/type'
+import { ChevronDownIcon } from 'lucide-react'
+import Link from 'next/link'
 
 type Props = {
   agent: IAgent
@@ -26,27 +34,66 @@ const CardAgent = ({ agent, onClickDelete, onClickEdit }: Props) => {
         <h6 className=" text-xs font-semibold text-gray-500 mt-2">address: </h6>
         <h3 className="font-semibold text-gray-800">{agent.address}</h3>
 
-        <div className="flex gap-2 my-2">
-          <Button
-            size={'sm'}
-            className="w-[4rem]"
-            variant={'success'}
-            onClick={() => {
-              onClickEdit && onClickEdit(agent)
-            }}
-          >
-            edit
-          </Button>
-          <Button
-            size={'sm'}
-            className="w-[4rem]"
-            variant={'destructive'}
-            onClick={() => {
-              onClickDelete && onClickDelete(agent)
-            }}
-          >
-            delete
-          </Button>
+        <div className="flex gap-2 my-2 flex-wrap justify-center">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className="w-full" size={'sm'}>
+                see all <ChevronDownIcon />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              <DropdownMenuItem>
+                <Button
+                  size={'sm'}
+                  className="w-full"
+                  variant={'success'}
+                  onClick={() => {
+                    onClickEdit && onClickEdit(agent)
+                  }}
+                >
+                  edit
+                </Button>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Button
+                  size={'sm'}
+                  className="w-full"
+                  variant={'destructive'}
+                  onClick={() => {
+                    onClickDelete && onClickDelete(agent)
+                  }}
+                >
+                  delete
+                </Button>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem>
+                <Link
+                  href={`/agent/user/${agent._id}`}
+                  className={buttonVariants({
+                    size: 'sm',
+                    variant: 'outline',
+                    className: 'w-full',
+                  })}
+                >
+                  users
+                </Link>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem>
+                <Link
+                  href={`/agent/booking/${agent._id}`}
+                  className={buttonVariants({
+                    size: 'sm',
+                    variant: 'outline',
+                    className: 'w-full',
+                  })}
+                >
+                  Bookings
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </CardContent>
     </Card>

@@ -51,6 +51,7 @@ export default function Provider({ children }: IProps) {
             title: 'success',
             description: messageSuccess,
             variant: 'success',
+            duration: 2000,
           })
         }
       } catch (error: any) {
@@ -61,6 +62,7 @@ export default function Provider({ children }: IProps) {
           variant: 'destructive',
           title: 'Uh oh! thao tác lỗi.',
           description: error.message,
+          duration: 6000,
         })
       }
     }

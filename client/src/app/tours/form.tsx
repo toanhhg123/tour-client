@@ -130,6 +130,28 @@ export default function FormTour({ initData, users, handleSubmit }: Props) {
                     )
                   }
 
+                  if (field.name === 'status') {
+                    component = (
+                      <Select
+                        onValueChange={field.onChange}
+                        value={valueString}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Chọn nhóm quyền..." />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {['available', 'soutOut', 'cancel'].map((status) => (
+                            <SelectItem value={status} key={status}>
+                              {status}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )
+                  }
+
                   if (field.name === 'tourGuideId') {
                     component = (
                       <Select
@@ -142,11 +164,13 @@ export default function FormTour({ initData, users, handleSubmit }: Props) {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {users.map((user) => (
-                            <SelectItem value={user._id} key={user._id}>
-                              {user.email}
-                            </SelectItem>
-                          ))}
+                          {users
+                            .filter((user) => user.roleId.name === 'Oper.Guide')
+                            .map((user) => (
+                              <SelectItem value={user._id} key={user._id}>
+                                {user.email}
+                              </SelectItem>
+                            ))}
                         </SelectContent>
                       </Select>
                     )

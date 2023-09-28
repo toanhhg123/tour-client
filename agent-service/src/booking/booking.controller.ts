@@ -55,6 +55,29 @@ class BookingController {
     })
   })
 
+  getBookingByAgentId = asyncHandler(
+    async (req: Request<{ id: string }>, res) => {
+      const data = await bookingService.getBookingByAgentId(req.params.id)
+
+      return res.json({
+        status: 'success',
+        message: 'success',
+        element: data
+      })
+    }
+  )
+
+  getBookingMyAgent = asyncHandler(async (req: Request, res) => {
+    const { agentId } = req.user
+    const data = await bookingService.getBookingByAgentId(agentId)
+
+    return res.json({
+      status: 'success',
+      message: 'success',
+      element: data
+    })
+  })
+
   update = asyncHandler(
     async (req: Request<{ id: string }, unknown, BookingCreate>, res) => {
       bookingService.checkInAgent(req.params.id, req.user.agentId)

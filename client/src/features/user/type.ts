@@ -45,7 +45,7 @@ export interface IUser {
   roleId: IRole
   address: string
   birthDay: Date
-  sex: string
+  sex: 'male' | 'female' | 'other'
   agentId?: IAgent
   operatorId: IOper
 }
@@ -73,4 +73,17 @@ export const initUserForm: IUserForm = {
   birthDay: new Date(),
   sex: 'male',
   password: '',
+}
+
+export const mapUserToUserForm = (user: IUser): IUserForm => {
+  return {
+    name: user.name,
+    email: user.email,
+    phone: user.phone,
+    roleId: user.roleId._id,
+    address: user.address,
+    birthDay: user.birthDay,
+    sex: user.sex,
+    password: '',
+  }
 }

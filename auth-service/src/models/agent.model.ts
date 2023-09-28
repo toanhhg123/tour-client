@@ -6,7 +6,8 @@ const agentSchema = new Schema(
     email: { type: String },
     phone: { type: String },
     address: { type: String, default: '' },
-    operId: { type: Schema.ObjectId, ref: 'User' }
+    operId: { type: Schema.ObjectId, ref: 'Users' },
+    operSaleId: { type: Schema.ObjectId, ref: 'Users' }
   },
   {
     timestamps: true,

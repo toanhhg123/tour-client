@@ -40,7 +40,11 @@ export default function BookingPaxFormCmp({
 }: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { ...dataForm },
+    defaultValues: {
+      ...dataForm,
+      dob: new Date(dataForm.dob),
+      paxportExpre: new Date(dataForm.paxportExpre),
+    },
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -164,6 +168,62 @@ export default function BookingPaxFormCmp({
   )
 }
 
+interface RoomFormProps {
+  room: string
+  onSave: (_room: string) => void
+}
+
+export function BookingPaxRoomForm({ onSave, room }: RoomFormProps) {
+  const form = useForm<z.infer<typeof formBookingPaxRoomSchema>>({
+    resolver: zodResolver(formBookingPaxRoomSchema),
+    defaultValues: {
+      room,
+    },
+  })
+
+  function onSubmit(values: z.infer<typeof formBookingPaxRoomSchema>) {
+    onSave(values.room)
+  }
+
+  return (
+    <form
+      onSubmit={form.handleSubmit(onSubmit)}
+      className="space-y-8  overflow-y-auto p-1"
+      style={{ height: '100%' }}
+    >
+      <Form {...form}>
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name={'room'}
+            render={({ field }) => {
+              const valueString = field.value?.toString() ?? ''
+              let component = (
+                <FormControl>
+                  <Input
+                    placeholder={'...room'}
+                    {...field}
+                    value={valueString}
+                  />
+                </FormControl>
+              )
+
+              return (
+                <FormItem className="flex flex-col">
+                  <FormLabel>{'room'}</FormLabel>
+                  {component}
+                  <FormMessage />
+                </FormItem>
+              )
+            }}
+          />
+        </div>
+      </Form>
+      <Button type="submit">Lưu lại</Button>
+    </form>
+  )
+}
+
 const formSchema = z.object({
   name: z
     .string({ required_error: 'không dược bỏ trống phần này' })
@@ -187,4 +247,10 @@ const formSchema = z.object({
     .min(1, { message: 'không được bỏ trống phần này' }),
   note: z.string().optional(),
   room: z.string().optional(),
+})
+
+const formBookingPaxRoomSchema = z.object({
+  room: z
+    .string({ required_error: 'không dược bỏ trống phần này' })
+    .min(1, { message: 'không được bỏ trống phần này' }),
 })

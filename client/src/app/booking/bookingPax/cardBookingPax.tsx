@@ -1,12 +1,21 @@
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { IBookingPax, typeBookingPaxs } from '@/features/booking/type'
 import format from 'date-fns/format'
 
 interface IProps {
   bookingPax: IBookingPax
+  onClickEdit?: (_bookingPax: IBookingPax) => void
+  onClickDelete?: (_bookingPax: IBookingPax) => void
+  onClickSetRoom?: (_bookingPax: IBookingPax) => void
 }
 
-const CardBookingPax = ({ bookingPax }: IProps) => {
+const CardBookingPax = ({
+  bookingPax,
+  onClickDelete,
+  onClickEdit,
+  onClickSetRoom,
+}: IProps) => {
   const {
     _id,
     name,
@@ -88,6 +97,37 @@ const CardBookingPax = ({ bookingPax }: IProps) => {
             <div className="uppercase text-xs leading-4 font-semibold text-center text-white">
               {typeBookingPaxs.find((x) => x.key === type)?.label}
             </div>
+          </div>
+          <div className="flex p-1 flex-col gap-1">
+            {onClickEdit && (
+              <Button
+                onClick={() => onClickEdit(bookingPax)}
+                variant={'outline'}
+                size={'sm'}
+              >
+                edit
+              </Button>
+            )}
+
+            {onClickDelete && (
+              <Button
+                onClick={() => onClickDelete(bookingPax)}
+                variant={'destructive'}
+                size={'sm'}
+              >
+                delete
+              </Button>
+            )}
+
+            {onClickSetRoom && (
+              <Button
+                onClick={() => onClickSetRoom(bookingPax)}
+                variant={'success'}
+                size={'sm'}
+              >
+                Set Room
+              </Button>
+            )}
           </div>
         </div>
       </div>

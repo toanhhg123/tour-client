@@ -1,4 +1,5 @@
 'use client'
+import { ModalConfirm } from '@/components/ModalConfirm'
 import { Button } from '@/components/ui/button'
 import {
   Sheet,
@@ -11,7 +12,10 @@ import {
 import PrivateRoute from '@/context/PrivateRouteContext'
 import {
   createBookingPaxThunk,
+  deleteBookibgPaxThunks,
   getBookingPaxsThunk,
+  updateBookingPaxRoomThunk,
+  updateBookingPaxThunk,
 } from '@/features/booking/actions'
 import {
   BookingPaxForm,
@@ -21,9 +25,9 @@ import {
 import useDispatchAsync from '@/hooks/useDispatchAsync'
 import { useAppSelector } from '@/store/hooks'
 import { ReloadIcon } from '@radix-ui/react-icons'
-import React, { useEffect, useState } from 'react'
-import BookingPaxFormCmp from '../formBookingPax'
+import { useEffect, useState } from 'react'
 import CardBookingPax from '../cardBookingPax'
+import BookingPaxFormCmp, { BookingPaxRoomForm } from '../formBookingPax'
 
 interface Props {
   params: { id: string }
@@ -31,10 +35,11 @@ interface Props {
 
 const Page = ({ params: { id } }: Props) => {
   const { bookingPaxs } = useAppSelector((state) => state.booking)
+
   const { dispatchAsyncThunk } = useDispatchAsync()
 
   const [sheet, setSheet] = useState<{
-    type?: 'edit' | 'create' | 'delete'
+    type?: 'edit' | 'create' | 'delete' | 'setRoom'
     dataForm?: BookingPaxForm
     curData?: IBookingPax
   }>()
@@ -43,16 +48,66 @@ const Page = ({ params: { id } }: Props) => {
     dispatchAsyncThunk(getBookingPaxsThunk(id))
   }, [id, dispatchAsyncThunk])
 
-  function handleSave(booking: BookingPaxForm): void {
+  async function handleSave(booking: BookingPaxForm) {
     if (sheet?.type === 'create')
-      dispatchAsyncThunk(
+      await dispatchAsyncThunk(
         createBookingPaxThunk({ ...booking, bookingId: id }),
         'success',
       )
+
+    if (sheet?.type === 'edit' && sheet.curData)
+      await dispatchAsyncThunk(
+        updateBookingPaxThunk({
+          id: sheet.curData._id,
+          bookingId: sheet.curData.bookingId._id,
+          body: {
+            ...booking,
+            bookingId: sheet.curData.bookingId._id,
+          },
+        }),
+        'success',
+      )
+
+    setSheet({})
+  }
+
+  const handleSaveRoom = async (name: string) => {
+    if (sheet?.type === 'setRoom' && sheet.curData)
+      await dispatchAsyncThunk(
+        updateBookingPaxRoomThunk({
+          id: sheet.curData._id,
+          bookingId: sheet.curData.bookingId._id,
+          name,
+        }),
+        'success',
+      )
+
+    setSheet({})
+  }
+
+  const handleDeleteBookingPax = async () => {
+    if (sheet?.type === 'delete' && sheet.curData) {
+      await dispatchAsyncThunk(
+        deleteBookibgPaxThunks({
+          id: sheet.curData._id,
+          bookingId: id,
+        }),
+        'success',
+      )
+      setSheet({})
+    }
   }
 
   return (
     <PrivateRoute>
+      <ModalConfirm
+        open={sheet?.type === 'delete'}
+        onOpenChange={(open) => {
+          if (!open) setSheet({})
+        }}
+        title="Bạn chắc chắn xoá chứ ?"
+        handleConfirm={handleDeleteBookingPax}
+      />
       <div className="w-full relative flex flex-col items-start md:flex-row md:items-center justify-between">
         <h3 className="text-1xl font-bold leading-tight tracking-tighter md:text-2xl lg:leading-[1.1]">
           Danh sách Chi tiết Booking
@@ -71,7 +126,11 @@ const Page = ({ params: { id } }: Props) => {
           </Button>
 
           <Sheet
-            open={sheet?.type === 'create' || sheet?.type === 'edit'}
+            open={
+              sheet?.type === 'create' ||
+              sheet?.type === 'edit' ||
+              sheet?.type === 'setRoom'
+            }
             onOpenChange={(open) => {
               if (!open) setSheet({})
             }}
@@ -101,10 +160,18 @@ const Page = ({ params: { id } }: Props) => {
                 </SheetDescription>
               </SheetHeader>
 
-              {sheet?.dataForm && (
-                <BookingPaxFormCmp
-                  initData={sheet.dataForm}
-                  onSave={handleSave}
+              {sheet?.dataForm &&
+                (sheet.type === 'create' || sheet.type === 'edit') && (
+                  <BookingPaxFormCmp
+                    initData={sheet.dataForm}
+                    onSave={handleSave}
+                  />
+                )}
+
+              {sheet?.curData && sheet.type === 'setRoom' && (
+                <BookingPaxRoomForm
+                  room={sheet.curData.room}
+                  onSave={handleSaveRoom}
                 />
               )}
             </SheetContent>
@@ -113,7 +180,34 @@ const Page = ({ params: { id } }: Props) => {
       </div>
       <div className="mt-3">
         {bookingPaxs.map((bookingPax) => (
-          <CardBookingPax bookingPax={bookingPax} key={bookingPax._id} />
+          <CardBookingPax
+            onClickDelete={(bookingPax) => {
+              setSheet({ type: 'delete', curData: bookingPax })
+            }}
+            onClickSetRoom={(bookingPax) => {
+              setSheet({ type: 'setRoom', curData: bookingPax })
+            }}
+            onClickEdit={(bookingPax) => {
+              setSheet({
+                type: 'edit',
+                curData: bookingPax,
+                dataForm: {
+                  name: bookingPax.name,
+                  dob: bookingPax.dob,
+                  sex: bookingPax.sex,
+                  nation: bookingPax.nation,
+                  passport: bookingPax.passport,
+                  paxportExpre: bookingPax.paxportExpre,
+                  type: bookingPax.type,
+                  phone: bookingPax.phone,
+                  note: bookingPax.note,
+                  room: bookingPax.room,
+                },
+              })
+            }}
+            bookingPax={bookingPax}
+            key={bookingPax._id}
+          />
         ))}
       </div>
     </PrivateRoute>

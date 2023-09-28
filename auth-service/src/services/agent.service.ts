@@ -18,6 +18,10 @@ class AgentService {
     return Agent.find({ operId: id })
   }
 
+  getBySaleId(id: string) {
+    return Agent.find({ operSaleId: id })
+  }
+
   async checkInOperator(agentId: string, operId: string) {
     const agent = await Agent.findById(agentId)
 

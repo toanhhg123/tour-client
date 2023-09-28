@@ -13,6 +13,23 @@ class UserController {
     return res.json({ message: 'success', element: data, status: 'success' })
   })
 
+  getByAgentId = asyncHandler(async (req: Request<{ id: string }>, res) => {
+    const data = await userService.findUserByAgentId(req.params.id)
+    return res.json({ message: 'success', element: data, status: 'success' })
+  })
+
+  getUserInOperator = asyncHandler(async (req: Request, res) => {
+    const { operatorId } = req.user
+    const data = await userService.findUserByOperatorId(operatorId)
+    return res.json({ message: 'success', element: data, status: 'success' })
+  })
+
+  getUserWithAgentManager = asyncHandler(async (req, res) => {
+    const { agentId } = req.user
+    const data = await userService.findUserByAgentId(agentId)
+    return res.json({ message: 'success', element: data, status: 'success' })
+  })
+
   findUserById = asyncHandler(async (req: Request<{ id: string }>, res) => {
     const data = await userService.findUserById(req.params.id)
     return res.json({ message: 'success', element: data, status: 'success' })
@@ -25,17 +42,6 @@ class UserController {
   })
 
   seedAdmin = asyncHandler(async (_: Request<{ id: string }>, res) => {
-    // const data = await userService.createUserWithRoleName(
-    //   {
-    //     email: 'admin@gmail.com',
-    //     password: '12345678',
-    //     name: 'admin',
-    //     phone: '0909090909',
-    //     address: '',
-    //     sex: 'male'
-    //   } as IUserCreate,
-    //   'Sys.Admin'
-    // )
     return res.json({
       message: 'success',
       element: 'not seed',
@@ -90,6 +96,26 @@ class UserController {
     }
   )
 
+  createOperGuide = asyncHandler(
+    async (req: Request<unknown, unknown, IUserCreate>, res) => {
+      const { operatorId } = req.user
+
+      const data = await userService.createUserWithRoleName(
+        {
+          ...req.body,
+          operatorId: new mongoose.Types.ObjectId(operatorId)
+        },
+        'Oper.Guide'
+      )
+
+      return res.json({
+        message: 'success',
+        element: data,
+        status: 'success'
+      })
+    }
+  )
+
   createOperSales = asyncHandler(
     async (req: Request<unknown, unknown, IUserCreate>, res) => {
       const { operatorId } = req.user
@@ -113,7 +139,6 @@ class UserController {
   createAgentManager = asyncHandler(
     async (req: Request<unknown, unknown, IUserCreate>, res) => {
       const { operatorId } = req.user
-      console.log(req.body)
 
       const data = await userService.createUserWithRoleName(
         { ...req.body, operatorId: new mongoose.Types.ObjectId(operatorId) },
@@ -132,13 +157,12 @@ class UserController {
 
   createAgentSales = asyncHandler(
     async (req: Request<unknown, unknown, IUserCreate>, res) => {
-      const { operatorId, agentId } = req.user
+      const { operatorId } = req.user
 
       const data = await userService.createUserWithRoleName(
         {
           ...req.body,
-          operatorId: new mongoose.Types.ObjectId(operatorId),
-          agentId: new mongoose.Types.ObjectId(agentId)
+          operatorId: new mongoose.Types.ObjectId(operatorId)
         },
         'Agent.Sales'
       )

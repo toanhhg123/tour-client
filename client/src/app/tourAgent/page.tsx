@@ -68,6 +68,8 @@ const PageClient = () => {
       )
 
       dispatchAsyncThunk(createBookingThunks(bookingCreate), 'success')
+      dispatchAsyncThunk(getToursThunk())
+      setSheet({})
     }
   }
 
@@ -124,6 +126,7 @@ const PageClient = () => {
             onClickBooking={handleOnclickBooking}
             tour={tour}
             key={tour._id}
+            showBtnDetailsBooking={userDetails?.roleId.name === 'Oper.Sales'}
           />
         ))}
       </div>

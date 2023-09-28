@@ -10,10 +10,22 @@ import Link from 'next/link'
 interface Props {
   booking: IBooking
   onclickEdit?: (_booking: IBooking) => void
+  onClickDeleteBooking?: (_booking: IBooking) => void
 }
 
-export default function CardBooking({ booking, onclickEdit }: Props) {
+export default function CardBooking({
+  booking,
+  onclickEdit,
+  onClickDeleteBooking,
+}: Props) {
   const { userDetails } = useAppSelector((state) => state.auth)
+  const { usersInOperator, agentsInOper } = useAppSelector(
+    (state) => state.user,
+  )
+  const sale = usersInOperator[booking.sale._id] ?? undefined
+  const agent = agentsInOper[booking.agent._id] ?? undefined
+
+  console.log({ sale })
 
   const {
     _id,
@@ -25,13 +37,11 @@ export default function CardBooking({ booking, onclickEdit }: Props) {
     singleFee,
     foreignFee,
     tour,
-    agent,
     vat,
     note,
     bookDate,
     expireDate,
     visaStatus,
-    sale,
     paxNum,
   } = booking
 
@@ -67,13 +77,29 @@ export default function CardBooking({ booking, onclickEdit }: Props) {
             <span className="text-xs leading-4 font-normal text-gray-500">
               email #
             </span>
-            {agent.email}
+            {agent?.email}
           </div>
           <div className="text-sm leading-5 font-semibold border-b-2 pb-2">
             <span className="text-xs leading-4 font-normal text-gray-500">
               name #
             </span>
-            {agent.name}
+            {agent?.name}
+          </div>
+
+          <div className="text-sm leading-5 font-semibold  pt-1">
+            THÔNG TIN Sales
+          </div>
+          <div className="text-sm leading-5 font-semibold">
+            <span className="text-xs leading-4 font-normal text-gray-500">
+              email #
+            </span>
+            {sale?.email}
+          </div>
+          <div className="text-sm leading-5 font-semibold border-b-2 pb-2">
+            <span className="text-xs leading-4 font-normal text-gray-500">
+              name #
+            </span>
+            {sale?.name}
           </div>
         </div>
         <div className="flex-1">
@@ -189,7 +215,8 @@ export default function CardBooking({ booking, onclickEdit }: Props) {
               số chỗ: {paxNum}
             </Badge>
           </div>
-          {sale._id === userDetails?._id && (
+
+          {sale?._id === userDetails?._id && (
             <div className="ml-3">
               <Link
                 className={cn(
@@ -203,6 +230,38 @@ export default function CardBooking({ booking, onclickEdit }: Props) {
               >
                 Chi tiết
               </Link>
+            </div>
+          )}
+
+          {userDetails?.roleId.name === 'TourMan' && (
+            <div className="ml-3">
+              <Link
+                className={cn(
+                  buttonVariants({
+                    variant: 'outline',
+                    size: 'sm',
+                    className: 'w-full',
+                  }),
+                )}
+                href={`/booking/bookingPax/${_id}`}
+              >
+                Danh sách chỗ
+              </Link>
+            </div>
+          )}
+
+          {onClickDeleteBooking && (
+            <div className="ml-3 mt-2">
+              <Button
+                className=" w-full"
+                variant={'destructive'}
+                size={'sm'}
+                onClick={() => {
+                  onClickDeleteBooking(booking)
+                }}
+              >
+                delete
+              </Button>
             </div>
           )}
 

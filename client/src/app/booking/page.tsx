@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent } from '@/components/ui/sheet'
 import PrivateRoute from '@/context/PrivateRouteContext'
 import {
+  deleteBookingByIdThunk,
   getBookingBySalesThunk,
   updateBookingThunk,
 } from '@/features/booking/actions'
@@ -18,6 +19,7 @@ import { useAppSelector } from '@/store/hooks'
 import { ReloadIcon } from '@radix-ui/react-icons'
 import { useEffect, useState } from 'react'
 import FormBooking from '../tourAgent/booking/formBooking'
+import { ModalConfirm } from '@/components/ModalConfirm'
 
 const Page = () => {
   const { dispatchAsyncThunk } = useDispatchAsync()
@@ -56,6 +58,15 @@ const Page = () => {
     }
   }
 
+  const handleDeleteBooking = () => {
+    const { curBooking } = sheet
+
+    if (curBooking) {
+      dispatchAsyncThunk(deleteBookingByIdThunk(curBooking._id), 'success')
+      setSheet({})
+    }
+  }
+
   const handleEdit = (booking: IBooking) => {
     setSheet({
       type: 'edit',
@@ -70,6 +81,14 @@ const Page = () => {
 
   return (
     <PrivateRoute>
+      <ModalConfirm
+        open={sheet.type === 'delete'}
+        onOpenChange={(open) => {
+          if (!open) setSheet({})
+        }}
+        title="Bạn chắc chắn xoá chứ ?"
+        handleConfirm={handleDeleteBooking}
+      />
       <div>
         <div className="w-full relative flex flex-col items-start md:flex-row md:items-center justify-between">
           <h3 className="text-1xl font-bold leading-tight tracking-tighter md:text-2xl lg:leading-[1.1]">
@@ -112,7 +131,14 @@ const Page = () => {
 
         <div className="mt-2">
           {bookings.map((x) => (
-            <CardBooking onclickEdit={handleEdit} booking={x} key={x._id} />
+            <CardBooking
+              onclickEdit={handleEdit}
+              onClickDeleteBooking={(booking) => {
+                setSheet({ type: 'delete', curBooking: booking })
+              }}
+              booking={x}
+              key={x._id}
+            />
           ))}
         </div>
       </div>

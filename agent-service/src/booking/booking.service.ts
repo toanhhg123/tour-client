@@ -17,6 +17,10 @@ class BookingService {
       throw ResponseError.forbbidenError()
   }
 
+  async getBookingByAgentId(id: string) {
+    return await bookingRepository.findByAgentId(id)
+  }
+
   async create(booking: BookingCreate) {
     return await bookingRepository.create(booking)
   }

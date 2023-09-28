@@ -8,6 +8,14 @@ class UserService {
     return userRepository.create(user)
   }
 
+  findUserByAgentId(id: string) {
+    return userRepository.findUserByAgentId(id)
+  }
+
+  findUserByOperatorId(id: string) {
+    return userRepository.findUserByOperatorId(id)
+  }
+
   async createUserWithRoleName(user: IUserCreate, roleName: RoleType) {
     const role = await roleRepository.getRoleByRoleName(roleName)
 
