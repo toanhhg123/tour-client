@@ -3,7 +3,7 @@ version: '3'
 services:
     auth:
         build: ./auth-service
-        # image: toanhhg123/tour-auth-service:v1.0
+        image: toanhhg123/tour-auth-service:v2.0
         container_name: auth-service
         environment:
             - loglevel=none
@@ -15,7 +15,7 @@ services:
         networks:
             - toursaas
     tour-service:
-        # image: toanhhg123/tour-service:v1.0
+        image: toanhhg123/tour-service:v2.0
         build: ./tour-service
         container_name: tour-service
         environment:
@@ -30,7 +30,7 @@ services:
             - toursaas
         
     agent-service:
-        # image: toanhhg123/agent-service:v1.0
+        image: toanhhg123/agent-service:v2.0
         build: ./agent-service
         container_name: agent-service
         environment:
@@ -44,7 +44,7 @@ services:
         networks:
             - toursaas
     nginx:
-        # image: toanhhg123/tour-gateway:v1.0
+        image: toanhhg123/tour-gateway:v2.0
         build: ./api-gateway
         container_name: api-gateway
         ports:

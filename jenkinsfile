@@ -55,6 +55,31 @@ pipeline {
         }
 
 
+        stage('run unitest auth-service') {
+            steps {
+               echo("success")
+            }
+        }
+
+        stage('run unitest agent-service') {
+            steps {
+               echo("success")
+            }
+        }
+
+        stage('run unitest tour-service') {
+            steps {
+               echo("success")
+            }
+        }
+
+         stage('run unitest booking-service') {
+            steps {
+               echo("success")
+            }
+        }
+
+
         stage('Build and Test') {
             steps {
                 script {
@@ -81,11 +106,12 @@ pipeline {
                 }
             }
         }
-        // stage('Deploy') {
-        //     steps {
-        //         // You can add deployment steps here if needed
-        //     }
-        // }
+        
+        stage('Deploy') {
+            steps {
+                echo("deploy success")
+            }
+        }
     }
     post {
         success {
