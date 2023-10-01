@@ -4,7 +4,6 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios'
 
 const handleError = (error: AxiosError<any>) => {
   try {
-    console.log('error handling')
     if (error.response?.data.message === 'jwt expired') {
       // const originalRequest = error.config as any
       // await axiosV1.post<IResponse<IAuthResponse>>(
@@ -34,16 +33,23 @@ const handleRequest = (config: InternalAxiosRequestConfig<any>) => {
   return config
 }
 
+const url =
+  process.env.NODE_ENV === 'production'
+    ? 'http://103.98.160.26'
+    : 'http://127.0.0.1'
+
+const portAuth = process.env.NODE_ENV === 'production' ? 8090 : 8081
+
 const apiAuth = axios.create({
-  baseURL: 'http://103.98.160.26:8090',
+  baseURL: `${url}:${portAuth}`,
 })
 
 const apiTour = axios.create({
-  baseURL: 'http://103.98.160.26:8082',
+  baseURL: `${url}:8082`,
 })
 
 const apiAgent = axios.create({
-  baseURL: 'http://103.98.160.26:8083',
+  baseURL: `${url}:8083`,
 })
 
 apiAuth.interceptors.request.use(handleRequest, handleError)

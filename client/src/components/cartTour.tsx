@@ -16,6 +16,7 @@ import {
 } from './ui/table'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
+import { convertToVnd } from '@/utils'
 
 interface Props {
   tour: ITour
@@ -67,8 +68,20 @@ const CardTour = ({ tour, onClickBooking, showBtnDetailsBooking }: Props) => {
             tour
           </span>
           {tour.name}
+          <Badge className="mx-2" variant={'default'}>
+            <Link href={tour.programLink} target="_blank">
+              xêm thêm
+            </Link>
+          </Badge>
         </h2>
-        <div className="text-sm">
+
+        <div className="flex text-sm">
+          <h2 className="font-bold">
+            Price:
+            <span className=" mx-3 inline-block px-2 py-1 leading-none bg-gray-600 text-white  font-semibold uppercase tracking-wide text-xs">
+              {convertToVnd(tour.price)}
+            </span>
+          </h2>
           Trạng thái:{' '}
           <Badge className="mr-4" variant={'outline'}>
             {tour.status}
@@ -117,25 +130,9 @@ const CardTour = ({ tour, onClickBooking, showBtnDetailsBooking }: Props) => {
         </div>
 
         <div className=" font-bold italic text-sm">
-          Lộ trình:
-          <Badge className="mr-4" variant={'secondary'}>
-            {tour.route}
-          </Badge>
-        </div>
-
-        <div className=" font-bold italic text-sm">
           Hang khách sạn:
           <Badge className="mr-4" variant={'secondary'}>
             {tour.hotelClass}
-          </Badge>
-        </div>
-
-        <div className=" font-bold italic text-sm">
-          Link đến chương trinh:
-          <Badge className="mr-4" variant={'default'}>
-            <Link href={tour.programLink} target="_blank">
-              xêm thêm
-            </Link>
           </Badge>
         </div>
       </div>

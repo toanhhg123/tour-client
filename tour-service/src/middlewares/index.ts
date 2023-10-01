@@ -10,9 +10,11 @@ export const notFound = (_req: Request, _res: Response, next: NextFunction) => {
 export const handleErrorResponse = (error: any) => {
   let customError = error
 
+  console.log({ error })
+
   if (!(error instanceof ResponseError)) {
     customError = new ResponseError(
-      process.env.NODE_ENV === 'development'
+      process.env.NODE_ENV !== 'production'
         ? error.message
         : 'Oh no, this is embarrasing. We are having troubles my friend'
     )

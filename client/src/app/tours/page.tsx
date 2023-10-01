@@ -233,7 +233,7 @@ const PageClient = () => {
         </div>
       </div>
 
-      <TourList data={tours} columnsAction={ColumsAction} />
+      <TourList data={tours.list} columnsAction={ColumsAction} />
     </PrivateRoute>
   )
 }

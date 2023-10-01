@@ -1,5 +1,6 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { IPaginationResponse } from '@/utils'
 import type { PayloadAction } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 import { ITour, TourService } from './type'
 
 interface TourServiceState {
@@ -8,19 +9,27 @@ interface TourServiceState {
 }
 
 export interface ITourState {
-  tours: ITour[]
+  tours: IPaginationResponse<ITour[]>
   tourServices?: TourServiceState
 }
 
 const initialState: ITourState = {
-  tours: [],
+  tours: {
+    list: [],
+    limit: 0,
+    pageIndex: 0,
+    total: 0,
+  },
 }
 
 export const tourSlice = createSlice({
   name: 'tour',
   initialState,
   reducers: {
-    getTourSuccess: (state, action: PayloadAction<ITour[]>) => {
+    getTourSuccess: (
+      state,
+      action: PayloadAction<IPaginationResponse<ITour[]>>,
+    ) => {
       state.tours = action.payload
     },
     getTourServiceByTourIdSuccess: (

@@ -8,11 +8,12 @@ import {
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import { getTourServiceByTourIdSuccess, getTourSuccess } from '.'
 import { TourCreate } from './type'
+import { ITourQuery } from '@/utils'
 
 export const getToursThunk = createAsyncThunk(
   'tourSlice/getTourThunk',
-  async (_params: undefined, apiThunk) => {
-    const { data } = await getTours()
+  async (_params: ITourQuery | undefined, apiThunk) => {
+    const { data } = await getTours(_params)
     apiThunk.dispatch(getTourSuccess(data.element))
   },
 )

@@ -19,6 +19,7 @@ export interface ITour {
   name: string
   totalPax: number
   route: string
+  price: number
   duration: string
   transport: string
   goDate: Date
@@ -93,6 +94,7 @@ export const initTour: ITour = {
     phone: '',
     address: '',
   },
+  price: 0,
 }
 
 export type TourCreate = Omit<ITour, '_id'>
@@ -100,6 +102,7 @@ export type TourCreate = Omit<ITour, '_id'>
 export interface ITourForm {
   name: string
   totalPax: number
+  price: number
   route: string
   duration: string
   transport: string
@@ -120,6 +123,7 @@ export interface ITourForm {
 export const initTourForm: ITourForm = {
   name: '',
   totalPax: 0,
+  price: 0,
   route: '',
   duration: '',
   transport: '',
@@ -153,6 +157,7 @@ export const mapTourToTourForm = ({
   commision,
   status,
   tourGuide,
+  price,
 }: ITour) => {
   return {
     name,
@@ -170,6 +175,7 @@ export const mapTourToTourForm = ({
     commision,
     status,
     tourGuideId: tourGuide._id,
+    price,
   } as ITourForm
 }
 

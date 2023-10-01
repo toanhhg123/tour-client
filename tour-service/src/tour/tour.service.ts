@@ -2,6 +2,7 @@ import { TourCreate } from './tour.model'
 import tourRepo from './tour.repository'
 import TourModel from './tour.model'
 import { ResponseError } from '~/types'
+import { ITourQuery } from '~/types/query'
 
 class TourService {
   isTourManOfTour(tour: TourCreate, userId: string) {
@@ -17,8 +18,8 @@ class TourService {
       throw ResponseError.forbbidenError()
   }
 
-  async findByOperId(id: string) {
-    return await tourRepo.findByOperId(id)
+  async findByOperId(id: string, tourQuery?: ITourQuery) {
+    return await tourRepo.findByOperId(id, tourQuery)
   }
 
   async create(tour: TourCreate) {

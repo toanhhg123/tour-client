@@ -22,3 +22,10 @@ export class ResponseError {
     return new ResponseError(message ?? 'forbbiden', 403, additionalInfo ?? {})
   }
 }
+
+export interface IPaginationResponse<T> {
+  limit: number
+  list: T
+  pageIndex: number
+  total: number
+}

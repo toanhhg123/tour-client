@@ -1,5 +1,6 @@
 'use client'
 import CardTour from '@/components/cartTour'
+import Pagination from '@/components/pagination'
 import ToastWarring from '@/components/toastWarning'
 import { Button } from '@/components/ui/button'
 import {
@@ -9,22 +10,24 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
+import { toast } from '@/components/ui/use-toast'
 import PrivateRoute from '@/context/PrivateRouteContext'
-import { deleteTourThunks, getToursThunk } from '@/features/tour/actions'
-import { ITour } from '@/features/tour/type'
-import { getUserThunks } from '@/features/user/actions'
-import useDispatchAsync from '@/hooks/useDispatchAsync'
-import { useAppSelector } from '@/store/hooks'
-import { ReloadIcon } from '@radix-ui/react-icons'
-import { useEffect, useState } from 'react'
+import { createBookingThunks } from '@/features/booking/actions'
 import {
   BookingForm,
   initBookingForm,
   mapToBookingCreateWithBookingForm,
   statusBookings,
 } from '@/features/booking/type'
+import { deleteTourThunks, getToursThunk } from '@/features/tour/actions'
+import { ITour } from '@/features/tour/type'
+import { getUserThunks } from '@/features/user/actions'
+import useDispatchAsync from '@/hooks/useDispatchAsync'
+import { useAppSelector } from '@/store/hooks'
+import { ReloadIcon } from '@radix-ui/react-icons'
+import { usePathname, useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import FormBooking from './booking/formBooking'
-import { createBookingThunks } from '@/features/booking/actions'
 
 const PageClient = () => {
   const { tours } = useAppSelector((state) => state.tour)
@@ -35,6 +38,13 @@ const PageClient = () => {
     bookingForm?: BookingForm
     curTour?: ITour
   }>()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+
+  const search = searchParams.get('search') || ''
+  const pageIndex = Number(searchParams.get('pageIndex') || 1)
+
+  const { total, limit } = tours
 
   const handleDelete = () => {
     const id = sheet?.curTour?._id
@@ -49,18 +59,28 @@ const PageClient = () => {
   const handleOnclickBooking = (tour: ITour) => {
     setSheet({
       type: 'create',
-      bookingForm: initBookingForm,
+      bookingForm: { ...initBookingForm, price: tour.price },
       curTour: tour,
     })
   }
 
   useEffect(() => {
-    dispatchAsyncThunk(getToursThunk())
+    dispatchAsyncThunk(getToursThunk({ pageIndex, search }))
     dispatchAsyncThunk(getUserThunks())
-  }, [dispatchAsyncThunk])
+  }, [dispatchAsyncThunk, pageIndex, search])
 
   const handleAddBooking = (booking: BookingForm) => {
     if (sheet?.type === 'create' && sheet.curTour && userDetails) {
+      if (booking.paxNum > sheet.curTour.totalPax) {
+        toast({
+          variant: 'destructive',
+          title: 'Uh oh! thao tác lỗi.',
+          description: `số chỗ không được vượt quá ${sheet.curTour.totalPax}`,
+          duration: 6000,
+        })
+        return
+      }
+
       const bookingCreate = mapToBookingCreateWithBookingForm(
         booking,
         sheet.curTour,
@@ -72,6 +92,8 @@ const PageClient = () => {
       setSheet({})
     }
   }
+
+  function handleChangePage(_pageIndex: number): void {}
 
   return (
     <PrivateRoute>
@@ -121,7 +143,7 @@ const PageClient = () => {
         </div>
       </div>
       <div className=" mt-5 flex flex-wrap gap-2 flex-col">
-        {tours.map((tour) => (
+        {tours.list.map((tour) => (
           <CardTour
             onClickBooking={handleOnclickBooking}
             tour={tour}
@@ -130,6 +152,15 @@ const PageClient = () => {
           />
         ))}
       </div>
+
+      <div className="mt-1"></div>
+      <Pagination
+        query={{ search }}
+        length={Math.ceil(total / limit)}
+        pageIndex={pageIndex}
+        pathName={`${pathname}`}
+        onChangePage={handleChangePage}
+      />
     </PrivateRoute>
   )
 }

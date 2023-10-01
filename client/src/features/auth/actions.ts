@@ -20,7 +20,6 @@ export const loginActionThunk = createAsyncThunk(
   'authSlice/loginActionThunk',
   async (params: { email: string; password: string }, apiThunk) => {
     const { data } = await login(params)
-    console.log(data)
     LocalStore.saveToStore(KEY_AUTH_LOCAL, data.element)
     apiThunk.dispatch(getUserDetailsThunk())
   },

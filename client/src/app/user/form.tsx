@@ -216,7 +216,6 @@ export const FormPassword = ({ handleSubmit }: PropsFormPassword) => {
   })
 
   function onSubmit(values: z.infer<typeof formPassword>) {
-    console.log(values)
     handleSubmit(values.password)
   }
 

@@ -7,7 +7,7 @@ import mongoose from 'mongoose'
 class TourController {
   gets = asyncHandler(async (req, res) => {
     const { operatorId } = req.user
-    const record = await tourService.findByOperId(operatorId)
+    const record = await tourService.findByOperId(operatorId, req.query)
 
     return res.json({
       status: 'success',

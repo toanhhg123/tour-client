@@ -25,8 +25,6 @@ export default function CardBooking({
   const sale = usersInOperator[booking.sale._id] ?? undefined
   const agent = agentsInOper[booking.agent._id] ?? undefined
 
-  console.log({ sale })
-
   const {
     _id,
     client,
@@ -233,7 +231,8 @@ export default function CardBooking({
             </div>
           )}
 
-          {userDetails?.roleId.name === 'TourMan' && (
+          {(userDetails?.roleId.name === 'TourMan' ||
+            userDetails?.roleId.name === 'Oper.Sales') && (
             <div className="ml-3">
               <Link
                 className={cn(

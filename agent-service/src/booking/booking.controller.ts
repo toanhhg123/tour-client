@@ -2,6 +2,7 @@ import { Request } from 'express'
 import { asyncHandler } from '~/core'
 import bookingService from './booking.service'
 import { BookingCreate } from './booking.model'
+import { ResponseError } from '~/types'
 
 class BookingController {
   getByTourId = asyncHandler(async (req: Request<{ id: string }>, res) => {
@@ -80,7 +81,12 @@ class BookingController {
 
   update = asyncHandler(
     async (req: Request<{ id: string }, unknown, BookingCreate>, res) => {
-      bookingService.checkInAgent(req.params.id, req.user.agentId)
+      const booking = await bookingService.findById(req.params.id)
+
+      console.log({ bookingSale: booking.sale._id, userId: req.user._id })
+
+      if (booking.sale._id?.toString() !== req.user._id)
+        throw ResponseError.forbbidenError()
 
       const data = await bookingService.updateById(req.params.id, req.body)
 

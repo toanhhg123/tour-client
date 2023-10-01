@@ -1,10 +1,14 @@
 import API from '@/config/axios'
 import { ITour, TourCreate, TourService } from '@/features/tour/type'
 import { IResponse } from '@/types'
+import { IPaginationResponse, ITourQuery } from '@/utils'
 
 const { apiTour } = API
 
-export const getTours = () => apiTour.get<IResponse<ITour[]>>('/tour')
+export const getTours = (tourQuery?: ITourQuery) =>
+  apiTour.get<IResponse<IPaginationResponse<ITour[]>>>('/tour', {
+    params: tourQuery,
+  })
 
 export const createTour = (tour: TourCreate) =>
   apiTour.post<IResponse<TourCreate>>('/tour', tour)

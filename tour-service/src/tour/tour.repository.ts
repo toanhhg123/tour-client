@@ -1,4 +1,8 @@
-import TourModel from './tour.model'
+import { ITourQuery } from '~/types/query'
+import TourModel, { Tour } from './tour.model'
+import { FilterQuery } from 'mongoose'
+import { IPaginationResponse } from '~/types'
+import { LIMIT_PAGE } from '~/utils/consts'
 
 class TourRepository {
   async getToursByTourManId(tourManId: string) {
@@ -8,18 +12,70 @@ class TourRepository {
     }).exec()
   }
 
-  async getByTourGuideId(tourGuideId: string) {
-    return await TourModel.find({
+  async getByTourGuideId(tourGuideId: string, query?: ITourQuery) {
+    const search = { $regex: new RegExp(query?.search || ''), $options: 'i' }
+    const pageIndex = query?.pageIndex || 1
+    const startDate = new Date(query?.fromDate || '1975-01-01')
+    const endDate = new Date(query?.endDate || '3000-01-01')
+
+    const filter: FilterQuery<Tour> = {
       'tourGuide._id': tourGuideId,
-      isDeleted: false
-    }).exec()
+      isDeleted: false,
+      name: search,
+      goDate: {
+        $gt: startDate,
+        $lt: endDate
+      }
+    }
+
+    const [count, tours] = await Promise.all([
+      TourModel.find(filter).count().exec(),
+      TourModel.find(filter)
+        .skip((pageIndex - 1) * LIMIT_PAGE)
+        .limit(LIMIT_PAGE)
+        .exec()
+    ])
+
+    return {
+      limit: LIMIT_PAGE,
+      pageIndex,
+      list: tours,
+      total: count
+    } as IPaginationResponse<typeof tours>
   }
 
-  async findByOperId(id: string) {
-    return await TourModel.find({
+  async findByOperId(id: string, query?: ITourQuery) {
+    const search = { $regex: new RegExp(query?.search || ''), $options: 'i' }
+    const pageIndex = Number(query?.pageIndex || 1) || 1
+    const fromDate = new Date(query?.fromDate || '1975-01-01')
+    const endDate = new Date(query?.endDate || '3000-01-01')
+
+    const filter: FilterQuery<Tour> = {
       'operator._id': id,
-      isDeleted: false
-    }).exec()
+      isDeleted: false,
+      name: search,
+      goDate: {
+        $gt: fromDate
+      },
+      returnDate: {
+        $lt: endDate
+      }
+    }
+
+    const [count, tours] = await Promise.all([
+      TourModel.find(filter).count().exec(),
+      TourModel.find(filter)
+        .skip((pageIndex - 1) * LIMIT_PAGE)
+        .limit(LIMIT_PAGE)
+        .exec()
+    ])
+
+    return {
+      limit: LIMIT_PAGE,
+      pageIndex,
+      list: tours,
+      total: count
+    } as IPaginationResponse<typeof tours>
   }
 
   async findAll() {

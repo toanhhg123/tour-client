@@ -5,6 +5,10 @@ const tourSchema = new Schema(
     name: {
       type: String
     },
+    price: {
+      type: Number,
+      default: 0
+    },
     totalPax: {
       type: Number
     },

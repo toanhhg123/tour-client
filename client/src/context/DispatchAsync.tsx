@@ -18,7 +18,6 @@ interface IContext {
 
 export const dispatchAsyncThunkContext = createContext<IContext>({
   dispatchAsyncThunk: function async(_asyncThunk: IReturnCreateAsynThunk) {
-    console.log(_asyncThunk)
     throw new Error('Function not implemented.')
   },
 })
@@ -55,7 +54,6 @@ export default function Provider({ children }: IProps) {
           })
         }
       } catch (error: any) {
-        console.log(error.message)
         setStatus({ loading: false })
 
         toast({
