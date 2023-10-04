@@ -1,5 +1,5 @@
 import { asyncHandler } from '~/core'
-import { AgentCreate } from '~/models/agent.model'
+import Agent, { AgentCreate } from '~/models/agent.model'
 import agentService from '~/services/agent.service'
 import { Request } from 'express'
 import mongoose from 'mongoose'
@@ -14,6 +14,11 @@ class AgentController {
   create = asyncHandler(
     async (req: Request<unknown, unknown, AgentCreate>, res) => {
       const { operatorId, _id } = req.user
+
+      if (await Agent.findOne({ email: req.body.email })) {
+        throw new Error('agent is exsis')
+      }
+
       const data = await agentService.create({
         ...req.body,
         operId: new mongoose.Types.ObjectId(operatorId),

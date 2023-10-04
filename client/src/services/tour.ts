@@ -10,6 +10,9 @@ export const getTours = (tourQuery?: ITourQuery) =>
     params: tourQuery,
   })
 
+export const getTourById = (id: string) =>
+  apiTour.get<IResponse<ITour>>(`/tour/${id}`)
+
 export const createTour = (tour: TourCreate) =>
   apiTour.post<IResponse<TourCreate>>('/tour', tour)
 

@@ -23,7 +23,9 @@ export interface IBooking {
     name: string
     email: string
   }
-  paxNum: number
+  childrenPax: number
+  adultPax: number
+  infanlPax: number
   bookDate: Date
   expireDate: Date
   vat: number
@@ -50,7 +52,9 @@ export type BookingForm = {
   clientName: string
   clientEmail: string
   clientPhone: string
-  paxNum: number
+  childrenPax: number
+  adultPax: number
+  infanlPax: number
   bookDate: Date
   expireDate: Date
   vat: number
@@ -77,18 +81,20 @@ export const initBookingForm: BookingForm = {
   clientName: '',
   clientEmail: '',
   clientPhone: '',
-  paxNum: 0,
+  childrenPax: 0,
+  adultPax: 0,
+  infanlPax: 0,
+  note: '',
   bookDate: new Date(),
-  expireDate: new Date(),
-  vat: 0,
-  status: 'deposit',
+  expireDate: new Date(Date.now() + 24 * 60 * 60 * 1000),
+  status: 'reservations',
   price: 0,
+  vat: 0,
   singleFee: 0,
   foreignFee: 0,
   visaFee: 0,
   otherFee: 0,
   visaStatus: '',
-  note: '',
 }
 
 export interface IBookingPax {
@@ -137,9 +143,11 @@ export const mapToBookingCreateWithBookingForm = (
     clientName,
     clientEmail,
     clientPhone,
-    paxNum,
     bookDate,
     expireDate,
+    childrenPax,
+    adultPax,
+    infanlPax,
     vat,
     note,
     status,
@@ -159,7 +167,6 @@ export const mapToBookingCreateWithBookingForm = (
       email: clientEmail,
       phone: clientPhone,
     },
-    paxNum,
     bookDate,
     expireDate,
     vat,
@@ -171,6 +178,9 @@ export const mapToBookingCreateWithBookingForm = (
     visaFee,
     otherFee,
     visaStatus,
+    childrenPax,
+    adultPax,
+    infanlPax,
     tour: {
       name: tour.name,
       _id: tour._id,
@@ -186,7 +196,9 @@ export const mapToBookingCreateWithBookingForm = (
 
 export const mapBookingToBookingForm = ({
   client: { name, email, phone },
-  paxNum,
+  childrenPax,
+  adultPax,
+  infanlPax,
   bookDate,
   price,
   expireDate,
@@ -203,7 +215,9 @@ export const mapBookingToBookingForm = ({
     clientName: name,
     clientEmail: email,
     clientPhone: phone,
-    paxNum,
+    childrenPax,
+    adultPax,
+    infanlPax,
     bookDate,
     price,
     expireDate,

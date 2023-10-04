@@ -12,7 +12,10 @@ import {
 } from '@/components/ui/sheet'
 import { toast } from '@/components/ui/use-toast'
 import PrivateRoute from '@/context/PrivateRouteContext'
-import { createBookingThunks } from '@/features/booking/actions'
+import {
+  createBookingThunks,
+  getBookingByListTourThunk,
+} from '@/features/booking/actions'
 import {
   BookingForm,
   initBookingForm,
@@ -28,16 +31,19 @@ import { ReloadIcon } from '@radix-ui/react-icons'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import FormBooking from './booking/formBooking'
+import { analysisBooking } from '@/lib/utils'
 
 const PageClient = () => {
   const { tours } = useAppSelector((state) => state.tour)
   const { userDetails } = useAppSelector((state) => state.auth)
+  const { bookingByListTours } = useAppSelector((state) => state.booking)
   const { dispatchAsyncThunk } = useDispatchAsync()
   const [sheet, setSheet] = useState<{
     type?: 'edit' | 'create' | 'delete'
     bookingForm?: BookingForm
     curTour?: ITour
   }>()
+
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
@@ -59,7 +65,7 @@ const PageClient = () => {
   const handleOnclickBooking = (tour: ITour) => {
     setSheet({
       type: 'create',
-      bookingForm: { ...initBookingForm, price: tour.price },
+      bookingForm: { ...initBookingForm },
       curTour: tour,
     })
   }
@@ -69,18 +75,33 @@ const PageClient = () => {
     dispatchAsyncThunk(getUserThunks())
   }, [dispatchAsyncThunk, pageIndex, search])
 
+  useEffect(() => {
+    if (tours.list.length) {
+      dispatchAsyncThunk(
+        getBookingByListTourThunk(tours.list.map((tour) => tour._id)),
+      )
+    }
+  }, [dispatchAsyncThunk, tours])
+
   const handleAddBooking = (booking: BookingForm) => {
     if (sheet?.type === 'create' && sheet.curTour && userDetails) {
-      if (booking.paxNum > sheet.curTour.totalPax) {
+      const paxNum = booking.childrenPax + booking.adultPax + booking.infanlPax
+
+      const { totalBooking } = analysisBooking(
+        bookingByListTours.filter(
+          (booking) => booking.tour._id === sheet.curTour?._id,
+        ) || [],
+      )
+
+      if (paxNum + totalBooking > sheet.curTour.totalPax) {
         toast({
           variant: 'destructive',
           title: 'Uh oh! thao tác lỗi.',
-          description: `số chỗ không được vượt quá ${sheet.curTour.totalPax}`,
+          description: `vui lòng chọn lại số chỗ booking`,
           duration: 6000,
         })
         return
       }
-
       const bookingCreate = mapToBookingCreateWithBookingForm(
         booking,
         sheet.curTour,
@@ -131,8 +152,9 @@ const PageClient = () => {
                   Vui lòng nhập vào các mục bên dưới !!
                 </SheetDescription>
               </SheetHeader>
-              {sheet?.bookingForm && (
+              {sheet?.bookingForm && sheet.curTour && (
                 <FormBooking
+                  tour={sheet.curTour}
                   initData={sheet.bookingForm}
                   onSave={handleAddBooking}
                   statusBookings={statusBookings}

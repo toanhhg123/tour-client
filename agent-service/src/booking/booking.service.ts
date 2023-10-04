@@ -9,6 +9,10 @@ class BookingService {
     return await bookingRepository.getByTourId(id)
   }
 
+  findBookingByListTourId(id: string[]) {
+    return bookingRepository.getByListTourId(id)
+  }
+
   async checkInAgent(bookingId: string, agentId: string) {
     const booking = await bookingRepository.getById(bookingId)
     if (!booking) throw new Error('not found booking')

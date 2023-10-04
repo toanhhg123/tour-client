@@ -10,7 +10,8 @@ const {
   deleteById,
   getMyBookings,
   getBookingByAgentId,
-  getBookingMyAgent
+  getBookingMyAgent,
+  getByListTourId
 } = bookingController
 const router = Router()
 
@@ -18,6 +19,12 @@ router.get(
   '/tour/:id',
   authorize(['Agent.Manager', 'Oper.Sales', 'Agent.Sales', 'TourMan']),
   getByTourId
+)
+
+router.get(
+  '/listTour',
+  authorize(['Agent.Manager', 'Oper.Sales', 'Agent.Sales', 'TourMan']),
+  getByListTourId
 )
 
 router.get(

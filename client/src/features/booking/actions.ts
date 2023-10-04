@@ -3,6 +3,7 @@ import {
   createBookingPax,
   deleteBookingById,
   deleteBookingPax,
+  getBookingByListTours,
   getBookingByTourId,
   getBookingInAgent,
   getBookingPaxByBookingId,
@@ -12,6 +13,7 @@ import {
 } from '@/services/booking'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import {
+  getBookingByListTourSuccess,
   getBookingByTourIdSuccess,
   getBookingPaxsSuccess,
   getBookingsSuccess,
@@ -31,6 +33,14 @@ export const getBookingByTourIdThunk = createAsyncThunk(
   async (params: string, thunApi) => {
     const { data } = await getBookingByTourId(params)
     thunApi.dispatch(getBookingByTourIdSuccess(data.element))
+  },
+)
+
+export const getBookingByListTourThunk = createAsyncThunk(
+  'booking/getBookingByListTourThunk',
+  async (params: string[], thunApi) => {
+    const { data } = await getBookingByListTours(params)
+    thunApi.dispatch(getBookingByListTourSuccess(data.element))
   },
 )
 

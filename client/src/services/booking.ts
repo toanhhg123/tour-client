@@ -12,6 +12,9 @@ const { apiAgent } = API
 export const getBookingByTourId = (id: string) =>
   apiAgent.get<IResponse<IBooking[]>>(`/booking/tour/${id}`)
 
+export const getBookingByListTours = (id: string[]) =>
+  apiAgent.get<IResponse<IBooking[]>>(`/booking/listTour`, { params: { id } })
+
 export const getBookingByAgentId = (id: string) =>
   apiAgent.get<IResponse<IBooking[]>>(`/booking/agent/${id}`)
 

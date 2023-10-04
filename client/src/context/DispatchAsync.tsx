@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 'use client'
 import { ReactNode, createContext, useMemo, useState } from 'react'
 import { useAppDispatch } from '@/store/hooks'
@@ -11,8 +10,8 @@ type IReturnCreateAsynThunk = AsyncThunkAction<any, any, any>
 
 interface IContext {
   dispatchAsyncThunk: (
-    asyncThunk: IReturnCreateAsynThunk,
-    messageSuccess?: string,
+    _asyncThunk: IReturnCreateAsynThunk,
+    _messageSuccess?: string,
   ) => Promise<any>
 }
 

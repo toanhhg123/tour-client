@@ -32,18 +32,20 @@ export default function Page() {
     curData?: IAgent
   }>({})
 
-  const handleSave = (agent: AgentCreate) => {
+  const handleSave = async (agent: AgentCreate) => {
     const { type, curData } = sheet
     if (type === 'create') {
-      dispatchAsyncThunk(createAgentThunk(agent), 'success')
+      await dispatchAsyncThunk(createAgentThunk(agent), 'success')
     }
 
     if (type === 'edit' && curData) {
-      dispatchAsyncThunk(
+      await dispatchAsyncThunk(
         updateAgentThunk({ id: curData._id, agent }),
         'success',
       )
     }
+    setSheet({})
+    dispatchAsyncThunk(getAgentsThunk())
   }
 
   const hanldeEdit = ({ _id, ...agent }: IAgent): void => {

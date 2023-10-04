@@ -15,6 +15,18 @@ class BookingController {
     })
   })
 
+  getByListTourId = asyncHandler(
+    async (req: Request<unknown, unknown, unknown, { id: string[] }>, res) => {
+      const data = await bookingService.findBookingByListTourId(req.query.id)
+
+      return res.json({
+        status: 'success',
+        message: 'success',
+        element: data
+      })
+    }
+  )
+
   create = asyncHandler(
     async (req: Request<unknown, unknown, BookingCreate>, res) => {
       const { _id, name, email } = req.user

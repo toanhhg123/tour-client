@@ -18,6 +18,11 @@ class BookingRepository {
     return booking
   }
 
+  async getByListTourId(tourId: string[]) {
+    const booking = await bookingModel.find({ 'tour._id': { $in: tourId } })
+    return booking
+  }
+
   async getBySaleId(id: string) {
     const booking = await bookingModel.find({ 'sale._id': id })
     return booking

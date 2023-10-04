@@ -1,13 +1,7 @@
-import { BookingForm, typeStatusBookingForm } from '@/features/booking/type'
-import { cn } from '@/lib/utils'
+import CardTour from '@/components/cartTour'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
-import * as z from 'zod'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
 import {
   Form,
   FormControl,
@@ -18,24 +12,33 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { BookingForm, typeStatusBookingForm } from '@/features/booking/type'
+import { ITour } from '@/features/tour/type'
+import { cn } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { format } from 'date-fns'
-import { useForm } from 'react-hook-form'
 import { CalendarIcon } from '@radix-ui/react-icons'
+import { format } from 'date-fns'
 import React from 'react'
-import { Badge } from '@/components/ui/badge'
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
 
 interface Props {
   initData: BookingForm
   onSave: (_booking: BookingForm) => void
   statusBookings: typeStatusBookingForm[]
   statusVisa?: string[]
+  tour: ITour
 }
 
 export default function FormBooking({
@@ -43,6 +46,7 @@ export default function FormBooking({
   onSave,
   statusBookings,
   statusVisa,
+  tour,
 }: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -63,6 +67,7 @@ export default function FormBooking({
       className="space-y-8  overflow-y-auto p-1"
       style={{ height: '100%' }}
     >
+      <CardTour tour={tour} />
       <Form {...form}>
         <div className="grid grid-cols-2 gap-4">
           {Object.keys(dataForm).map((x) => {
@@ -118,10 +123,15 @@ export default function FormBooking({
                     )
                   }
 
-                  if (field.name === 'paxNum') {
+                  if (
+                    field.name === 'adultPax' ||
+                    field.name === 'infanlPax' ||
+                    field.name === 'childrenPax'
+                  ) {
                     component = (
                       <FormControl>
                         <Input
+                          type="number"
                           placeholder={key}
                           onChange={(e) =>
                             form.setValue(field.name, Number(e.target.value))
@@ -209,7 +219,9 @@ const formSchema = z.object({
   clientName: z.string().min(1, { message: 'không được bỏ trống phần này' }),
   clientEmail: z.string().min(1, { message: 'không đươc bỏ trống phần này' }),
   clientPhone: z.string().min(1, { message: 'không đươc bỏ trống phần này' }),
-  paxNum: z.number().min(1, { message: 'không hợp lệ' }),
+  childrenPax: z.number().min(1, { message: 'không hợp lệ' }),
+  adultPax: z.number().min(1, { message: 'không hợp lệ' }),
+  infanlPax: z.number().min(1, { message: 'không hợp lệ' }),
   bookDate: z.date(),
   expireDate: z.date(),
   vat: z.number(),

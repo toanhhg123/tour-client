@@ -20,6 +20,11 @@ import { ReloadIcon } from '@radix-ui/react-icons'
 import React, { useEffect, useState } from 'react'
 import FormBooking from '../formBooking'
 import { ModalConfirm } from '@/components/ModalConfirm'
+import { ITour } from '@/features/tour/type'
+import { toast } from '@/components/ui/use-toast'
+import { getBookingByTourId } from '@/services/booking'
+import { getTourById } from '@/services/tour'
+import { analysisBooking } from '@/lib/utils'
 
 interface Props {
   params: { id: string }
@@ -33,26 +38,62 @@ const Page = ({ params: { id } }: Props) => {
     type?: 'edit' | 'create' | 'delete'
     bookingForm?: BookingForm
     curBooking?: IBooking
+    curTour?: ITour
   }>({})
 
-  const handleEdit = (booking: IBooking) => {
-    setSheet({
-      type: 'edit',
-      bookingForm: mapBookingToBookingForm(booking),
-      curBooking: booking,
-    })
+  const handleEdit = async (booking: IBooking) => {
+    try {
+      const tour = getTourById(booking.tour._id)
+
+      setSheet({
+        type: 'edit',
+        bookingForm: mapBookingToBookingForm(booking),
+        curBooking: booking,
+        curTour: (await tour).data.element,
+      })
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! thao tác lỗi.',
+        description: error.message,
+        duration: 6000,
+      })
+    }
   }
 
-  const handleSave = ({
+  const handleSave = async ({
     clientName,
     clientEmail,
     clientPhone,
     ...bookingForm
-  }: BookingForm): void => {
-    const { type, curBooking } = sheet
-    if (type === 'edit' && curBooking) {
-      const { _id, tour, agent } = curBooking
-      dispatchAsyncThunk(
+  }: BookingForm) => {
+    const { type, curBooking, curTour } = sheet
+    if (type === 'edit' && curBooking && curTour) {
+      const { _id, tour, agent, childrenPax, adultPax, infanlPax } = curBooking
+
+      const paxNum = childrenPax + adultPax + infanlPax
+      const paxNumForm =
+        bookingForm.childrenPax + bookingForm.adultPax + bookingForm.infanlPax
+
+      const bookingByListTours = await getBookingByTourId(tour._id)
+
+      const { totalBooking } = analysisBooking(
+        bookingByListTours.data.element.filter(
+          (booking) => booking.tour._id === sheet.curTour?._id,
+        ) || [],
+      )
+
+      if (paxNumForm - paxNum + totalBooking > curTour.totalPax) {
+        toast({
+          variant: 'destructive',
+          title: 'Uh oh! thao tác lỗi.',
+          description: `số chỗ không được vượt quá ${totalBooking}`,
+          duration: 6000,
+        })
+        return
+      }
+
+      await dispatchAsyncThunk(
         updateBookingThunk({
           id: _id,
           booking: {
@@ -68,6 +109,9 @@ const Page = ({ params: { id } }: Props) => {
         }),
         'success',
       )
+
+      setSheet({})
+      dispatchAsyncThunk(getBookingByTourIdThunk(id))
     }
   }
 
@@ -77,6 +121,7 @@ const Page = ({ params: { id } }: Props) => {
     if (curBooking) {
       dispatchAsyncThunk(deleteBookingByIdThunk(curBooking._id), 'success')
       setSheet({})
+      dispatchAsyncThunk(getBookingByTourIdThunk(id))
     }
   }
 
@@ -105,8 +150,9 @@ const Page = ({ params: { id } }: Props) => {
           className="w-3/4 overflow-y-auto"
           style={{ maxWidth: 800 }}
         >
-          {sheet?.bookingForm && (
+          {sheet?.bookingForm && sheet.curTour && (
             <FormBooking
+              tour={sheet.curTour}
               initData={sheet.bookingForm}
               onSave={handleSave}
               statusBookings={statusBookings}

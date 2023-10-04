@@ -36,7 +36,15 @@ const bookingSchema = new Schema(
       },
       required: true
     },
-    paxNum: {
+    infanlPax: {
+      type: Number,
+      default: 1
+    },
+    childrenPax: {
+      type: Number,
+      default: 1
+    },
+    adultPax: {
       type: Number,
       default: 1
     },
@@ -60,7 +68,9 @@ const bookingSchema = new Schema(
     },
     status: {
       type: String,
-      required: true
+      required: true,
+      enum: ['deposit', 'reservations', 'paid', 'done', 'other'],
+      default: 'reservations'
     },
     price: {
       type: Number,

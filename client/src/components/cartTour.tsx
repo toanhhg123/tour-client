@@ -1,70 +1,43 @@
 import { ITour } from '@/features/tour/type'
-import { Badge } from './ui/badge'
+import { analysisBooking, cn } from '@/lib/utils'
+import { useAppSelector } from '@/store/hooks'
+import { convertToVnd } from '@/utils'
+import { BookmarkIcon, ExclamationTriangleIcon } from '@radix-ui/react-icons'
 import { format } from 'date-fns'
+import Link from 'next/link'
+import { Badge } from './ui/badge'
 import { Button, buttonVariants } from './ui/button'
-import { useEffect, useState } from 'react'
-import { IBooking } from '@/features/booking/type'
-import { getBookingByTourId } from '@/services/booking'
-import { ExclamationTriangleIcon, BookmarkIcon } from '@radix-ui/react-icons'
 import {
+  Table,
   TableBody,
   TableCell,
-  TableRow,
-  Table,
   TableHead,
   TableHeader,
+  TableRow,
 } from './ui/table'
-import Link from 'next/link'
-import { cn } from '@/lib/utils'
-import { convertToVnd } from '@/utils'
 
 interface Props {
   tour: ITour
-  onClickBooking: (_tour: ITour) => void
+  onClickBooking?: (_tour: ITour) => void
   showBtnDetailsBooking?: boolean
 }
+
 const CardTour = ({ tour, onClickBooking, showBtnDetailsBooking }: Props) => {
-  const [bookings, setBookings] = useState<IBooking[]>([])
+  const { bookingByListTours } = useAppSelector((state) => state.booking)
 
-  const reservations = bookings
-    .filter((x) => x.status === 'reservations')
-    .reduce((total, book) => {
-      return total + book.paxNum
-    }, 0)
-
-  const deposit = bookings
-    .filter((x) => x.status === 'deposit')
-    .reduce((total, book) => {
-      return total + book.paxNum
-    }, 0)
-
-  const done = bookings
-    .filter((x) => x.status === 'done')
-    .reduce((total, book) => {
-      return total + book.paxNum
-    }, 0)
-
-  const paid = bookings
-    .filter((x) => x.status === 'paid')
-    .reduce((total, book) => {
-      return total + book.paxNum
-    }, 0)
-
-  const totalBooking = bookings.reduce((total, book) => {
-    return total + book.paxNum
-  }, 0)
-
-  useEffect(() => {
-    getBookingByTourId(tour._id).then((res) => {
-      setBookings(res.data.element)
-    })
-  }, [tour])
+  const { reservations, deposit, paid, done, totalBooking } = analysisBooking(
+    bookingByListTours.filter((booking) => booking.tour._id === tour._id) || [],
+  )
 
   return (
     <div className="border h-max center border-gray-300 rounded w-full">
       <div className="p-4 flex justify-between items-center gap-2">
         <h2 className="font-bold">
-          <span className=" mr-3 inline-block px-2 py-1 leading-none bg-orange-200 text-orange-800 rounded-full font-semibold uppercase tracking-wide text-xs">
+          <span
+            className=" mr-3 inline-block px-2 py-1 leading-none bg-orange-200
+                           text-orange-800 rounded-full font-semibold uppercase tracking-wide
+                           text-xs"
+          >
             tour
           </span>
           {tour.name}
@@ -213,12 +186,13 @@ const CardTour = ({ tour, onClickBooking, showBtnDetailsBooking }: Props) => {
               variant={'success'}
               className="mr-2 flex gap-1"
               size={'sm'}
+              type="button"
               onClick={() => {
-                onClickBooking(tour)
+                onClickBooking && onClickBooking(tour)
               }}
             >
               <BookmarkIcon />
-              giữ chỗ
+              {onClickBooking && 'giữ chỗ'}
             </Button>
           ) : (
             <div className=" font-bold border border-gray-100 rounded-sm bg-red-400 text-white text-lg p-1">

@@ -6,12 +6,14 @@ export interface ITourState {
   bookingTours: IBooking[]
   bookings: IBooking[]
   bookingPaxs: IBookingPax[]
+  bookingByListTours: IBooking[]
 }
 
 const initialState: ITourState = {
   bookingTours: [],
   bookings: [],
   bookingPaxs: [],
+  bookingByListTours: [],
 }
 
 export const bookingSlice = createSlice({
@@ -29,6 +31,10 @@ export const bookingSlice = createSlice({
     getBookingsSuccess: (state, action: PayloadAction<IBooking[]>) => {
       state.bookings = action.payload
     },
+
+    getBookingByListTourSuccess: (state, action: PayloadAction<IBooking[]>) => {
+      state.bookingByListTours = action.payload
+    },
   },
 })
 
@@ -37,6 +43,7 @@ export const {
   getBookingByTourIdSuccess,
   getBookingPaxsSuccess,
   getBookingsSuccess,
+  getBookingByListTourSuccess,
 } = bookingSlice.actions
 
 export default bookingSlice.reducer

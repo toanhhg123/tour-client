@@ -40,13 +40,17 @@ export default function CardBooking({
     bookDate,
     expireDate,
     visaStatus,
-    paxNum,
+    childrenPax,
+    adultPax,
+    infanlPax,
   } = booking
+
+  const paxNum = childrenPax + adultPax + infanlPax
 
   return (
     <div className="bg-gray-100 mx-auto border-gray-500 border rounded-sm text-gray-700 mb-0.5 h-30">
       <div className={`flex p-3 border-l-8 flex-wrap ${colorStatus[status]}`}>
-        <div className="space-y-1 w-[200px] border-r-2 pr-3">
+        <div className="space-y-1 w-max border-r-2 pr-3">
           <div className="text-sm leading-5 font-semibold">THÔNG TIN KH</div>
           <div className="text-sm leading-5 font-semibold">
             <span className="text-xs leading-4 font-normal text-gray-500">

@@ -68,5 +68,17 @@ services:
             - toursaas
         links:
           - "auth"
+
+    # rabbitmq:
+    #     image: rabbitmq:3-management-alpine
+    #     container_name: 'tour_saas_rabbitmq'
+    #     ports:
+    #         - 5672:5672
+    #         - 15672:15672
+    #     environment:
+    #         - RABBITMQ_DEFAULT_USER=toanhhg123
+    #         - RABBITMQ_DEFAULT_PASS=30122002Aa  
+    #     networks:
+    #         - toursaas
 networks:
     toursaas:

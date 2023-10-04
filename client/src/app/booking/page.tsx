@@ -1,10 +1,13 @@
 'use client'
 import CardBooking from '@/app/booking/CardBooking'
+import { ModalConfirm } from '@/components/ModalConfirm'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent } from '@/components/ui/sheet'
+import { toast } from '@/components/ui/use-toast'
 import PrivateRoute from '@/context/PrivateRouteContext'
 import {
   deleteBookingByIdThunk,
+  getBookingByListTourThunk,
   getBookingBySalesThunk,
   updateBookingThunk,
 } from '@/features/booking/actions'
@@ -14,12 +17,15 @@ import {
   mapBookingToBookingForm,
   statusBookings,
 } from '@/features/booking/type'
+import { ITour } from '@/features/tour/type'
 import useDispatchAsync from '@/hooks/useDispatchAsync'
+import { getTourById } from '@/services/tour'
 import { useAppSelector } from '@/store/hooks'
 import { ReloadIcon } from '@radix-ui/react-icons'
 import { useEffect, useState } from 'react'
 import FormBooking from '../tourAgent/booking/formBooking'
-import { ModalConfirm } from '@/components/ModalConfirm'
+import { getBookingByTourId } from '@/services/booking'
+import { analysisBooking } from '@/lib/utils'
 
 const Page = () => {
   const { dispatchAsyncThunk } = useDispatchAsync()
@@ -28,18 +34,42 @@ const Page = () => {
     type?: 'edit' | 'create' | 'delete'
     bookingForm?: BookingForm
     curBooking?: IBooking
+    curTour?: ITour
   }>({})
 
-  const handleSave = ({
+  const handleSave = async ({
     clientName,
     clientEmail,
     clientPhone,
     ...bookingForm
-  }: BookingForm): void => {
-    const { type, curBooking } = sheet
-    if (type === 'edit' && curBooking) {
-      const { _id, tour, agent } = curBooking
-      dispatchAsyncThunk(
+  }: BookingForm) => {
+    const { type, curBooking, curTour } = sheet
+    if (type === 'edit' && curBooking && curTour) {
+      const { _id, tour, agent, childrenPax, adultPax, infanlPax } = curBooking
+
+      const paxNum = childrenPax + adultPax + infanlPax
+      const paxNumForm =
+        bookingForm.childrenPax + bookingForm.adultPax + bookingForm.infanlPax
+
+      const bookingByListTours = await getBookingByTourId(tour._id)
+
+      const { totalBooking } = analysisBooking(
+        bookingByListTours.data.element.filter(
+          (booking) => booking.tour._id === sheet.curTour?._id,
+        ) || [],
+      )
+
+      if (paxNumForm - paxNum + totalBooking > curTour.totalPax) {
+        toast({
+          variant: 'destructive',
+          title: 'Uh oh! thao tác lỗi.',
+          description: `số chỗ không hợp lệ`,
+          duration: 6000,
+        })
+        return
+      }
+
+      await dispatchAsyncThunk(
         updateBookingThunk({
           id: _id,
           booking: {
@@ -55,6 +85,9 @@ const Page = () => {
         }),
         'success',
       )
+
+      setSheet({})
+      dispatchAsyncThunk(getBookingBySalesThunk())
     }
   }
 
@@ -64,15 +97,29 @@ const Page = () => {
     if (curBooking) {
       dispatchAsyncThunk(deleteBookingByIdThunk(curBooking._id), 'success')
       setSheet({})
+      dispatchAsyncThunk(getBookingBySalesThunk())
     }
   }
 
-  const handleEdit = (booking: IBooking) => {
-    setSheet({
-      type: 'edit',
-      bookingForm: mapBookingToBookingForm(booking),
-      curBooking: booking,
-    })
+  const handleEdit = async (booking: IBooking) => {
+    try {
+      const tour = getTourById(booking.tour._id)
+      await dispatchAsyncThunk(getBookingByListTourThunk([booking.tour._id]))
+
+      setSheet({
+        type: 'edit',
+        bookingForm: mapBookingToBookingForm(booking),
+        curBooking: booking,
+        curTour: (await tour).data.element,
+      })
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! thao tác lỗi.',
+        description: error.message,
+        duration: 6000,
+      })
+    }
   }
 
   useEffect(() => {
@@ -106,8 +153,9 @@ const Page = () => {
               className="w-3/4 overflow-y-auto"
               style={{ maxWidth: 800 }}
             >
-              {sheet?.bookingForm && (
+              {sheet?.bookingForm && sheet.curTour && (
                 <FormBooking
+                  tour={sheet.curTour}
                   initData={sheet.bookingForm}
                   onSave={handleSave}
                   statusBookings={statusBookings}
