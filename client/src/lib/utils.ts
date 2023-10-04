@@ -10,29 +10,34 @@ export function analysisBooking(bookings: IBooking[]) {
   const reservations = bookings
     .filter((x) => x.status === 'reservations')
     .reduce((total, book) => {
-      return total + book.paxNum
+      const { childrenPax, adultPax, infanlPax } = book
+      return total + childrenPax + adultPax + infanlPax
     }, 0)
 
   const deposit = bookings
     .filter((x) => x.status === 'deposit')
     .reduce((total, book) => {
-      return total + book.paxNum
+      const { childrenPax, adultPax, infanlPax } = book
+      return total + childrenPax + adultPax + infanlPax
     }, 0)
 
   const done = bookings
     .filter((x) => x.status === 'done')
     .reduce((total, book) => {
-      return total + book.paxNum
+      const { childrenPax, adultPax, infanlPax } = book
+      return total + childrenPax + adultPax + infanlPax
     }, 0)
 
   const paid = bookings
     .filter((x) => x.status === 'paid')
     .reduce((total, book) => {
-      return total + book.paxNum
+      const { childrenPax, adultPax, infanlPax } = book
+      return total + childrenPax + adultPax + infanlPax
     }, 0)
 
   const totalBooking = bookings.reduce((total, book) => {
-    return total + book.paxNum
+    const { childrenPax, adultPax, infanlPax } = book
+    return total + childrenPax + adultPax + infanlPax
   }, 0)
 
   return {
