@@ -30,7 +30,6 @@ pipeline {
                         DB_NAME="S3_TOUR"
                         NODE_ENV="production"
                         GRPC_PORT_AUTH="10002"
-
                     """
                     writeFile file: './tour-service/.env', text: envContent
                 }
@@ -109,19 +108,22 @@ pipeline {
                withDockerRegistry(credentialsId: 'docker_hub', url: 'https://index.docker.io/v1/') {
                     // sh 'docker compose build'
                     sh 'docker compose push'
-                    echo("success")
+                    sh 'sleep 10'
+                    
                }
             }
         }
     }
     post {
-        // success {
-        //     // If all stages are successful, stop and remove the containers
-        //     script {
-        //         sh "docker compose -f ${DOCKER_COMPOSE_FILE} down"
-        //         sh "docker compose -f ${DOCKER_COMPOSE_FILE} down --rmi all"
-        //     }
-        // }
+        success {
+            // If all stages are successful, stop and remove the containers
+            script {
+                sh "docker compose -f ${DOCKER_COMPOSE_FILE} down"
+                sh "docker compose -f ${DOCKER_COMPOSE_FILE} down --rmi all"
+
+                sh "docker compose up -d"
+            }
+        }
         failure {
             // If the build fails, stop and remove the containers
             script {    
