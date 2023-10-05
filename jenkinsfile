@@ -102,15 +102,38 @@ pipeline {
             }
 
         }
-        stage('SonarQube Analysis') {
+        stage('SonarQube auth service Analysis') {
                 steps {
                     withSonarQubeEnv('sonar_server_10.2.1') {
-                        sh "node -v "
-                        echo "${SONAR_TOKEN}"
-
                         sh "${SONAR_SCANNER_HOME}/bin/sonar-scanner \
-                            -Dsonar.projectKey=tour-saas \
-                            -Dsonar.sources=. \
+                            -Dsonar.projectKey=auth-server-toursaas \
+                            -Dsonar.sources=./auth-service \
+                            -Dsonar.host.url=http://103.98.160.26:9090 \
+                            -Dsonar.token=${SONAR_TOKEN}"
+                    }
+
+            }
+        }
+
+        stage('SonarQube booking service Analysis') {
+                steps {
+                    withSonarQubeEnv('sonar_server_10.2.1') {
+                        sh "${SONAR_SCANNER_HOME}/bin/sonar-scanner \
+                            -Dsonar.projectKey=booking-server-toursaas \
+                            -Dsonar.sources=./agent-service \
+                            -Dsonar.host.url=http://103.98.160.26:9090 \
+                            -Dsonar.token=${SONAR_TOKEN}"
+                    }
+
+            }
+        }
+
+         stage('SonarQube tour service Analysis') {
+                steps {
+                    withSonarQubeEnv('sonar_server_10.2.1') {
+                        sh "${SONAR_SCANNER_HOME}/bin/sonar-scanner \
+                            -Dsonar.projectKey=tour-server-toursaas \
+                            -Dsonar.sources=./tour-service \
                             -Dsonar.host.url=http://103.98.160.26:9090 \
                             -Dsonar.token=${SONAR_TOKEN}"
                     }
