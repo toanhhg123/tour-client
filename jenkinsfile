@@ -95,9 +95,9 @@ pipeline {
                     sh 'docker ps -a'
                     sh 'docker images'
 
-                    sh 'docker logs auth-service'
-                    sh 'docker logs tour-service'
-                    sh 'docker logs agent-service'
+                    sh 'docker compose ${DOCKER_COMPOSE_FILE} exec  auth-service'
+                    sh 'docker compose ${DOCKER_COMPOSE_FILE} exec  tour-service'
+                    sh 'docker compose ${DOCKER_COMPOSE_FILE} exec  agent-service'
                     sh 'docker compose -f ${DOCKER_COMPOSE_FILE} exec auth npm run test'
                 }
             }
