@@ -8,6 +8,7 @@ const app = CreateServer()
 
 describe('app-express', () => {
   let token = ''
+  const password = process.env.password || '12345678'
 
   beforeAll(async () => {
     await connectDb(process.env.URL_DB, {
@@ -29,7 +30,10 @@ describe('app-express', () => {
       it('post login', async () => {
         const { statusCode, body } = await supertest(app)
           .post('/auth/login')
-          .send({ email: 'operSales@gmail.com', password: '12345678' })
+          .send({
+            email: 'operSales@gmail.com',
+            password
+          })
 
         token = body.element
         expect(statusCode).toBe(200)
