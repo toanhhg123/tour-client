@@ -18,10 +18,9 @@ export default function CardBooking({
   onclickEdit,
   onClickDeleteBooking,
 }: Props) {
-  const { userDetails } = useAppSelector((state) => state.auth)
   const { usersInOperator, agents } = useAppSelector((state) => state.user)
-  const sale = usersInOperator[booking.sale._id] ?? undefined
 
+  const sale = usersInOperator.find((user) => user._id === booking.sale?._id)
   const agent = agents.find((agent) => agent._id === booking.agent?._id)
 
   const {
@@ -217,40 +216,20 @@ export default function CardBooking({
             </Badge>
           </div>
 
-          {sale?._id === userDetails?._id && (
-            <div className="ml-3">
-              <Link
-                className={cn(
-                  buttonVariants({
-                    variant: 'outline',
-                    size: 'sm',
-                    className: 'w-full',
-                  }),
-                )}
-                href={`/booking/bookingPax/${_id}`}
-              >
-                Chi tiết
-              </Link>
-            </div>
-          )}
-
-          {(userDetails?.roleId.name === 'TourMan' ||
-            userDetails?.roleId.name === 'Oper.Sales') && (
-            <div className="ml-3">
-              <Link
-                className={cn(
-                  buttonVariants({
-                    variant: 'outline',
-                    size: 'sm',
-                    className: 'w-full',
-                  }),
-                )}
-                href={`/booking/bookingPax/${_id}`}
-              >
-                Danh sách chỗ
-              </Link>
-            </div>
-          )}
+          <div className="ml-3">
+            <Link
+              className={cn(
+                buttonVariants({
+                  variant: 'outline',
+                  size: 'sm',
+                  className: 'w-full',
+                }),
+              )}
+              href={`/booking/bookingPax/${_id}`}
+            >
+              Booking Pax
+            </Link>
+          </div>
 
           {onClickDeleteBooking && (
             <div className="ml-3 mt-2">

@@ -111,7 +111,7 @@ const Page = ({ params: { id } }: Props) => {
       />
       <div className="w-full relative flex flex-col items-start md:flex-row md:items-center justify-between">
         <h3 className="text-1xl font-bold leading-tight tracking-tighter md:text-2xl lg:leading-[1.1]">
-          Danh sách Chi tiết Booking
+          Booking Paxs
         </h3>
 
         <div className="flex align-middle gap-2">
@@ -155,7 +155,7 @@ const Page = ({ params: { id } }: Props) => {
               style={{ maxWidth: 800 }}
             >
               <SheetHeader>
-                <SheetTitle>Thêm một chi tiết booking</SheetTitle>
+                <SheetTitle>create new booking pax</SheetTitle>
                 <SheetDescription>
                   Vui lòng nhập vào các mục bên dưới !!
                 </SheetDescription>

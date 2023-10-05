@@ -3,7 +3,6 @@ import { getUserDetailsThunk } from '@/features/auth/actions'
 import { getRolesThunks } from '@/features/role/actions'
 import { RoleType } from '@/features/role/type'
 import {
-  getAgentsInOperatorThunk,
   getAgentsThunk,
   getUsersInOperatorThunk,
 } from '@/features/user/actions'

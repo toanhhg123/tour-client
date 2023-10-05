@@ -4,9 +4,7 @@ import { IAgent, IUser, Supplier } from './type'
 
 export interface IRoleState {
   users: IUser[]
-  usersInOperator: {
-    [key: string]: IUser
-  }
+  usersInOperator: IUser[]
   agents: IAgent[]
   suppliers: Supplier[]
   userAgents: IUser[]
@@ -21,7 +19,7 @@ const initialState: IRoleState = {
   suppliers: [],
   userAgents: [],
   agentsInOper: {},
-  usersInOperator: {},
+  usersInOperator: [],
 }
 
 export const userSlice = createSlice({
@@ -53,12 +51,7 @@ export const userSlice = createSlice({
       state.agentsInOper = action.payload
     },
 
-    getUserInOperatorSuccess: (
-      state,
-      action: PayloadAction<{
-        [key: string]: IUser
-      }>,
-    ) => {
+    getUserInOperatorSuccess: (state, action: PayloadAction<IUser[]>) => {
       state.usersInOperator = action.payload
     },
   },

@@ -61,11 +61,7 @@ export const getUsersInOperatorThunk = createAsyncThunk(
   'userSlice/getUsersInOperatorThunk',
   async (_: undefined, apiThunk) => {
     const { data } = await getUserInOperator()
-    apiThunk.dispatch(
-      getUserInOperatorSuccess(
-        data.element.reduce((a, b) => ({ ...a, [b._id]: b }), {}),
-      ),
-    )
+    apiThunk.dispatch(getUserInOperatorSuccess(data.element))
   },
 )
 

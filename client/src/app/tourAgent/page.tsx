@@ -32,6 +32,7 @@ import { usePathname, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import FormBooking from './booking/formBooking'
 import { analysisBooking } from '@/lib/utils'
+import { Empty } from '@/components/empty'
 
 const PageClient = () => {
   const { tours } = useAppSelector((state) => state.tour)
@@ -125,7 +126,7 @@ const PageClient = () => {
 
       <div className="w-full relative flex flex-col items-start md:flex-row md:items-center justify-between">
         <h3 className="text-1xl font-bold leading-tight tracking-tighter md:text-2xl lg:leading-[1.1]">
-          Danh sách Tour
+          Tours
         </h3>
 
         <div className="flex align-middle gap-2">
@@ -164,14 +165,18 @@ const PageClient = () => {
         </div>
       </div>
       <div className=" mt-5 flex flex-wrap gap-2 flex-col">
-        {tours.list.map((tour) => (
-          <CardTour
-            onClickBooking={handleOnclickBooking}
-            tour={tour}
-            key={tour._id}
-            showBtnDetailsBooking={userDetails?.roleId.name === 'TourMan'}
-          />
-        ))}
+        {tours.list.length ? (
+          tours.list.map((tour) => (
+            <CardTour
+              onClickBooking={handleOnclickBooking}
+              tour={tour}
+              key={tour._id}
+              showBtnDetailsBooking={userDetails?.roleId.name === 'TourMan'}
+            />
+          ))
+        ) : (
+          <Empty />
+        )}
       </div>
 
       <div className="mt-1"></div>

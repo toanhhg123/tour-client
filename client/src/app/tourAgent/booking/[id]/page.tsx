@@ -25,6 +25,7 @@ import { toast } from '@/components/ui/use-toast'
 import { getBookingByTourId } from '@/services/booking'
 import { getTourById } from '@/services/tour'
 import { analysisBooking } from '@/lib/utils'
+import { Empty } from '@/components/empty'
 
 interface Props {
   params: { id: string }
@@ -167,7 +168,7 @@ const Page = ({ params: { id } }: Props) => {
       <div>
         <div className="w-full relative flex flex-col items-start md:flex-row md:items-center justify-between">
           <h3 className="text-1xl font-bold leading-tight tracking-tighter md:text-2xl lg:leading-[1.1]">
-            Danh sách Tour
+            Bookings
           </h3>
           <div className="flex align-middle gap-2">
             <Button
@@ -182,16 +183,20 @@ const Page = ({ params: { id } }: Props) => {
         </div>
 
         <div className="mt-2">
-          {bookingTours.map((x) => (
-            <CardBooking
-              onClickDeleteBooking={(booking) => {
-                setSheet({ type: 'delete', curBooking: booking })
-              }}
-              onclickEdit={handleEdit}
-              booking={x}
-              key={x._id}
-            />
-          ))}
+          {bookingTours.length ? (
+            bookingTours.map((x) => (
+              <CardBooking
+                onClickDeleteBooking={(booking) => {
+                  setSheet({ type: 'delete', curBooking: booking })
+                }}
+                onclickEdit={handleEdit}
+                booking={x}
+                key={x._id}
+              />
+            ))
+          ) : (
+            <Empty />
+          )}
         </div>
       </div>
     </PrivateRoute>
