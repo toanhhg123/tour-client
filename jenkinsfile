@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         DOCKER_COMPOSE_FILE = 'docker-compose.yml'
-        SONAR_SCANNER_HOME = tool name: 'SonarQubeScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+        SONAR_SCANNER_HOME = tool name: 'sonar-scaner-v1.0', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
     }
     stages {
         stage('Create .env File to auth-service') {
