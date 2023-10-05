@@ -3,7 +3,7 @@ pipeline {
     environment {
         DOCKER_COMPOSE_FILE = 'docker-compose.yml'
         SONAR_SCANNER_HOME = tool 'sonar-scaner-v1.0'
-        sonar_token_v1_ex30	= credentials('sonar_token_v1_ex30')
+        SONAR_TOKEN	= credentials('sonar_token_v1_ex30')
     }
     tools {
         nodejs "nodejs-16.20"
@@ -91,22 +91,14 @@ pipeline {
                     // Build and start the services using Docker Compose
                     sh "docker compose build"
                     
-                    // Wait for services to be up (adjust this as needed)
                     sh 'sleep 10'
+                    sh 'docker ps -a'
+                    sh 'docker images'
 
-                    
-
-                    // sh 'docker ps'
-                    // sh 'docker images'
-
-                    
-                    // // Run tests here (replace with your actual test commands)
-
-                    // sh 'docker logs auth-service'
-                    // sh 'docker logs tour-service'
-                    // sh 'docker logs agent-service'
-
-                    // sh 'docker compose -f ${DOCKER_COMPOSE_FILE} exec auth npm run test'
+                    sh 'docker logs auth-service'
+                    sh 'docker logs tour-service'
+                    sh 'docker logs agent-service'
+                    sh 'docker compose -f ${DOCKER_COMPOSE_FILE} exec auth npm run test'
                 }
             }
 
@@ -115,12 +107,13 @@ pipeline {
                 steps {
                     withSonarQubeEnv('sonar_server_10.2.1') {
                         sh "node -v "
+                        echo "${SONAR_TOKEN}"
 
                         sh "${SONAR_SCANNER_HOME}/bin/sonar-scanner \
                             -Dsonar.projectKey=tour-saas \
                             -Dsonar.sources=. \
                             -Dsonar.host.url=http://103.98.160.26:9090 \
-                            -Dsonar.token=%sonar_token_v1_ex30%"
+                            -Dsonar.token=${SONAR_TOKEN}"
                     }
 
             }
@@ -145,15 +138,18 @@ pipeline {
                 sh "docker compose -f ${DOCKER_COMPOSE_FILE} down --rmi all"
 
                 sh "docker compose up -d"
+              
             }
         }
         failure {
             // If the build fails, stop and remove the containers
-            script {    
-                sh "docker compose -f ${DOCKER_COMPOSE_FILE} down"
-                sh "docker compose -f ${DOCKER_COMPOSE_FILE} down --rmi all"
+            // script {    
+            //     sh "docker compose -f ${DOCKER_COMPOSE_FILE} down"
+            //     sh "docker compose -f ${DOCKER_COMPOSE_FILE} down --rmi all"
 
-            }
+            // }
+
+            echo "faild"
         }
     }
 }
