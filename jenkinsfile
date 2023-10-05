@@ -110,8 +110,8 @@ pipeline {
                 steps {
                     withSonarQubeEnv('sonar_server_10.2.1') {
                         sh "${SONAR_SCANNER_HOME}/bin/sonar-scanner \
-                            -Dsonar.projectKey=auth \
-                            -Dsonar.sources=./agent-service \
+                            -Dsonar.projectKey=tour-saas \
+                            -Dsonar.sources=. \
                             -Dsonar.host.url=http://103.98.160.26:9090 \
                             -Dsonar.login=squ_7134e2532329ea973b20a5722791faea9780dc58"
                     }
