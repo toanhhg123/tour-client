@@ -91,7 +91,7 @@ export default function LoginAccount() {
             </Form>
           </CardContent>
           <CardFooter className="flex flex-col">
-            <Button className="w-full bg-red-600">Login</Button>
+            <Button className="w-ful">Login</Button>
           </CardFooter>
         </Card>
       </form>
