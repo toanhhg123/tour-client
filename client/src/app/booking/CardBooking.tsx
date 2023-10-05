@@ -19,11 +19,10 @@ export default function CardBooking({
   onClickDeleteBooking,
 }: Props) {
   const { userDetails } = useAppSelector((state) => state.auth)
-  const { usersInOperator, agentsInOper } = useAppSelector(
-    (state) => state.user,
-  )
+  const { usersInOperator, agents } = useAppSelector((state) => state.user)
   const sale = usersInOperator[booking.sale._id] ?? undefined
-  const agent = agentsInOper[booking.agent._id] ?? undefined
+
+  const agent = agents.find((agent) => agent._id === booking.agent?._id)
 
   const {
     _id,

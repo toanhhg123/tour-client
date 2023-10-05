@@ -17,7 +17,6 @@ export function Header() {
     if (x.roles) {
       return x.roles.some((role) => role === userDetails?.roleId.name)
     }
-
     return true
   })
 

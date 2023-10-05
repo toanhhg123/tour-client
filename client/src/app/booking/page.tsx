@@ -26,6 +26,7 @@ import { useEffect, useState } from 'react'
 import FormBooking from '../tourAgent/booking/formBooking'
 import { getBookingByTourId } from '@/services/booking'
 import { analysisBooking } from '@/lib/utils'
+import { Empty } from '@/components/empty'
 
 const Page = () => {
   const { dispatchAsyncThunk } = useDispatchAsync()
@@ -45,7 +46,7 @@ const Page = () => {
   }: BookingForm) => {
     const { type, curBooking, curTour } = sheet
     if (type === 'edit' && curBooking && curTour) {
-      const { _id, tour, agent, childrenPax, adultPax, infanlPax } = curBooking
+      const { _id, tour, childrenPax, adultPax, infanlPax } = curBooking
 
       const paxNum = childrenPax + adultPax + infanlPax
       const paxNumForm =
@@ -79,7 +80,6 @@ const Page = () => {
               email: clientEmail,
               phone: clientPhone,
             },
-            agent,
             ...bookingForm,
           },
         }),
@@ -139,7 +139,7 @@ const Page = () => {
       <div>
         <div className="w-full relative flex flex-col items-start md:flex-row md:items-center justify-between">
           <h3 className="text-1xl font-bold leading-tight tracking-tighter md:text-2xl lg:leading-[1.1]">
-            Danh sách Tour
+            Danh sách booking
           </h3>
 
           <Sheet
@@ -178,16 +178,20 @@ const Page = () => {
         </div>
 
         <div className="mt-2">
-          {bookings.map((x) => (
-            <CardBooking
-              onclickEdit={handleEdit}
-              onClickDeleteBooking={(booking) => {
-                setSheet({ type: 'delete', curBooking: booking })
-              }}
-              booking={x}
-              key={x._id}
-            />
-          ))}
+          {bookings.length ? (
+            bookings.map((x) => (
+              <CardBooking
+                onclickEdit={handleEdit}
+                onClickDeleteBooking={(booking) => {
+                  setSheet({ type: 'delete', curBooking: booking })
+                }}
+                booking={x}
+                key={x._id}
+              />
+            ))
+          ) : (
+            <Empty />
+          )}
         </div>
       </div>
     </PrivateRoute>

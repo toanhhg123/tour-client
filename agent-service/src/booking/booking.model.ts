@@ -15,8 +15,7 @@ const bookingSchema = new Schema(
         name: String,
         email: String,
         phone: String
-      },
-      required: true
+      }
     },
     client: {
       type: {
@@ -38,15 +37,15 @@ const bookingSchema = new Schema(
     },
     infanlPax: {
       type: Number,
-      default: 1
+      default: 0
     },
     childrenPax: {
       type: Number,
-      default: 1
+      default: 0
     },
     adultPax: {
       type: Number,
-      default: 1
+      default: 0
     },
     bookDate: {
       type: Schema.Types.Date,
@@ -56,7 +55,7 @@ const bookingSchema = new Schema(
     expireDate: {
       type: Schema.Types.Date,
       required: true,
-      default: new Date()
+      default: new Date(Date.now() + 24 * 60 * 60 * 1000)
     },
     vat: {
       type: Number,
@@ -74,7 +73,7 @@ const bookingSchema = new Schema(
     },
     price: {
       type: Number,
-      required: true
+      default: 0
     },
     singleFee: {
       type: Number,

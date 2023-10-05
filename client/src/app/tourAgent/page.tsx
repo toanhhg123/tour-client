@@ -105,7 +105,6 @@ const PageClient = () => {
       const bookingCreate = mapToBookingCreateWithBookingForm(
         booking,
         sheet.curTour,
-        userDetails,
       )
 
       dispatchAsyncThunk(createBookingThunks(bookingCreate), 'success')
@@ -170,7 +169,7 @@ const PageClient = () => {
             onClickBooking={handleOnclickBooking}
             tour={tour}
             key={tour._id}
-            showBtnDetailsBooking={userDetails?.roleId.name === 'Oper.Sales'}
+            showBtnDetailsBooking={userDetails?.roleId.name === 'TourMan'}
           />
         ))}
       </div>

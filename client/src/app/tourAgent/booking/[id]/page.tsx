@@ -69,7 +69,7 @@ const Page = ({ params: { id } }: Props) => {
   }: BookingForm) => {
     const { type, curBooking, curTour } = sheet
     if (type === 'edit' && curBooking && curTour) {
-      const { _id, tour, agent, childrenPax, adultPax, infanlPax } = curBooking
+      const { _id, tour, childrenPax, adultPax, infanlPax } = curBooking
 
       const paxNum = childrenPax + adultPax + infanlPax
       const paxNumForm =
@@ -103,7 +103,6 @@ const Page = ({ params: { id } }: Props) => {
               email: clientEmail,
               phone: clientPhone,
             },
-            agent,
             ...bookingForm,
           },
         }),
@@ -115,11 +114,15 @@ const Page = ({ params: { id } }: Props) => {
     }
   }
 
-  const handleDeleteBooking = () => {
+  const handleDeleteBooking = async () => {
     const { curBooking } = sheet
 
     if (curBooking) {
-      dispatchAsyncThunk(deleteBookingByIdThunk(curBooking._id), 'success')
+      await dispatchAsyncThunk(
+        deleteBookingByIdThunk(curBooking._id),
+        'success',
+      )
+
       setSheet({})
       dispatchAsyncThunk(getBookingByTourIdThunk(id))
     }
@@ -130,7 +133,7 @@ const Page = ({ params: { id } }: Props) => {
   }, [id, dispatchAsyncThunk])
 
   return (
-    <PrivateRoute>
+    <PrivateRoute roles={['TourMan']}>
       <ModalConfirm
         open={sheet.type === 'delete'}
         onOpenChange={(open) => {

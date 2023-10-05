@@ -1,5 +1,4 @@
 'use client'
-
 import { Button } from '@/components/ui/button'
 import {
   Sheet,
@@ -45,7 +44,6 @@ export default function Page() {
       )
     }
     setSheet({})
-    dispatchAsyncThunk(getAgentsThunk())
   }
 
   const hanldeEdit = ({ _id, ...agent }: IAgent): void => {

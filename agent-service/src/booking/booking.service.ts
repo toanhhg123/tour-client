@@ -17,7 +17,7 @@ class BookingService {
     const booking = await bookingRepository.getById(bookingId)
     if (!booking) throw new Error('not found booking')
 
-    if (booking.agent._id?.toString() !== agentId)
+    if (booking.agent?._id?.toString() !== agentId)
       throw ResponseError.forbbidenError()
   }
 

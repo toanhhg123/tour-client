@@ -1,6 +1,7 @@
 'use client'
 import CardBooking from '@/app/booking/CardBooking'
 import { ModalConfirm } from '@/components/ModalConfirm'
+import { Empty } from '@/components/empty'
 import PrivateRoute from '@/context/PrivateRouteContext'
 import {
   deleteBookingByIdThunk,
@@ -50,15 +51,19 @@ const Page = () => {
       />
       <div>
         <div className="mt-2">
-          {bookings.map((x) => (
-            <CardBooking
-              onClickDeleteBooking={(booking) => {
-                setSheet({ type: 'delete', curBooking: booking })
-              }}
-              booking={x}
-              key={x._id}
-            />
-          ))}
+          {bookings.length ? (
+            bookings.map((x) => (
+              <CardBooking
+                onClickDeleteBooking={(booking) => {
+                  setSheet({ type: 'delete', curBooking: booking })
+                }}
+                booking={x}
+                key={x._id}
+              />
+            ))
+          ) : (
+            <Empty />
+          )}
         </div>
       </div>
     </PrivateRoute>

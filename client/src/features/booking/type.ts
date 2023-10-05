@@ -1,4 +1,3 @@
-import { IUserDetails } from '../auth/type'
 import { ITour } from '../tour/type'
 
 export interface IBooking {
@@ -7,7 +6,7 @@ export interface IBooking {
     _id: string
     name: string
   }
-  agent: {
+  agent?: {
     _id: string
     name: string
     email: string
@@ -29,14 +28,14 @@ export interface IBooking {
   bookDate: Date
   expireDate: Date
   vat: number
-  note?: string
+  note: string
   status: 'deposit' | 'reservations' | 'paid' | 'done'
   price: number
-  singleFee?: number
-  foreignFee?: number
-  visaFee?: number
-  otherFee?: number
-  visaStatus?: string
+  singleFee: number
+  foreignFee: number
+  visaFee: number
+  otherFee: number
+  visaStatus: string | null
 }
 
 export const vniStatus = {
@@ -46,7 +45,31 @@ export const vniStatus = {
   done: 'Hoàn thành',
 }
 
-export type BookingCreate = Omit<IBooking, '_id' | 'sale'>
+export type BookingCreate = {
+  tour: {
+    _id: string
+    name: string
+  }
+  client: {
+    name: string
+    email: string
+    phone: string
+  }
+  childrenPax: number
+  adultPax: number
+  infanlPax: number
+  bookDate?: Date
+  expireDate?: Date
+  vat?: number
+  note?: string
+  status?: 'deposit' | 'reservations' | 'paid' | 'done'
+  price?: number
+  singleFee?: number
+  foreignFee?: number
+  visaFee?: number
+  otherFee?: number
+  visaStatus?: string | null
+}
 
 export type BookingForm = {
   clientName: string
@@ -55,17 +78,17 @@ export type BookingForm = {
   childrenPax: number
   adultPax: number
   infanlPax: number
-  bookDate: Date
-  expireDate: Date
-  vat: number
+  bookDate?: Date
+  expireDate?: Date
+  vat?: number
   note?: string
-  status: 'deposit' | 'reservations' | 'paid' | 'done'
-  price: number
+  status?: 'deposit' | 'reservations' | 'paid' | 'done'
+  price?: number
   singleFee?: number
   foreignFee?: number
   visaFee?: number
   otherFee?: number
-  visaStatus?: string
+  visaStatus?: string | null
 }
 
 export type typeStatusBookingForm = { key: string; label: string }
@@ -85,16 +108,6 @@ export const initBookingForm: BookingForm = {
   adultPax: 0,
   infanlPax: 0,
   note: '',
-  bookDate: new Date(),
-  expireDate: new Date(Date.now() + 24 * 60 * 60 * 1000),
-  status: 'reservations',
-  price: 0,
-  vat: 0,
-  singleFee: 0,
-  foreignFee: 0,
-  visaFee: 0,
-  otherFee: 0,
-  visaStatus: '',
 }
 
 export interface IBookingPax {
@@ -159,7 +172,6 @@ export const mapToBookingCreateWithBookingForm = (
     visaStatus,
   }: BookingForm,
   tour: ITour,
-  user: IUserDetails,
 ): BookingCreate => {
   return {
     client: {
@@ -184,12 +196,6 @@ export const mapToBookingCreateWithBookingForm = (
     tour: {
       name: tour.name,
       _id: tour._id,
-    },
-    agent: {
-      _id: user.agentId?._id!,
-      name: user.agentId?.name!,
-      email: user.agentId?.email!,
-      phone: user.phone,
     },
   }
 }

@@ -52,8 +52,10 @@ export default function FormBooking({
     resolver: zodResolver(formSchema),
     defaultValues: {
       ...dataForm,
-      bookDate: new Date(dataForm.bookDate),
-      expireDate: new Date(dataForm.expireDate),
+      bookDate: new Date(dataForm.bookDate || new Date()),
+      expireDate: new Date(
+        dataForm.expireDate || new Date(24 * 60 * 60 * 1000),
+      ),
     },
   })
 
@@ -63,7 +65,9 @@ export default function FormBooking({
 
   return (
     <form
-      onSubmit={form.handleSubmit(onSubmit)}
+      onSubmit={form.handleSubmit(onSubmit, (valid) => {
+        console.log(valid)
+      })}
       className="space-y-8  overflow-y-auto p-1"
       style={{ height: '100%' }}
     >
@@ -219,18 +223,18 @@ const formSchema = z.object({
   clientName: z.string().min(1, { message: 'không được bỏ trống phần này' }),
   clientEmail: z.string().min(1, { message: 'không đươc bỏ trống phần này' }),
   clientPhone: z.string().min(1, { message: 'không đươc bỏ trống phần này' }),
-  childrenPax: z.number().min(1, { message: 'không hợp lệ' }),
-  adultPax: z.number().min(1, { message: 'không hợp lệ' }),
-  infanlPax: z.number().min(1, { message: 'không hợp lệ' }),
-  bookDate: z.date(),
-  expireDate: z.date(),
-  vat: z.number(),
+  childrenPax: z.number().min(0, { message: 'không hợp lệ' }),
+  adultPax: z.number().min(0, { message: 'không hợp lệ' }),
+  infanlPax: z.number().min(0, { message: 'không hợp lệ' }),
+  bookDate: z.date().optional(),
+  expireDate: z.date().optional(),
+  vat: z.number().optional(),
   note: z.string().optional(),
-  status: z.string(),
-  price: z.number(),
-  singleFee: z.number(),
-  foreignFee: z.number(),
-  visaFee: z.number(),
-  otherFee: z.number(),
-  visaStatus: z.string(),
+  status: z.string().optional(),
+  price: z.number().optional(),
+  singleFee: z.number().optional(),
+  foreignFee: z.number().optional(),
+  visaFee: z.number().optional(),
+  otherFee: z.number().optional(),
+  visaStatus: z.string().nullable(),
 })

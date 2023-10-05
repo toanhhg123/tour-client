@@ -54,6 +54,42 @@ const Page = () => {
 
   const { dispatchAsyncThunk } = useDispatchAsync()
 
+  const handleReload = () => {
+    dispatchAsyncThunk(getUserThunks(), 'reload success')
+  }
+
+  const handleSubmitForm = (value: IUserForm) => {
+    const role = roleFilter.find((x) => x._id === value.roleId)
+    const { type } = sheet
+    if (type === 'create' && role) {
+      dispatchAsyncThunk(
+        createUserThunk({
+          ...value,
+          role: role.name,
+          agentId: value.agentId,
+        }),
+        'thêm thành công',
+      )
+    }
+
+    setSheet({})
+  }
+
+  const handleChangePassword = (_data: string) => {
+    const { curUser, type } = sheet
+    if (type === 'changePassword' && curUser) {
+      dispatchAsyncThunk(
+        changeUserPasswordThunk({ id: curUser._id, password: _data }),
+        'success',
+      )
+    }
+    setSheet({})
+  }
+
+  useEffect(() => {
+    dispatchAsyncThunk(getUserThunks())
+  }, [dispatchAsyncThunk])
+
   const ColumsAction = useMemo(() => {
     return columnHelper.group({
       id: 'actions',
@@ -98,39 +134,6 @@ const Page = () => {
       header: 'Thao tác',
     })
   }, [])
-
-  const handleReload = () => {
-    dispatchAsyncThunk(getUserThunks(), 'reload success')
-  }
-
-  const handleSubmitForm = (value: IUserForm) => {
-    const role = roleFilter.find((x) => x._id === value.roleId)
-    const { type } = sheet
-    if (type === 'create' && role) {
-      dispatchAsyncThunk(
-        createUserThunk({
-          ...value,
-          role: role.name,
-          agentId: value.agentId,
-        }),
-        'thêm thành công',
-      )
-    }
-  }
-
-  const handleChangePassword = (_data: string) => {
-    const { curUser, type } = sheet
-    if (type === 'changePassword' && curUser) {
-      dispatchAsyncThunk(
-        changeUserPasswordThunk({ id: curUser._id, password: _data }),
-        'success',
-      )
-    }
-  }
-
-  useEffect(() => {
-    dispatchAsyncThunk(getUserThunks())
-  }, [dispatchAsyncThunk])
 
   return (
     <PrivateRoute>

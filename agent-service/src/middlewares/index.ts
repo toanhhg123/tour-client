@@ -12,9 +12,9 @@ export const handleErrorResponse = (error: any) => {
 
   if (!(error instanceof ResponseError)) {
     customError = new ResponseError(
-      process.env.NODE_ENV === 'development'
-        ? error.message
-        : 'Oh no, this is embarrasing. We are having troubles my friend'
+      process.env.NODE_ENV === 'production'
+        ? 'Oh no, this is embarrasing. We are having troubles my friend'
+        : error.message
     )
   }
   return customError
