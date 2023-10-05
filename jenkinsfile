@@ -3,6 +3,7 @@ pipeline {
     environment {
         DOCKER_COMPOSE_FILE = 'docker-compose.yml'
         SONAR_SCANNER_HOME = tool 'sonar-scaner-v1.0'
+        sonar_token_v1_ex30	= credentials('sonar_token_v1_ex30')
     }
     tools {
         nodejs "nodejs-16.20"
@@ -119,7 +120,7 @@ pipeline {
                             -Dsonar.projectKey=tour-saas \
                             -Dsonar.sources=. \
                             -Dsonar.host.url=http://103.98.160.26:9090 \
-                            -Dsonar.token=squ_7134e2532329ea973b20a5722791faea9780dc58"
+                            -Dsonar.token=${sonar_token_v1_ex30}"
                     }
 
             }
