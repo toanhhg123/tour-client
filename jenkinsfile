@@ -105,7 +105,8 @@ pipeline {
                 }
             }
 
-            stage('SonarQube Analysis') {
+        }
+        stage('SonarQube Analysis') {
                 steps {
                     withSonarQubeEnv('sonar_server_10.2.1') {
                         sh "${SONAR_SCANNER_HOME}/bin/sonar-scanner \
@@ -115,7 +116,6 @@ pipeline {
                             -Dsonar.login=squ_7134e2532329ea973b20a5722791faea9780dc58"
                     }
             }
-        }
         }
 
         stage('Deploy') {
