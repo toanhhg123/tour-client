@@ -2,7 +2,6 @@ import {
   changePassword,
   createAgent,
   createUser,
-  getAgentByOperSales,
   getAgentInOperator,
   getSuppliers,
   getUserByAgentId,
@@ -12,15 +11,15 @@ import {
 } from '@/services/auth'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import {
+  getAgentInOperSuccess,
   getAgentsSuccess,
   getSuppliersSuccess,
-  getUsersSuccess,
-  getUsersAgentSuccess,
-  getAgentInOperSuccess,
   getUserInOperatorSuccess,
+  getUsersAgentSuccess,
+  getUsersSuccess,
 } from '.'
-import { AgentCreate, IUserForm } from './type'
 import { RoleType } from '../role/type'
+import { AgentCreate, IUserForm } from './type'
 
 export const getUserThunks = createAsyncThunk(
   'userSlice/getUserThunks',
@@ -41,7 +40,7 @@ export const changeUserPasswordThunk = createAsyncThunk(
 export const getAgentsThunk = createAsyncThunk(
   'userSlice/getAgentsThunk',
   async (_: undefined, apiThunk) => {
-    const { data } = await getAgentByOperSales()
+    const { data } = await getAgentInOperator()
     apiThunk.dispatch(getAgentsSuccess(data.element))
   },
 )

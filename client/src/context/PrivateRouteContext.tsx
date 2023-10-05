@@ -4,6 +4,7 @@ import { getRolesThunks } from '@/features/role/actions'
 import { RoleType } from '@/features/role/type'
 import {
   getAgentsInOperatorThunk,
+  getAgentsThunk,
   getUsersInOperatorThunk,
 } from '@/features/user/actions'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
@@ -24,7 +25,7 @@ const PrivateRoute = ({ children, roles }: Props) => {
     if (auth.status === 'pendding') {
       dispatch(getUserDetailsThunk())
       dispatch(getRolesThunks())
-      dispatch(getAgentsInOperatorThunk())
+      dispatch(getAgentsThunk())
       dispatch(getUsersInOperatorThunk())
     } else if (auth.status === 'faild') {
       return router.replace('/auth/login')

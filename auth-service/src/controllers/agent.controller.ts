@@ -7,7 +7,9 @@ import mongoose from 'mongoose'
 class AgentController {
   gets = asyncHandler(async (req, res) => {
     const { operatorId } = req.user
+
     const data = await agentService.getByOperId(operatorId)
+
     return res.json({ message: 'success', element: data, status: 'success' })
   })
 
@@ -39,7 +41,9 @@ class AgentController {
   getAgentByOperId = asyncHandler(
     async (req: Request<unknown, unknown, AgentCreate>, res) => {
       const { operatorId } = req.user
+
       const data = await agentService.getByOperId(operatorId)
+
       return res.json({ message: 'success', element: data, status: 'success' })
     }
   )

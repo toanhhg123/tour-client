@@ -236,5 +236,5 @@ const formSchema = z.object({
   foreignFee: z.number().optional(),
   visaFee: z.number().optional(),
   otherFee: z.number().optional(),
-  visaStatus: z.string().nullable(),
+  visaStatus: z.string().nullable().optional(),
 })

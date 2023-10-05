@@ -28,6 +28,7 @@ import { ReloadIcon } from '@radix-ui/react-icons'
 import { useEffect, useState } from 'react'
 import CardBookingPax from '../cardBookingPax'
 import BookingPaxFormCmp, { BookingPaxRoomForm } from '../formBookingPax'
+import { Empty } from '@/components/empty'
 
 interface Props {
   params: { id: string }
@@ -179,36 +180,40 @@ const Page = ({ params: { id } }: Props) => {
         </div>
       </div>
       <div className="mt-3">
-        {bookingPaxs.map((bookingPax) => (
-          <CardBookingPax
-            onClickDelete={(bookingPax) => {
-              setSheet({ type: 'delete', curData: bookingPax })
-            }}
-            onClickSetRoom={(bookingPax) => {
-              setSheet({ type: 'setRoom', curData: bookingPax })
-            }}
-            onClickEdit={(bookingPax) => {
-              setSheet({
-                type: 'edit',
-                curData: bookingPax,
-                dataForm: {
-                  name: bookingPax.name,
-                  dob: bookingPax.dob,
-                  sex: bookingPax.sex,
-                  nation: bookingPax.nation,
-                  passport: bookingPax.passport,
-                  paxportExpre: bookingPax.paxportExpre,
-                  type: bookingPax.type,
-                  phone: bookingPax.phone,
-                  note: bookingPax.note,
-                  room: bookingPax.room,
-                },
-              })
-            }}
-            bookingPax={bookingPax}
-            key={bookingPax._id}
-          />
-        ))}
+        {bookingPaxs.length ? (
+          bookingPaxs.map((bookingPax) => (
+            <CardBookingPax
+              onClickDelete={(bookingPax) => {
+                setSheet({ type: 'delete', curData: bookingPax })
+              }}
+              onClickSetRoom={(bookingPax) => {
+                setSheet({ type: 'setRoom', curData: bookingPax })
+              }}
+              onClickEdit={(bookingPax) => {
+                setSheet({
+                  type: 'edit',
+                  curData: bookingPax,
+                  dataForm: {
+                    name: bookingPax.name,
+                    dob: bookingPax.dob,
+                    sex: bookingPax.sex,
+                    nation: bookingPax.nation,
+                    passport: bookingPax.passport,
+                    paxportExpre: bookingPax.paxportExpre,
+                    type: bookingPax.type,
+                    phone: bookingPax.phone,
+                    note: bookingPax.note,
+                    room: bookingPax.room,
+                  },
+                })
+              }}
+              bookingPax={bookingPax}
+              key={bookingPax._id}
+            />
+          ))
+        ) : (
+          <Empty />
+        )}
       </div>
     </PrivateRoute>
   )
