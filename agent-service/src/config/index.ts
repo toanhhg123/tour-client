@@ -7,4 +7,4 @@ export const env = {
   node_env: process.env.NODE_ENV
 }
 
-if (env.node_env === 'production') console.log('production is running')
+if (env.node_env == 'production') console.log('production is running')
