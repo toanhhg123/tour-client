@@ -73,7 +73,7 @@ pipeline {
             }
         }
 
-         stage('run unitest booking-service') {
+        stage('run unitest booking-service') {
             steps {
                echo("success")
             }
@@ -100,18 +100,17 @@ pipeline {
                     sh 'docker logs agent-service'
 
                     sh 'docker compose -f ${DOCKER_COMPOSE_FILE} exec auth npm run test'
-                    sh 'docker compose build'
-                    sh 'docker compose push'
-
-
-
                 }
             }
         }
 
         stage('Deploy') {
             steps {
-                echo("deploy success")
+               withDockerRegistry(credentialsId: 'docker_hub', url: 'https://index.docker.io/v1/') {
+                    sh 'docker compose build'
+                    sh 'docker compose push'
+                    echo("success")
+               }
             }
         }
     }
