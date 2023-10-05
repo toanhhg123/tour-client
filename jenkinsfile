@@ -120,7 +120,7 @@ pipeline {
                             -Dsonar.projectKey=tour-saas \
                             -Dsonar.sources=. \
                             -Dsonar.host.url=http://103.98.160.26:9090 \
-                            -Dsonar.token=${sonar_token_v1_ex30}"
+                            -Dsonar.token=%sonar_token_v1_ex30%"
                     }
 
             }
