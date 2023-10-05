@@ -2,6 +2,7 @@ pipeline {
     agent any
     environment {
         DOCKER_COMPOSE_FILE = 'docker-compose.yml'
+        SONAR_SCANNER_HOME = tool name: 'SonarQubeScanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
     }
     stages {
         stage('Create .env File to auth-service') {
@@ -88,6 +89,8 @@ pipeline {
                     // Wait for services to be up (adjust this as needed)
                     sh 'sleep 10'
 
+                    
+
                     // sh 'docker ps'
                     // sh 'docker images'
 
@@ -101,6 +104,18 @@ pipeline {
                     // sh 'docker compose -f ${DOCKER_COMPOSE_FILE} exec auth npm run test'
                 }
             }
+
+            stage('SonarQube Analysis') {
+                steps {
+                    withSonarQubeEnv('sonar_server_10.2.1') {
+                        sh "${SONAR_SCANNER_HOME}/bin/sonar-scanner \
+                            -Dsonar.projectKey=auth \
+                            -Dsonar.sources=. \
+                            -Dsonar.host.url=http://103.98.160.26:9090 \
+                            -Dsonar.login=squ_7134e2532329ea973b20a5722791faea9780dc58"
+                    }
+            }
+        }
         }
 
         stage('Deploy') {
@@ -109,7 +124,6 @@ pipeline {
                     // sh 'docker compose build'
                     sh 'docker compose push'
                     sh 'sleep 10'
-                    
                }
             }
         }
