@@ -113,7 +113,7 @@ pipeline {
                             -Dsonar.projectKey=tour-saas \
                             -Dsonar.sources=. \
                             -Dsonar.host.url=http://103.98.160.26:9090 \
-                            -Dsonar.login=squ_7134e2532329ea973b20a5722791faea9780dc58"
+                            -Dsonar.token=squ_7134e2532329ea973b20a5722791faea9780dc58"
                     }
 
             }
@@ -121,6 +121,9 @@ pipeline {
 
         stage('Deploy') {
             steps {
+                tools {
+                    nodejs "nodejs-16.20"
+                }
                withDockerRegistry(credentialsId: 'docker_hub', url: 'https://index.docker.io/v1/') {
                     // sh 'docker compose build'
                     sh 'docker compose push'
