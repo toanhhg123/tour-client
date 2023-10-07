@@ -57,6 +57,7 @@ router.post(
 )
 
 router.patch('/:id', update)
+
 router.patch('/password/:id', authorize(), changePassword)
 
 export default router

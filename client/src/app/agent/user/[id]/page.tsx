@@ -1,7 +1,6 @@
 'use client'
 
-import CardUser from '@/app/user/card-user'
-import FormUser, { FormPassword } from '@/app/user/form'
+import FormUser, { FormPassword } from '@/sections/user/form'
 import { Button } from '@/components/ui/button'
 import {
   Sheet,
@@ -18,16 +17,11 @@ import {
   createUserThunk,
   getUserThunks,
 } from '@/features/user/actions'
-import {
-  IUser,
-  IUserForm,
-  initUserForm,
-  mapUserToUserForm,
-} from '@/features/user/type'
+import { IUser, IUserForm, initUserForm } from '@/features/user/type'
 import useDispatchAsync from '@/hooks/useDispatchAsync'
 import { useAppSelector } from '@/store/hooks'
 import { ReloadIcon } from '@radix-ui/react-icons'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 interface Props {
   params: {
@@ -152,7 +146,7 @@ const Page = ({ params }: Props) => {
       </div>
 
       <div className="grid grid-cols-4 gap-1">
-        {userAgents.map((user) => {
+        {/* {userAgents.map((user) => {
           return (
             <CardUser
               onclickChangePassword={(user) => {
@@ -166,7 +160,7 @@ const Page = ({ params }: Props) => {
               user={user}
             />
           )
-        })}
+        })} */}
       </div>
     </PrivateRoute>
   )

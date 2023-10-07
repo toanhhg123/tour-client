@@ -77,8 +77,13 @@ const navs: INavItem[] = [
   },
   {
     href: '/user',
-    label: 'Quản lí người dùng',
-    roles: ['Oper.Admin'],
+    label: 'User Manager',
+    roles: ['Oper.Admin', 'Manager'],
+  },
+  {
+    href: '/supplier',
+    label: 'Supplier',
+    roles: ['Oper.Admin', 'Manager'],
   },
   {
     href: '/agentMan/user',
@@ -107,16 +112,11 @@ const navs: INavItem[] = [
   },
   {
     href: '/',
-    label: 'Vé series',
-  },
-  {
-    href: '/',
     label: 'Giao dịch',
     childrens: [
       { label: 'Danh sách vé nước ngoài', href: '/' },
       { label: 'Danh sách giữ chỗ vé nước ngoài', href: '/' },
     ],
-
     roles: ['TourMan'],
   },
 ]

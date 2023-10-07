@@ -137,7 +137,7 @@ const FormUser = ({ defaultValue, roles, handleSubmit, agents }: Props) => {
                       >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Chọn nhóm quyền..." />
+                            <SelectValue placeholder="select role" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>

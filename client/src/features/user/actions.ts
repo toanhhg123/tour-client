@@ -69,7 +69,7 @@ export const createUserThunk = createAsyncThunk(
   'userSlice/createUser',
   async (params: IUserForm & { role: RoleType }, apiThunk) => {
     await createUser(params, params.role)
-    apiThunk.dispatch(getUserThunks())
+    apiThunk.dispatch(getUsersInOperatorThunk())
   },
 )
 

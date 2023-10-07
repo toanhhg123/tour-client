@@ -1,7 +1,7 @@
 'use client'
 
-import CardUser from '@/app/user/card-user'
-import FormUser, { FormPassword } from '@/app/user/form'
+import CardUser from '@/sections/user/card-user'
+import FormUser, { FormPassword } from '@/sections/user/form'
 import { Button } from '@/components/ui/button'
 import {
   Sheet,
