@@ -18,7 +18,12 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { loginActionThunk } from '@/features/auth/actions'
+import { getUserDetailsThunk, loginActionThunk } from '@/features/auth/actions'
+import { getRolesThunks } from '@/features/role/actions'
+import {
+  getAgentsThunk,
+  getUsersInOperatorThunk,
+} from '@/features/user/actions'
 import useDispatchAsync from '@/hooks/useDispatchAsync'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -35,7 +40,12 @@ export default function LoginAccount() {
   })
 
   async function handleSubmit(data: { email: string; password: string }) {
-    await dispatchAsyncThunk(loginActionThunk(data), 'login success')
+    await dispatchAsyncThunk(loginActionThunk(data), 'login success', () => {
+      dispatchAsyncThunk(getUserDetailsThunk())
+      dispatchAsyncThunk(getRolesThunks())
+      dispatchAsyncThunk(getAgentsThunk())
+      dispatchAsyncThunk(getUsersInOperatorThunk())
+    })
   }
 
   return (

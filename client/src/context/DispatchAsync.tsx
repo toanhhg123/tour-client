@@ -12,6 +12,8 @@ interface IContext {
   dispatchAsyncThunk: (
     _asyncThunk: IReturnCreateAsynThunk,
     _messageSuccess?: string,
+    _onSuccess?: () => void,
+    _onFaild?: () => void,
   ) => Promise<any>
 }
 
@@ -35,6 +37,8 @@ export default function Provider({ children }: IProps) {
     return async function (
       _asyncThunk: IReturnCreateAsynThunk,
       messageSuccess?: string,
+      onSuccess?: () => void,
+      onFaild?: () => void,
     ) {
       try {
         setStatus({ loading: true })
@@ -52,8 +56,11 @@ export default function Provider({ children }: IProps) {
             duration: 2000,
           })
         }
+        if (onSuccess) onSuccess()
       } catch (error: any) {
         setStatus({ loading: false })
+
+        if (onFaild) onFaild()
 
         toast({
           variant: 'destructive',
