@@ -17,9 +17,11 @@ import {
   getBookingByTourIdSuccess,
   getBookingPaxsSuccess,
   getBookingsSuccess,
+  getCurBookingTourSuccess,
 } from '.'
 import { getBookingByAgentId, updateBookingPax } from './../../services/booking'
 import { BookingCreate, BookingPaxCreate } from './type'
+import { getTourById } from '@/services/tour'
 
 export const createBookingThunks = createAsyncThunk(
   'booking/createBookingThunks',
@@ -124,5 +126,20 @@ export const updateBookingThunk = createAsyncThunk(
   async (params: { id: string; booking: BookingCreate }, thunkApi) => {
     await updateBooking(params.id, params.booking)
     thunkApi.dispatch(getBookingBySalesThunk())
+  },
+)
+
+export const getCurBookingTourThunk = createAsyncThunk(
+  'booking/getCurBookingTourThunk',
+  async (params: string, thunkApi) => {
+    const tour = getTourById(params)
+    const bookings = getBookingByTourId(params)
+
+    thunkApi.dispatch(
+      getCurBookingTourSuccess({
+        tour: (await tour).data.element,
+        bookings: (await bookings).data.element,
+      }),
+    )
   },
 )

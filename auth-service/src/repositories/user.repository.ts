@@ -1,6 +1,6 @@
 import User, { IUser, IUserCreate } from '~/models/user.model'
 
-class userRepositoty {
+class UserRepositoty {
   async findUserById(id: string) {
     const user = await User.findById(id)
       .populate('roleId')
@@ -62,4 +62,4 @@ class userRepositoty {
   }
 }
 
-export default new userRepositoty()
+export default new UserRepositoty()

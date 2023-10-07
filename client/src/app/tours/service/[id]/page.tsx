@@ -22,6 +22,7 @@ import {
 import TourServiceCard from '../tourServiceCard'
 import { getSuppliersThunk } from '@/features/user/actions'
 import FormTourService from '../FormTourService'
+import { Empty } from '@/components/empty'
 
 interface Props {
   params: { id: string }
@@ -105,10 +106,14 @@ const Page = ({ params: { id } }: Props) => {
         </div>
       </div>
 
-      <div>
-        {tourServices?.list.map((tourService) => (
-          <TourServiceCard data={tourService} key={tourService._id} />
-        ))}
+      <div className="mt-2">
+        {tourServices?.list.length ? (
+          tourServices?.list.map((tourService) => (
+            <TourServiceCard data={tourService} key={tourService._id} />
+          ))
+        ) : (
+          <Empty />
+        )}
       </div>
     </PrivateRoute>
   )

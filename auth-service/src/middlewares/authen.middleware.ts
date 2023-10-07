@@ -11,7 +11,7 @@ export const authorize = (roles?: RoleType[]) =>
 
     const user = verifyToken(token)
 
-    if (roles && roles.length && !roles.some((x) => x === user.role)) {
+    if (roles?.length && !roles.some((x) => x === user.role)) {
       throw new ResponseError('forbbiden', 403)
     }
 

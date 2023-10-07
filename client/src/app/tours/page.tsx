@@ -1,32 +1,7 @@
 'use client'
+import ToastWarring from '@/components/toastWarning'
+import { Badge } from '@/components/ui/badge'
 import { Button, buttonVariants } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import {
-  ITour,
-  ITourForm,
-  TourCreate,
-  initTourForm,
-  mapTourToTourForm,
-} from '@/features/tour/type'
-import { ReloadIcon } from '@radix-ui/react-icons'
-import { createColumnHelper } from '@tanstack/react-table'
-import { MoreHorizontal } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
-import TourList from './table'
-import PrivateRoute from '@/context/PrivateRouteContext'
-import { useAppSelector } from '@/store/hooks'
-import {
-  createTourThunks,
-  deleteTourThunks,
-  getToursThunk,
-  updateTourThunks,
-} from '@/features/tour/actions'
 import {
   Sheet,
   SheetContent,
@@ -35,102 +10,62 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
-import useDispatchAsync from '@/hooks/useDispatchAsync'
-import FormTour from './form'
+import PrivateRoute from '@/context/PrivateRouteContext'
+import {
+  createTourThunks,
+  deleteTourThunks,
+  getToursThunk,
+  updateTourThunks,
+} from '@/features/tour/actions'
+import {
+  ITour,
+  ITourForm,
+  TourCreate,
+  initTourForm,
+  mapTourToTourForm,
+} from '@/features/tour/type'
 import { getUserThunks } from '@/features/user/actions'
-import ToastWarring from '@/components/toastWarning'
+import useDispatchAsync from '@/hooks/useDispatchAsync'
+import { useAppSelector } from '@/store/hooks'
+import { convertToVnd } from '@/utils'
+import { ReloadIcon } from '@radix-ui/react-icons'
+import { format } from 'date-fns'
+import {
+  CreditCard,
+  DollarSignIcon,
+  MailIcon,
+  Plane,
+  PlaneLanding,
+  Star,
+  TrafficCone,
+} from 'lucide-react'
 import Link from 'next/link'
-import { cn } from '@/lib/utils'
-
-const columnHelper = createColumnHelper<ITour>()
+import { useEffect, useState } from 'react'
+import FormTour from './form'
+import { usePathname, useSearchParams } from 'next/navigation'
+import Pagination from '@/components/pagination'
 
 const PageClient = () => {
   const { tours } = useAppSelector((state) => state.tour)
   const { users } = useAppSelector((state) => state.user)
+
   const { userDetails } = useAppSelector((state) => state.auth)
+
   const [sheet, setSheet] = useState<{
     type?: 'edit' | 'create' | 'delete'
     curData?: ITourForm
     curTour?: ITour
   }>({})
 
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+
+  const search = searchParams.get('search') || ''
+  const pageIndex = Number(searchParams.get('pageIndex') || 1)
+
+  const { total, limit } = tours
+
   const { dispatchAsyncThunk } = useDispatchAsync()
-
-  const ColumsAction = useMemo(() => {
-    return columnHelper.group({
-      id: 'actions',
-      enableHiding: false,
-      cell: ({ row }) => {
-        return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
-              <DropdownMenuItem>
-                <Button
-                  variant={'outline'}
-                  className="w-full"
-                  size={'sm'}
-                  onClick={() => {
-                    setSheet({
-                      curData: mapTourToTourForm(row.original),
-                      curTour: row.original,
-                      type: 'edit',
-                    })
-                  }}
-                >
-                  chi tiet
-                </Button>
-              </DropdownMenuItem>
-
-              <DropdownMenuItem>
-                <Link
-                  href={`tourAgent/booking/${row.original._id}`}
-                  className={cn(
-                    buttonVariants({ variant: 'outline' }),
-                    'w-full',
-                  )}
-                >
-                  bookings
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Link
-                  href={`tours/service/${row.original._id}`}
-                  className={cn(
-                    buttonVariants({ variant: 'outline' }),
-                    'w-full',
-                  )}
-                >
-                  {' '}
-                  Dịch vụ
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Button
-                  variant={'default'}
-                  className="bg-red-500 text-white w-full"
-                  size={'sm'}
-                  onClick={() => {
-                    setSheet({ curTour: row.original, type: 'delete' })
-                  }}
-                >
-                  Delete
-                </Button>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )
-      },
-      header: 'Thao tác',
-    })
-  }, [])
 
   const handleDelete = () => {
     const id = sheet?.curTour?._id
@@ -169,9 +104,9 @@ const PageClient = () => {
   }
 
   useEffect(() => {
-    dispatchAsyncThunk(getToursThunk())
+    dispatchAsyncThunk(getToursThunk({ pageIndex, search }))
     dispatchAsyncThunk(getUserThunks())
-  }, [dispatchAsyncThunk])
+  }, [dispatchAsyncThunk, pageIndex, search])
 
   return (
     <PrivateRoute>
@@ -180,9 +115,10 @@ const PageClient = () => {
         isOpen={sheet?.type === 'delete'}
         handleContinue={handleDelete}
       />
+
       <div className="w-full relative flex flex-col items-start md:flex-row md:items-center justify-between">
-        <h3 className="text-1xl font-bold leading-tight tracking-tighter md:text-2xl lg:leading-[1.1]">
-          Danh sách Tour
+        <h3 className="text-xl font-semibold leading-tight tracking-tighter md:text-2xl lg:leading-[1.1]">
+          Tour Manager
         </h3>
 
         <div className="flex align-middle gap-2">
@@ -233,7 +169,158 @@ const PageClient = () => {
         </div>
       </div>
 
-      <TourList data={tours.list} columnsAction={ColumsAction} />
+      {tours.list.map((tour) => {
+        return (
+          <div
+            key={tour._id}
+            className="rounded-[2px]  border-blue-100 mt-2 border  p-3"
+          >
+            <div className="flex justify-between items-center">
+              <div className="flex gap-2">
+                <Link
+                  href={tour.programLink}
+                  target="_blank"
+                  className="flex underline text-blue-500 font-semibold gap-1 text-sm items-center"
+                >
+                  <Star className="w-[1rem]" /> {tour.name}
+                </Link>
+                <Badge variant={'secondary'}>{tour.status}</Badge>
+              </div>
+
+              <div className="font-semibold text-sm flex gap-1 items-center">
+                Total Pax:
+                <span className="p-1 bg-green-200 rounded-sm">
+                  {tour.totalPax}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex justify-between">
+              <div className="flex m-1 flex-wrap text-[12px] items-center gap-2">
+                <div className="font-semibold">
+                  Go Date:
+                  <span className="text-gray-500">
+                    {format(new Date(tour.goDate), 'dd/MM/yyyy')}
+                  </span>
+                </div>
+
+                <div className="font-semibold">
+                  Return Date:
+                  <span className="text-gray-500">
+                    {format(new Date(tour.goDate), 'dd/MM/yyyy')}
+                  </span>
+                </div>
+
+                <div className="font-semibold">
+                  Duration:
+                  <span className="text-gray-500">{tour.duration}</span>
+                </div>
+              </div>
+
+              <div className="flex gap-2 flex-wrap items-center">
+                <div className="font-semibold text-[12px] flex items-center">
+                  <MailIcon className="w-[12px]" />
+                  Tour Manager:
+                  <span className="text-gray-500">{tour.tourMan?.email}</span>
+                </div>
+
+                <div className="font-semibold text-[12px] flex items-center">
+                  <MailIcon className="w-[12px]" />
+                  Tour Guide:
+                  <span className="text-gray-500">{tour.tourGuide?.email}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="h-[1px] bg-gray-200 my-2"></div>
+
+            <div className="flex justify-between items-end">
+              <div>
+                <div className="font-semibold text-[12px]">
+                  <div className="flex items-center">
+                    <Plane className="w-[12px]" />
+                    Go Fight:
+                    <span>{tour.goFlight}</span>
+                  </div>
+                </div>
+
+                <div className="font-semibold text-[12px]">
+                  <div className="flex items-center">
+                    <PlaneLanding className="w-[12px]" />
+                    Return Fight:
+                    <span> {tour.goFlight}</span>
+                  </div>
+                </div>
+
+                <div className="font-semibold text-[12px]">
+                  <div className="flex items-center">
+                    <TrafficCone className="w-[12px]" />
+                    Transport:
+                    <span> {tour.transport}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div className="font-semibold text-[12px]">
+                  <div className="flex items-center">
+                    <CreditCard className="w-[12px]" />
+                    Visa Date:
+                    <span>{format(new Date(tour.visaDate), 'dd/MM/yyyy')}</span>
+                  </div>
+                </div>
+                <div className="font-semibold text-[12px]">
+                  <div className="flex items-center">
+                    <DollarSignIcon className="w-[12px]" />
+                    commision:
+                    <span>{convertToVnd(tour.commision)}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex item-center gap-1">
+                <Button
+                  onClick={() => {
+                    setSheet({
+                      curData: mapTourToTourForm(tour),
+                      curTour: tour,
+                      type: 'edit',
+                    })
+                  }}
+                  size={'sm'}
+                  variant={'success'}
+                >
+                  Edit
+                </Button>
+                <Link
+                  className={buttonVariants({
+                    size: 'sm',
+                    variant: 'outline',
+                  })}
+                  href={`/tours/booking/${tour._id}`}
+                >
+                  bookings
+                </Link>
+                <Link
+                  className={buttonVariants({ size: 'sm', variant: 'warning' })}
+                  href={`/tours/service/${tour._id}`}
+                >
+                  services
+                </Link>
+              </div>
+            </div>
+          </div>
+        )
+      })}
+
+      <div className="my-2">
+        <Pagination
+          query={{ search }}
+          length={Math.ceil(total / limit)}
+          pageIndex={pageIndex}
+          pathName={`${pathname}`}
+        />
+      </div>
     </PrivateRoute>
   )
 }

@@ -10,12 +10,7 @@ interface IProps {
   onClickSetRoom?: (_bookingPax: IBookingPax) => void
 }
 
-const CardBookingPax = ({
-  bookingPax,
-  onClickDelete,
-  onClickEdit,
-  onClickSetRoom,
-}: IProps) => {
+const CardBookingPax = ({ bookingPax, onClickDelete, onClickEdit }: IProps) => {
   const {
     _id,
     name,
@@ -116,16 +111,6 @@ const CardBookingPax = ({
                 size={'sm'}
               >
                 delete
-              </Button>
-            )}
-
-            {onClickSetRoom && (
-              <Button
-                onClick={() => onClickSetRoom(bookingPax)}
-                variant={'success'}
-                size={'sm'}
-              >
-                Set Room
               </Button>
             )}
           </div>

@@ -30,7 +30,7 @@ class BookingController {
 
   create = asyncHandler(
     async (req: Request<unknown, unknown, BookingCreate>, res) => {
-      const { _id, agentId } = req.user
+      const { _id, agentId, operatorId } = req.user
 
       if (agentId)
         req.body.agent = {
@@ -41,7 +41,8 @@ class BookingController {
         ...req.body,
         sale: {
           _id
-        }
+        },
+        operatorId: operatorId
       })
 
       return res.json({

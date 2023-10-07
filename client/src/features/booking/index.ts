@@ -1,15 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { IBooking, IBookingPax } from './type'
+import { ITour } from '../tour/type'
 
-export interface ITourState {
+export interface IBookingState {
   bookingTours: IBooking[]
   bookings: IBooking[]
   bookingPaxs: IBookingPax[]
   bookingByListTours: IBooking[]
+  curBookingTour?: {
+    tour: ITour
+    bookings: IBooking[]
+  }
 }
 
-const initialState: ITourState = {
+const initialState: IBookingState = {
   bookingTours: [],
   bookings: [],
   bookingPaxs: [],
@@ -35,6 +40,13 @@ export const bookingSlice = createSlice({
     getBookingByListTourSuccess: (state, action: PayloadAction<IBooking[]>) => {
       state.bookingByListTours = action.payload
     },
+
+    getCurBookingTourSuccess: (
+      state,
+      action: PayloadAction<Required<typeof initialState.curBookingTour>>,
+    ) => {
+      state.curBookingTour = action.payload
+    },
   },
 })
 
@@ -44,6 +56,7 @@ export const {
   getBookingPaxsSuccess,
   getBookingsSuccess,
   getBookingByListTourSuccess,
+  getCurBookingTourSuccess,
 } = bookingSlice.actions
 
 export default bookingSlice.reducer

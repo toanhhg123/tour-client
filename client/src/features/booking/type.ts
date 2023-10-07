@@ -2,6 +2,7 @@ import { ITour } from '../tour/type'
 
 export interface IBooking {
   _id: string
+  operatorId: string
   tour: {
     _id: string
     name: string

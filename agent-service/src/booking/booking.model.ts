@@ -17,6 +17,10 @@ const bookingSchema = new Schema(
         phone: String
       }
     },
+    operatorId: {
+      type: String,
+      required: true
+    },
     client: {
       type: {
         name: String,

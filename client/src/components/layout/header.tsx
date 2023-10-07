@@ -71,12 +71,8 @@ interface INavItem {
 
 const navs: INavItem[] = [
   {
-    href: '/',
+    href: '/tours',
     label: 'Danh sách tour',
-    childrens: [
-      { label: 'Tour trong nước', href: '/tours' },
-      { label: 'Tour ngoài nước', href: '/' },
-    ],
     roles: ['TourMan'],
   },
   {

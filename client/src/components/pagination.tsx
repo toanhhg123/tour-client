@@ -5,7 +5,7 @@ import { buttonVariants } from './ui/button'
 
 interface Props {
   pageIndex: number
-  onChangePage: (_pageIndex: number) => void
+  onChangePage?: (_pageIndex: number) => void
   length: number
   pathName: string
   query: { [key: string]: string }
