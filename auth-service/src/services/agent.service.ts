@@ -8,7 +8,7 @@ class AgentService {
   }
 
   async updateById(id: string, agent: AgentCreate) {
-    return await Agent.findByIdAndUpdate(id, agent)
+    return Agent.findByIdAndUpdate(id, agent)
   }
 
   gets() {

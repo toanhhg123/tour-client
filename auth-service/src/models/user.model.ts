@@ -66,7 +66,7 @@ userSchema.pre(
 userSchema.methods.comparePassword = async function (
   candidatePassword: string
 ) {
-  return await bcrypt.compare(candidatePassword, this.password)
+  return bcrypt.compare(candidatePassword, this.password)
 }
 
 const User = model('Users', userSchema)

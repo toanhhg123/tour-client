@@ -13,7 +13,7 @@ class UserRepositoty {
   }
 
   async findUsersByOperatorid(id: string) {
-    return await User.find({ operatorId: id })
+    return User.find({ operatorId: id })
       .populate('roleId')
       .populate('operatorId')
       .populate('agentId')
@@ -58,7 +58,7 @@ class UserRepositoty {
     if (!account)
       throw new Error('Vi: không tìm thấy người dùng | En: Not found account')
     account.password = newPassword
-    return await account.save()
+    return account.save()
   }
 }
 

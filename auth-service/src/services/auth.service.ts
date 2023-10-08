@@ -6,13 +6,13 @@ class AuthService {
   async authencate(user: IUserLogin) {
     const { email, password } = user
 
-    const record = await User.findOne({ email })
+    const record: IUser | null = await User.findOne({ email })
       .select('+password')
       .populate('roleId')
 
     if (!record) throw new Error('Không tìm thấy email !!!')
 
-    if (!(await (record as IUser).comparePassword(password)))
+    if (!(await record.comparePassword(password)))
       throw new Error('mật khẩu không chính xác !!!')
 
     const role = record.roleId as unknown as Role
