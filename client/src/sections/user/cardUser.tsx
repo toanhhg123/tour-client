@@ -5,6 +5,7 @@ import {
   Calendar,
   Home,
   LocateIcon,
+  Mail,
   Phone,
   User,
   UserCheck,
@@ -33,6 +34,14 @@ const CardUser = ({ user, renderAction }: Props) => {
           phone:
           <span className="p-1 rounded-sm bg-blue-100 font-semibold">
             {user.phone}
+          </span>
+        </div>
+
+        <div className="flex items-center gap-1">
+          <Mail className="w-[12px]" />
+          email:
+          <span className="p-1 rounded-sm bg-blue-100 font-semibold">
+            {user.email}
           </span>
         </div>
 

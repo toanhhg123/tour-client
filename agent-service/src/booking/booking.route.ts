@@ -42,7 +42,11 @@ router.get(
 
 router.get('/', authorize(['Agent.Manager', 'Agent.Sales']), get)
 
-router.get('/agent/:id', authorize(['Oper.Sales']), getBookingByAgentId)
+router.get(
+  '/agent/:id',
+  authorize(['Oper.Sales', 'Manager', 'Oper.Admin']),
+  getBookingByAgentId
+)
 
 router.post(
   '/',

@@ -1,6 +1,7 @@
 import {
   changePassword,
   createAgent,
+  createSupplier,
   createUser,
   getAgentInOperator,
   getSuppliers,
@@ -8,6 +9,8 @@ import {
   getUserInOperator,
   getUsers,
   updateAgent,
+  updateSalesAgent,
+  updateSupplier,
 } from '@/services/auth'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import {
@@ -19,7 +22,7 @@ import {
   getUsersSuccess,
 } from '.'
 import { RoleType } from '../role/type'
-import { AgentCreate, IUserForm } from './type'
+import { AgentCreate, IUserForm, SupplierForm } from './type'
 
 export const getUserThunks = createAsyncThunk(
   'userSlice/getUserThunks',
@@ -81,6 +84,14 @@ export const createAgentThunk = createAsyncThunk(
   },
 )
 
+export const updateSalesAgentThunk = createAsyncThunk(
+  'userSlice/updateSalesAgentThunk',
+  async (params: { id: string; operSalesId: string }, apiThunk) => {
+    await updateSalesAgent(params.id, { operSalesId: params.operSalesId })
+    apiThunk.dispatch(getAgentsThunk())
+  },
+)
+
 export const updateAgentThunk = createAsyncThunk(
   'userSlice/updateAgentThunk',
   async (params: { id: string; agent: AgentCreate }, apiThunk) => {
@@ -94,6 +105,23 @@ export const getSuppliersThunk = createAsyncThunk(
   async (params: undefined, apiThunk) => {
     const { data } = await getSuppliers()
     apiThunk.dispatch(getSuppliersSuccess(data.element))
+  },
+)
+
+export const createSupplierThunk = createAsyncThunk(
+  'userSlice/createSupplierThunk',
+  async (body: SupplierForm, apiThunk) => {
+    await createSupplier(body)
+    apiThunk.dispatch(getSuppliersThunk())
+  },
+)
+
+export const updateSupplierThunk = createAsyncThunk(
+  'userSlice/updateSupplierThunk',
+  async (params: { id: string; body: SupplierForm }, apiThunk) => {
+    const { id, body } = params
+    await updateSupplier(id, body)
+    apiThunk.dispatch(getSuppliersThunk())
   },
 )
 

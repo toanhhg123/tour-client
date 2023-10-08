@@ -9,8 +9,13 @@ import {
   ToastViewport,
 } from '@/components/ui/toast'
 import { useToast } from '@/components/ui/use-toast'
+import { ReactNode } from 'react'
 
-export function Toaster() {
+interface Props {
+  icon?: ReactNode
+}
+
+export function Toaster({ icon }: Props) {
   const { toasts } = useToast()
 
   return (
@@ -25,6 +30,7 @@ export function Toaster() {
               )}
             </div>
             {action}
+            {icon}
             <ToastClose />
           </Toast>
         )

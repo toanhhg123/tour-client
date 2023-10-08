@@ -3,7 +3,7 @@ import { InferSchemaType, Schema, model } from 'mongoose'
 const supplierSchema = new Schema(
   {
     name: { type: String },
-    email: { type: String },
+    email: { type: String, unique: true, required: true },
     phone: { type: String },
     type: { type: String },
     address: { type: String, default: '' },

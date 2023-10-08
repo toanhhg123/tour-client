@@ -85,7 +85,12 @@ const Page = () => {
   return (
     <PrivateRoute>
       <div className="w-full text-gray-700  flex flex-wrap  justify-between gap-2">
-        <BoxFilter roles={roles} agents={agents} onFilter={handleFilter} />
+        <BoxFilter
+          onClear={handleReload}
+          roles={roles}
+          agents={agents}
+          onFilter={handleFilter}
+        />
 
         <div className="flex-1">
           <div className="flex gap-1">
@@ -104,7 +109,7 @@ const Page = () => {
             </Button>
           </div>
 
-          <div className="border my-2 p-2 max-h-[700px] overflow-y-auto">
+          <div className="border my-2 p-2 min-h-screen overflow-y-auto">
             {sheet.type ? (
               <>
                 <div className="relative p-2 border my-2 border-blue-100">

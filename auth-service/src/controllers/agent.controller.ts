@@ -15,7 +15,7 @@ class AgentController {
 
   create = asyncHandler(
     async (req: Request<unknown, unknown, AgentCreate>, res) => {
-      const { operatorId, _id } = req.user
+      const { operatorId, _id, role } = req.user
 
       if (await Agent.findOne({ email: req.body.email })) {
         throw new Error('agent is exsis')
@@ -24,7 +24,8 @@ class AgentController {
       const data = await agentService.create({
         ...req.body,
         operId: new mongoose.Types.ObjectId(operatorId),
-        operSaleId: new mongoose.Types.ObjectId(_id)
+        operSaleId:
+          role === 'Oper.Sales' ? new mongoose.Types.ObjectId(_id) : undefined
       })
       return res.json({ message: 'success', element: data, status: 'success' })
     }
@@ -50,13 +51,35 @@ class AgentController {
 
   update = asyncHandler(
     async (req: Request<{ id: string }, unknown, AgentCreate>, res) => {
-      const { _id } = req.user
+      const { operatorId } = req.user
+
+      await agentService.checkInOperator(req.params.id, operatorId)
+
+      delete req.body.operSaleId
 
       const data = await agentService.updateById(req.params.id, {
         ...req.body,
         operId: undefined,
-        operSaleId: new mongoose.Types.ObjectId(_id)
+        operSaleId: undefined
       })
+
+      return res.json({ message: 'success', element: data, status: 'success' })
+    }
+  )
+
+  updateSales = asyncHandler(
+    async (
+      req: Request<{ id: string }, unknown, { operSalesId: string }>,
+      res
+    ) => {
+      const { operatorId } = req.user
+
+      await agentService.checkInOperator(req.params.id, operatorId)
+
+      const data = await agentService.updateOperSalesId(
+        req.params.id,
+        req.body.operSalesId
+      )
 
       return res.json({ message: 'success', element: data, status: 'success' })
     }

@@ -198,7 +198,6 @@ const formSchema = z.object({
   name: z.string().min(1, { message: 'không được bỏ trống phần này' }),
   totalPax: z.number({ required_error: 'vui lòng nhập trường này' }),
   price: z.number({ required_error: 'vui lòng nhập trường này' }),
-
   route: z.string().min(1, { message: 'không được bỏ trống phần này' }),
   duration: z.string().min(1, { message: 'không được bỏ trống phần này' }),
   transport: z.string().min(1, { message: 'không được bỏ trống phần này' }),

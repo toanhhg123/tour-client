@@ -1,3 +1,4 @@
+import mongoose from 'mongoose'
 import Agent, { AgentCreate } from '~/models/agent.model'
 import { ResponseError } from '~/types'
 
@@ -20,6 +21,16 @@ class AgentService {
 
   getBySaleId(id: string) {
     return Agent.find({ operSaleId: id })
+  }
+
+  async updateOperSalesId(id: string, operSaleId: string) {
+    const agent = await Agent.findById(id)
+
+    if (!agent) throw new Error('not found agent')
+
+    agent.operSaleId = new mongoose.Types.ObjectId(operSaleId)
+
+    return agent.save()
   }
 
   async checkInOperator(agentId: string, operId: string) {

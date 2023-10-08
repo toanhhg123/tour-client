@@ -14,16 +14,26 @@ class SupplierController {
   create = asyncHandler(
     async (req: Request<unknown, unknown, SupplierCreate>, res) => {
       const { operatorId } = req.user
+
+      if (await supplierService.findByEmail(req.body.email)) {
+        throw new Error('supplier email is exsist')
+      }
+
       const data = await supplierService.create({
         ...req.body,
         operId: new mongoose.Types.ObjectId(operatorId)
       })
+
       return res.json({ message: 'success', element: data, status: 'success' })
     }
   )
 
   update = asyncHandler(
     async (req: Request<{ id: string }, unknown, SupplierCreate>, res) => {
+      const { operatorId } = req.user
+
+      await supplierService.checkInOperator(req.params.id, operatorId)
+
       const data = await supplierService.updateById(req.params.id, {
         ...req.body,
         operId: undefined

@@ -8,8 +8,8 @@ const router = Router()
 
 router.get('/', authorize(), gets)
 
-router.post('/', authorize(['Oper.Admin']), create)
+router.post('/', authorize(['Oper.Admin', 'Manager']), create)
 
-router.patch('/:id', authorize(['Oper.Sales']), update)
+router.patch('/:id', authorize(['Oper.Admin', 'Manager']), update)
 
 export default router

@@ -2,6 +2,10 @@ import Supplier, { SupplierCreate } from '~/models/supplier.model'
 import { ResponseError } from '~/types'
 
 class SupplierService {
+  findByEmail(email: string) {
+    return Supplier.findOne({ email })
+  }
+
   create(agent: SupplierCreate) {
     return Supplier.create(agent)
   }
@@ -21,10 +25,10 @@ class SupplierService {
     return Supplier.find({ operId: id })
   }
 
-  async checkInOperator(agentId: string, operId: string) {
-    const agent = await Supplier.findById(agentId)
+  async checkInOperator(id: string, operId: string) {
+    const supplier = await Supplier.findById(id)
 
-    if (agent?.operId?.toString() !== operId)
+    if (supplier?.operId?.toString() !== operId)
       throw ResponseError.forbbidenError()
   }
 }

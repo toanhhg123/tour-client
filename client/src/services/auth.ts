@@ -7,6 +7,7 @@ import {
   IUser,
   IUserForm,
   Supplier,
+  SupplierForm,
 } from '@/features/user/type'
 import { IResponse } from '@/types'
 
@@ -53,11 +54,20 @@ export const createAgent = (agent: AgentCreate) =>
 export const updateAgent = (id: string, agent: AgentCreate) =>
   apiAuth.patch<IResponse<IAgent>>(`/agent/${id}`, agent)
 
+export const updateSalesAgent = (id: string, body: { operSalesId: string }) =>
+  apiAuth.patch<IResponse<IAgent>>(`/agent/sales/${id}`, body)
+
 export const changePassword = (id: string, body: { password: string }) =>
   apiAuth.patch<IResponse<IUser>>(`/user/password/${id}`, body)
 
 export const getSuppliers = () =>
   apiAuth.get<IResponse<Supplier[]>>('/supplier')
+
+export const createSupplier = (body: SupplierForm) =>
+  apiAuth.post<IResponse<Supplier[]>>('/supplier', body)
+
+export const updateSupplier = (id: string, body: SupplierForm) =>
+  apiAuth.patch<IResponse<Supplier[]>>(`/supplier/${id}`, body)
 
 export const getUserByAgentId = (id: string) =>
   apiAuth.get<IResponse<IUser[]>>(`/user/agent/${id}`)

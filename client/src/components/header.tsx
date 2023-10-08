@@ -8,6 +8,7 @@ import { Header } from './layout/header'
 
 const HeaderClient = () => {
   const { userDetails } = useAppSelector((state) => state.auth)
+
   return userDetails ? (
     <div className="border-b">
       <div className="flex justify-between h-16 items-center px-4">

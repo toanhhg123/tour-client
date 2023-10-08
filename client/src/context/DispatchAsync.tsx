@@ -5,6 +5,7 @@ import { AsyncThunkAction } from '@reduxjs/toolkit'
 import Loading from '@/components/loading'
 import { useToast } from '@/components/ui/use-toast'
 import { Toaster } from '@/components/ui/toaster'
+import { CheckCircle2 } from 'lucide-react'
 
 type IReturnCreateAsynThunk = AsyncThunkAction<any, any, any>
 
@@ -54,6 +55,8 @@ export default function Provider({ children }: IProps) {
             description: messageSuccess,
             variant: 'success',
             duration: 2000,
+            className:
+              'bg-white  rounded-none shadow border-l-4 border-l-green-400 shadow-green-200',
           })
         }
         if (onSuccess) onSuccess()
@@ -75,7 +78,7 @@ export default function Provider({ children }: IProps) {
   return (
     <dispatchAsyncThunkContext.Provider value={{ dispatchAsyncThunk }}>
       {status.loading && <Loading />}
-      <Toaster />
+      <Toaster icon={<CheckCircle2 className=" text-green-600" />} />
       {children}
     </dispatchAsyncThunkContext.Provider>
   )

@@ -1,6 +1,6 @@
 import { IBooking } from '@/features/booking/type'
 import React, { useEffect } from 'react'
-import CardBooking from '../tour/cardBooking'
+import CardBooking from '../booking/card-booking'
 import { useAppSelector } from '@/store/hooks'
 import useDispatchAsync from '@/hooks/useDispatchAsync'
 import { getBookingPaxsThunk } from '@/features/booking/actions'

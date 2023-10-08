@@ -19,7 +19,7 @@ import useDispatchAsync from '@/hooks/useDispatchAsync'
 import { useAppSelector } from '@/store/hooks'
 import { ReloadIcon } from '@radix-ui/react-icons'
 import { useEffect, useState } from 'react'
-import FormAgent from './FormAgent'
+import FormAgent from '../../sections/agent/form-agent'
 import CardAgent from './cardAgent'
 
 export default function Page() {

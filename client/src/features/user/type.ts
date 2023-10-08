@@ -7,9 +7,10 @@ export interface IAgent {
   phone: string
   address: string
   operId: string
+  operSaleId: string
 }
 
-export type AgentCreate = Omit<IAgent, '_id' | 'operId'>
+export type AgentCreate = Omit<IAgent, '_id' | 'operId' | 'operSaleId'>
 
 export const initAgentCreate: AgentCreate = {
   name: '',
@@ -32,10 +33,20 @@ export interface Supplier {
   name: string
   email: string
   phone: string
-  type: string
+  type: 'LandTour' | 'Airline' | 'CarService' | 'Wifi' | 'insurance'
   address: string
   operId: IUser
 }
+
+export const initSupplierForm: SupplierForm = {
+  name: '',
+  email: '',
+  phone: '',
+  address: '',
+  type: 'LandTour',
+}
+
+export type SupplierForm = Omit<Supplier, 'operId' | '_id'>
 
 export interface IUser {
   _id: string
