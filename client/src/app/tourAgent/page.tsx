@@ -85,7 +85,7 @@ const PageClient = () => {
   }, [dispatchAsyncThunk, tours])
 
   const handleAddBooking = (booking: BookingForm) => {
-    if (sheet?.type === 'create' && sheet.curTour && userDetails) {
+    if (sheet?.type === 'create' && sheet.curTour) {
       const paxNum = booking.childrenPax + booking.adultPax + booking.infanlPax
 
       const { totalBooking } = analysisBooking(
@@ -154,7 +154,6 @@ const PageClient = () => {
               </SheetHeader>
               {sheet?.bookingForm && sheet.curTour && (
                 <FormBooking
-                  tour={sheet.curTour}
                   initData={sheet.bookingForm}
                   onSave={handleAddBooking}
                   statusBookings={statusBookings}

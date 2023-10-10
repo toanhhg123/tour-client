@@ -132,19 +132,19 @@ const CardTour = ({ tour, onClickBooking, showBtnDetailsBooking }: Props) => {
                   Giữ chỗ
                 </TableHead>
                 <TableHead className="font-bold border border-slate-200">
-                  Đặt cọc{' '}
+                  Đặt cọc
                 </TableHead>
                 <TableHead className="font-bold border border-slate-200">
-                  Thanh toán đủ{' '}
+                  Thanh toán đủ
                 </TableHead>
                 <TableHead className="font-bold border border-slate-200">
                   Thanh toán
                 </TableHead>
                 <TableHead className="font-bold border border-slate-200">
-                  Tổng số chỗ{' '}
+                  Tổng số chỗ
                 </TableHead>
                 <TableHead className="font-bold border border-slate-200">
-                  số chỗ còn lại{' '}
+                  số chỗ còn lại
                 </TableHead>
               </TableRow>
             </TableHeader>

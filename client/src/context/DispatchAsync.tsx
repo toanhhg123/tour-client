@@ -78,7 +78,7 @@ export default function Provider({ children }: IProps) {
   return (
     <dispatchAsyncThunkContext.Provider value={{ dispatchAsyncThunk }}>
       {status.loading && <Loading />}
-      <Toaster icon={<CheckCircle2 className=" text-green-600" />} />
+      <Toaster />
       {children}
     </dispatchAsyncThunkContext.Provider>
   )

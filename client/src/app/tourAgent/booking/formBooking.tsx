@@ -1,4 +1,3 @@
-import CardTour from '@/components/cartTour'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
@@ -24,11 +23,11 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { BookingForm, typeStatusBookingForm } from '@/features/booking/type'
-import { ITour } from '@/features/tour/type'
 import { cn } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CalendarIcon } from '@radix-ui/react-icons'
 import { format } from 'date-fns'
+import { Save } from 'lucide-react'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
@@ -38,7 +37,6 @@ interface Props {
   onSave: (_booking: BookingForm) => void
   statusBookings: typeStatusBookingForm[]
   statusVisa?: string[]
-  tour: ITour
 }
 
 export default function FormBooking({
@@ -46,7 +44,6 @@ export default function FormBooking({
   onSave,
   statusBookings,
   statusVisa,
-  tour,
 }: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -65,13 +62,10 @@ export default function FormBooking({
 
   return (
     <form
-      onSubmit={form.handleSubmit(onSubmit, (valid) => {
-        console.log(valid)
-      })}
-      className="space-y-8  overflow-y-auto p-1"
+      onSubmit={form.handleSubmit(onSubmit)}
+      className="space-y-2  overflow-y-auto p-1"
       style={{ height: '100%' }}
     >
-      <CardTour tour={tour} />
       <Form {...form}>
         <div className="grid grid-cols-2 gap-4">
           {Object.keys(dataForm).map((x) => {
@@ -214,7 +208,12 @@ export default function FormBooking({
           })}
         </div>
       </Form>
-      <Button type="submit">Lưu lại</Button>
+      <div className="flex justify-end">
+        <Button type="submit" size={'lg'} className="font-semibold">
+          <Save className="w-[14px] mr-1" />
+          save
+        </Button>
+      </div>
     </form>
   )
 }
