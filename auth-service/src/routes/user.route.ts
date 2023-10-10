@@ -58,6 +58,10 @@ router.post(
 
 router.patch('/:id', update)
 
-router.patch('/password/:id', authorize(), changePassword)
+router.patch(
+  '/password/:id',
+  authorize(['Manager', 'Oper.Sales', 'Agent.Manager', 'Oper.Admin']),
+  changePassword
+)
 
 export default router

@@ -21,7 +21,6 @@ const Page = () => {
   const { roles } = useAppSelector((state) => state.role)
   const { agents, usersInOperator } = useAppSelector((state) => state.user)
   const { userDetails } = useAppSelector((state) => state.auth)
-
   const [users, setUsers] = useState(usersInOperator)
 
   const { dispatchAsyncThunk } = useDispatchAsync()

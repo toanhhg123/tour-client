@@ -169,7 +169,7 @@ const Page = ({ params: { id } }: Props) => {
                   />
                 )}
 
-              {sheet?.curData && sheet.type === 'setRoom' && (
+              {sheet?.curData?.room && sheet.type === 'setRoom' && (
                 <BookingPaxRoomForm
                   room={sheet.curData.room}
                   onSave={handleSaveRoom}

@@ -101,8 +101,8 @@ const navs: INavItem[] = [
     roles: ['Agent.Manager'],
   },
   {
-    href: '/agent',
-    label: 'Quản lí Agent',
+    href: '/agent-operSales',
+    label: 'Agent Manager',
     roles: ['Oper.Sales'],
   },
   {

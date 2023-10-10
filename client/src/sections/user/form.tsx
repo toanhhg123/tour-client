@@ -29,7 +29,7 @@ import { useForm } from 'react-hook-form'
 
 import { IRole } from '@/features/role/type'
 import { IAgent, IUserForm } from '@/features/user/type'
-import { CalendarIcon } from 'lucide-react'
+import { CalendarIcon, Save } from 'lucide-react'
 import * as z from 'zod'
 import React from 'react'
 
@@ -55,9 +55,9 @@ const FormUser = ({ defaultValue, roles, handleSubmit, agents }: Props) => {
   }
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
       <Form {...form}>
-        <div className="grid  gap-2 mb-3">
+        <div className="grid gap-2 mb-3">
           {Object.keys(defaultValue).map((x) => {
             const key = x as keyof IUserForm
             return (
@@ -133,7 +133,7 @@ const FormUser = ({ defaultValue, roles, handleSubmit, agents }: Props) => {
                     component = (
                       <Select
                         onValueChange={field.onChange}
-                        value={valueString}
+                        value={valueString || undefined}
                       >
                         <FormControl>
                           <SelectTrigger>
@@ -184,7 +184,12 @@ const FormUser = ({ defaultValue, roles, handleSubmit, agents }: Props) => {
           })}
         </div>
       </Form>
-      <Button type="submit">Lưu lại</Button>
+      <div className="flex justify-end">
+        <Button type="submit" size={'lg'} className="font-semibold">
+          <Save className="w-[14px] mr-1" />
+          save
+        </Button>
+      </div>
     </form>
   )
 }
@@ -222,7 +227,7 @@ export const FormPassword = ({ handleSubmit }: PropsFormPassword) => {
   return (
     <form
       onSubmit={form.handleSubmit(onSubmit)}
-      className="space-y-8 p-1   overflow-auto"
+      className="space-y-2 p-1   overflow-auto"
       style={{ height: '100%' }}
     >
       <Form {...form}>
@@ -244,7 +249,12 @@ export const FormPassword = ({ handleSubmit }: PropsFormPassword) => {
           />
         </div>
       </Form>
-      <Button type="submit">Lưu lại</Button>
+      <div className="flex justify-end">
+        <Button type="submit" size={'lg'} className="font-semibold">
+          <Save className="w-[14px] mr-1" />
+          save
+        </Button>
+      </div>
     </form>
   )
 }
