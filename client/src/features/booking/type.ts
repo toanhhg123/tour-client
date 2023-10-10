@@ -123,7 +123,7 @@ export interface IBookingPax {
   type: 'Adult' | 'Child' | 'Infant'
   phone: string
   note: string
-  room: string
+  room?: string
 }
 
 export type TypeBookingPaxForm = { key: string; label: string }
@@ -149,7 +149,6 @@ export const initBookingPaxForm: BookingPaxForm = {
   type: 'Adult',
   phone: '',
   note: '',
-  room: '',
 }
 
 export const mapToBookingCreateWithBookingForm = (

@@ -42,7 +42,7 @@ const CardBookingPax = ({ bookingPax }: Props) => {
   }
 
   return (
-    <div className="p-2 border text-[12px] border-blue-100">
+    <div className="p-2 border mt-1 text-[12px] border-blue-100">
       <div className="flex items-center gap-2 flex-wrap">
         <div className="flex items-center gap-1">
           <User className="w-[12px]" />

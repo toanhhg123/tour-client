@@ -1,6 +1,7 @@
 'use client'
 import CardBooking from '@/app/booking/CardBooking'
 import { ModalConfirm } from '@/components/ModalConfirm'
+import { Empty } from '@/components/empty'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent } from '@/components/ui/sheet'
 import { toast } from '@/components/ui/use-toast'
@@ -19,14 +20,13 @@ import {
 } from '@/features/booking/type'
 import { ITour } from '@/features/tour/type'
 import useDispatchAsync from '@/hooks/useDispatchAsync'
+import { analysisBooking } from '@/lib/utils'
+import { getBookingByTourId } from '@/services/booking'
 import { getTourById } from '@/services/tour'
 import { useAppSelector } from '@/store/hooks'
 import { ReloadIcon } from '@radix-ui/react-icons'
 import { useEffect, useState } from 'react'
-import FormBooking from '../tourAgent/booking/formBooking'
-import { getBookingByTourId } from '@/services/booking'
-import { analysisBooking } from '@/lib/utils'
-import { Empty } from '@/components/empty'
+import FormBooking from '../../components/booking/formBooking'
 
 const Page = () => {
   const { dispatchAsyncThunk } = useDispatchAsync()
@@ -155,7 +155,6 @@ const Page = () => {
             >
               {sheet?.bookingForm && sheet.curTour && (
                 <FormBooking
-                  tour={sheet.curTour}
                   initData={sheet.bookingForm}
                   onSave={handleSave}
                   statusBookings={statusBookings}

@@ -1,5 +1,6 @@
 'use client'
-import FormBooking from '@/app/tourAgent/booking/formBooking'
+import FormBooking from '@/components/booking/formBooking'
+import Pagination from '@/components/pagination'
 import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/use-toast'
 import PrivateRoute from '@/context/PrivateRouteContext'
@@ -22,6 +23,8 @@ import { useAppSelector } from '@/store/hooks'
 import { ReloadIcon } from '@radix-ui/react-icons'
 import { Pen, UserX, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { usePathname, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 const Page = () => {
   const { tours } = useAppSelector((state) => state.tour)
@@ -32,21 +35,22 @@ const Page = () => {
     curTour?: ITour
   }>({})
 
-  const handleFilter = (filter: Filter) => {
-    console.log(filter)
-  }
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const router = useRouter()
 
-  const handleClear = () => {
-    dispatchAsyncThunk(getToursThunk())
+  const search = searchParams.get('search') || ''
+  const pageIndex = Number(searchParams.get('pageIndex') || 1)
+
+  const { total, limit } = tours
+
+  const handleFilter = (filter: Filter) => {
+    const query = new URLSearchParams(filter)
+    router.push(`${pathname}?${query}`)
   }
 
   const handleReload = () => {
-    dispatchAsyncThunk(getToursThunk(), 'success')
-    const listTour = tours.list
-    if (listTour.length)
-      dispatchAsyncThunk(
-        getBookingByListTourThunk(listTour.map((tour) => tour._id)),
-      )
+    router.push(pathname)
   }
 
   const handleSave = async (booking: BookingForm) => {
@@ -101,8 +105,8 @@ const Page = () => {
   }
 
   useEffect(() => {
-    dispatchAsyncThunk(getToursThunk())
-  }, [dispatchAsyncThunk])
+    dispatchAsyncThunk(getToursThunk({ search, pageIndex }))
+  }, [dispatchAsyncThunk, pageIndex, search])
 
   useEffect(() => {
     const listTour = tours.list
@@ -116,7 +120,7 @@ const Page = () => {
   return (
     <PrivateRoute roles={['Agent.Manager', 'Oper.Sales', 'Agent.Sales']}>
       <div className="w-full relative flex flex-col items-start md:flex-row gap-2 justify-between">
-        <BoxFilter onFilter={handleFilter} onClear={handleClear} />
+        <BoxFilter onFilter={handleFilter} onClear={handleReload} />
         <div className="flex-1">
           <div className="flex gap-1">
             <Button variant={'outline'} size={'mini'} onClick={handleReload}>
@@ -184,6 +188,14 @@ const Page = () => {
                 ))}
               </>
             )}
+          </div>
+          <div className="my-2">
+            <Pagination
+              query={{ search, pageIndex }}
+              length={Math.ceil(total / limit)}
+              pageIndex={pageIndex}
+              pathName={`${pathname}`}
+            />
           </div>
         </div>
       </div>

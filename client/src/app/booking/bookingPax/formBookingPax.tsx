@@ -26,6 +26,7 @@ import { cn } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CalendarIcon } from '@radix-ui/react-icons'
 import { format } from 'date-fns'
+import React from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
@@ -61,6 +62,8 @@ export default function BookingPaxFormCmp({
         <div className="grid grid-cols-2 gap-4">
           {Object.keys(dataForm).map((x) => {
             const key = x as keyof BookingPaxForm
+            if (key === 'room')
+              return <React.Fragment key={key}></React.Fragment>
 
             return (
               <FormField
@@ -246,7 +249,7 @@ const formSchema = z.object({
     .string({ required_error: 'không dược bỏ trống phần này' })
     .min(1, { message: 'không được bỏ trống phần này' }),
   note: z.string().optional(),
-  room: z.string().optional(),
+  room: z.string().nullable().optional(),
 })
 
 const formBookingPaxRoomSchema = z.object({

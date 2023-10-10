@@ -8,7 +8,7 @@ interface Props {
   onChangePage?: (_pageIndex: number) => void
   length: number
   pathName: string
-  query: { [key: string]: string }
+  query: { [key: string]: string | number }
 }
 
 export default function Pagination({
