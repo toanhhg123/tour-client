@@ -13,7 +13,6 @@ pipeline {
         stage('Create .env File to auth-service') {
             steps {
                 script {
-                    sh "ls -a"
                     sh "java -version"
 
                     def envContent = """\
@@ -29,8 +28,6 @@ pipeline {
          stage('Create .env File to tour-service') {
             steps {
                 script {
-                    sh "ls -a"
-
                     def envContent = """\
                         PORT="8082"
                         URL_DB="mongodb://root:30122002@103.98.160.26:27020"
@@ -46,8 +43,6 @@ pipeline {
          stage('Create .env File to agent-service') {
             steps {
                 script {
-                    sh "ls -a"
-
                     def envContent = """\
                     PORT="8083"
                     URL_DB="mongodb://root:30122002@103.98.160.26:27020"
