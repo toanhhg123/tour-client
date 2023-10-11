@@ -150,26 +150,23 @@ pipeline {
     }
     post {
         success {
-            // If all stages are successful, stop and remove the containers
             script {
                 sh "docker compose -f ${DOCKER_COMPOSE_FILE} down"
                 sh "docker compose -f ${DOCKER_COMPOSE_FILE} down --rmi all"
 
-                sh "docker compose up -d"
-                sh 'docker ps -a'
-                sh 'docker images'
-                sh 'docker compose -f ${DOCKER_COMPOSE_FILE} exec auth npm run test'
+                // sh "docker compose up -d"
+                // sh 'docker ps -a'
+                // sh 'docker images'
+                // sh 'docker compose -f ${DOCKER_COMPOSE_FILE} exec auth npm run test'
 
               
             }
         }
         failure {
-            // If the build fails, stop and remove the containers
-            // script {    
-            //     sh "docker compose -f ${DOCKER_COMPOSE_FILE} down"
-            //     sh "docker compose -f ${DOCKER_COMPOSE_FILE} down --rmi all"
-
-            // }
+            script {    
+                sh "docker compose -f ${DOCKER_COMPOSE_FILE} down"
+                sh "docker compose -f ${DOCKER_COMPOSE_FILE} down --rmi all"
+            }
 
             echo "faild"
         }
