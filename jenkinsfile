@@ -10,6 +10,12 @@ pipeline {
     }
 
     stages {
+        stage('test ssh') {
+            sshagent(['ssh-server-tour']) {
+                sh 'ssh -o StrictHostKeyChecking=no -l trinh 103.98.160.26 uname -a'
+
+            }
+        }
         stage('Create .env File to auth-service') {
             steps {
                 script {
