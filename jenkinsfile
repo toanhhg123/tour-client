@@ -13,7 +13,7 @@ pipeline {
         stage('test ssh') {
            steps{
                  sshagent (credentials: ['ssh-server-tour']) {
-                    sh 'ssh -o StrictHostKeyChecking=no -l trinh 103.98.160.26 uname -a'
+                    sh 'ssh -o StrictHostKeyChecking=no -l trinh 103.98.160.26 touch abc.html'
                 }
            }
         }
