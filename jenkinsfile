@@ -160,7 +160,7 @@ pipeline {
                         def remoteDirectory = '/home/trinh/deploy'  // Replace with the actual path
                         
                         // SSH into the remote server and change directory
-                        sh "ssh -o StrictHostKeyChecking=no ${remoteUser}@${remoteHost} 'cd ${remoteDirectory} && ./deploy.sh'"
+                        sh "ssh -o StrictHostKeyChecking=no ${remoteUser}@${remoteHost} 'cd ${remoteDirectory} && touch a.html && ./deploy.sh'"
                     }
                 }
             }
