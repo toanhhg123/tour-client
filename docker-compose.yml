@@ -58,6 +58,7 @@ services:
         command: npm start
         networks:
             - toursaas
+            
     # prometheus:
     #     image: prom/prometheus
     #     container_name: prometheus
@@ -79,16 +80,26 @@ services:
     #     networks:
     #         - toursaas
        
-    nginx:
-        image: toanhhg123/tour-gateway:latest
-        build: ./api-gateway
-        container_name: api-gateway
-        ports:
-            - "90:80"
-        networks:
-            - toursaas
-        links:
-          - "auth"
+    # nginx:
+    #     image: toanhhg123/tour-gateway:latest
+    #     build: ./api-gateway
+    #     container_name: api-gateway
+    #     ports:
+    #         - "90:80"
+    #     networks:
+    #         - toursaas
+    #     links:
+    #       - "auth"
+
+    # mongodb:
+    #     image: mongo
+    #     environment:
+    #       MONGO_INITDB_ROOT_USERNAME: root
+    #       MONGO_INITDB_ROOT_PASSWORD: 30122002
+    #     ports:
+    #       - "27020:27017"
+    #     networks:
+    #       - toursaas
 
     # rabbitmq:
     #     image: rabbitmq:3-management-alpine
