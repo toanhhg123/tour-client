@@ -7,8 +7,7 @@ pipeline {
     }
     tools {
         nodejs "nodejs-16.20"
-        JDK "JDK"
-
+        java "JDK"
     }
 
     stages {
