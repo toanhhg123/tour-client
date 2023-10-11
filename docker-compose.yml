@@ -58,16 +58,37 @@ services:
         command: npm start
         networks:
             - toursaas
-    nginx:
-        image: toanhhg123/tour-gateway:latest
-        build: ./api-gateway
-        container_name: api-gateway
-        ports:
-            - "90:80"
-        networks:
-            - toursaas
-        links:
-          - "auth"
+    # prometheus:
+    #     image: prom/prometheus
+    #     container_name: prometheus
+    #     volumes:
+    #         - ./prometheus-config:/etc/prometheus
+    #     command:
+    #         - '--config.file=/etc/prometheus/prometheus.yml'
+    #     ports:
+    #         - "1001:9090"
+    #     networks:
+    #         - toursaas
+    #     depends_on:
+    #         - agent-service
+    # grafana:
+    #     image: grafana/grafana
+    #     container_name: grafana
+    #     ports:
+    #         - "1002:3000"
+    #     networks:
+    #         - toursaas
+       
+    # nginx:
+    #     # image: toanhhg123/tour-gateway:latest
+    #     build: ./api-gateway
+    #     container_name: api-gateway
+    #     ports:
+    #         - "90:80"
+    #     networks:
+    #         - toursaas
+    #     links:
+    #       - "auth"
 
     # rabbitmq:
     #     image: rabbitmq:3-management-alpine
