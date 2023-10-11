@@ -3,7 +3,7 @@ version: '3'
 services:
     auth:
         build: ./auth-service
-        image: toanhhg123/tour-auth-service:latest
+        # image: toanhhg123/tour-auth-service:latest
         container_name: auth-service
         environment:
             - loglevel=none
@@ -15,7 +15,7 @@ services:
         networks:
             - toursaas
     tour-service:
-        image: toanhhg123/tour-service:latest
+        # image: toanhhg123/tour-service:latest
         build: ./tour-service
         container_name: tour-service
         environment:
@@ -31,7 +31,7 @@ services:
             - toursaas
         
     agent-service:
-        image: toanhhg123/agent-service:latest
+        # image: toanhhg123/agent-service:latest
         build: ./agent-service
         container_name: agent-service
         environment:
@@ -46,7 +46,7 @@ services:
         networks:
             - toursaas
     client:
-        image: toanhhg123/tour-client:latest
+        # image: toanhhg123/tour-client:latest
         build: ./client
         container_name: client
         environment:
@@ -79,16 +79,16 @@ services:
     #     networks:
     #         - toursaas
        
-    # nginx:
-    #     # image: toanhhg123/tour-gateway:latest
-    #     build: ./api-gateway
-    #     container_name: api-gateway
-    #     ports:
-    #         - "90:80"
-    #     networks:
-    #         - toursaas
-    #     links:
-    #       - "auth"
+    nginx:
+        # image: toanhhg123/tour-gateway:latest
+        build: ./api-gateway
+        container_name: api-gateway
+        ports:
+            - "90:80"
+        networks:
+            - toursaas
+        links:
+          - "auth"
 
     # rabbitmq:
     #     image: rabbitmq:3-management-alpine
