@@ -2,14 +2,14 @@ global:
   scrape_interval: 15s
 
 scrape_configs:
-#   - job_name: 'auth'
-#     static_configs:
-#       - targets: ['auth:8081']
+  - job_name: 'auth'
+    static_configs:
+      - targets: ['103.98.160.26:8081']
 
-#   - job_name: 'tour-service'
-#     static_configs:
-#       - targets: ['tour-service:8082']
+  - job_name: 'tour-service'
+    static_configs:
+      - targets: ['103.98.160.26:8082']
 
   - job_name: 'agent-service'
     static_configs:
-      - targets: ['agent-service:8083']
+      - targets: ['103.98.160.26:8083']
