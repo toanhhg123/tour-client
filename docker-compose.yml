@@ -61,27 +61,27 @@ services:
         networks:
             - toursaas
 
-    # prometheus:
-    #     image: prom/prometheus
-    #     container_name: prometheus
-    #     volumes:
-    #         - ./prometheus-config:/etc/prometheus
-    #     command:
-    #         - '--config.file=/etc/prometheus/prometheus.yml'
-    #     ports:
-    #         - "1001:9090"
-    #     networks:
-    #         - toursaas
-    #     depends_on:
-    #         - agent-service
+    prometheus:
+        image: prom/prometheus
+        container_name: prometheus
+        volumes:
+            - ./prometheus-config:/etc/prometheus
+        command:
+            - '--config.file=/etc/prometheus/prometheus.yml'
+        ports:
+            - "1001:9090"
+        networks:
+            - toursaas
+        depends_on:
+            - agent-service
     
-    # grafana:
-    #     image: grafana/grafana
-    #     container_name: grafana
-    #     ports:
-    #         - "1002:3000"
-    #     networks:
-    #         - toursaas
+    grafana:
+        image: grafana/grafana
+        container_name: grafana
+        ports:
+            - "1002:3000"
+        networks:
+            - toursaas
        
     nginx:
         image: toanhhg123/tour-gateway:latest
