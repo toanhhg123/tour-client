@@ -9,3 +9,5 @@ LICENSE
 .docker
 .gitlab
 .git
+yarn.lock**
+yarn.log.json
