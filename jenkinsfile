@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent  { 
+        label 'linux'
+    }
     environment {
         DOCKER_COMPOSE_FILE = 'docker-compose.yml'
         SONAR_SCANNER_HOME = tool 'sonar-scaner-v1.0'
