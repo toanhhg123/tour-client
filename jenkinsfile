@@ -170,6 +170,7 @@ pipeline {
             script {
                 sh "docker compose -f ${DOCKER_COMPOSE_FILE} down"
                 sh "docker compose -f ${DOCKER_COMPOSE_FILE} down --rmi all"
+                sh "docker compose down --rmi all --volumes"
 
                 // sh "docker compose up -d"
                 // sh 'docker ps -a'
@@ -183,6 +184,7 @@ pipeline {
             script {    
                 sh "docker compose -f ${DOCKER_COMPOSE_FILE} down"
                 sh "docker compose -f ${DOCKER_COMPOSE_FILE} down --rmi all"
+                sh "docker compose down --rmi all --volumes"
             }
 
             echo "faild"
