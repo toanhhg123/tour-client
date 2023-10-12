@@ -1,5 +1,5 @@
 pipeline {
-    agent none
+    agent any
     environment {
         DOCKER_COMPOSE_FILE = 'docker-compose.yml'
         SONAR_SCANNER_HOME = tool 'sonar-scaner-v1.0'
@@ -105,18 +105,18 @@ pipeline {
         //     }
         // }
 
-        stage('push to docker-hub') {
-            steps {
+        // stage('push to docker-hub') {
+        //     steps {
               
-               withDockerRegistry(credentialsId: 'docker-hub', url: 'https://index.docker.io/v1/'){
-                    // sh 'docker compose build'
-                    sh 'docker compose push'
-               }
+        //        withDockerRegistry(credentialsId: 'docker-hub', url: 'https://index.docker.io/v1/'){
+        //             // sh 'docker compose build'
+        //             sh 'docker compose push'
+        //        }
 
-            }
+        //     }
 
             
-        }
+        // }
 
         stage('deploy') {
             steps {
