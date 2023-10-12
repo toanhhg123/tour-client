@@ -10,6 +10,10 @@ pipeline {
     }
 
     stages {
+        stage("clear"){
+            CleanWs()
+        }
+
         stage('Create .env File to auth-service') {
             steps {
                 script {
@@ -143,7 +147,7 @@ pipeline {
                 // sh 'docker ps -a'
                 // sh 'docker images'
                 // sh 'docker compose -f ${DOCKER_COMPOSE_FILE} exec auth npm run test'
-
+    
               
             }
         }
@@ -155,6 +159,10 @@ pipeline {
             }
 
             echo "faild"
+        }
+
+        always {
+            CleanWs()
         }
     }
 }
