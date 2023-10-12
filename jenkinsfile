@@ -10,12 +10,6 @@ pipeline {
     }
 
     stages {
-        stage("clear"){
-            steps{
-                cleanWs()
-            }
-        }
-
         stage('Create .env File to auth-service') {
             steps {
                 script {
