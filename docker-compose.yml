@@ -47,19 +47,19 @@ services:
         networks:
             - toursaas
 
-    # client:
-    #     image: toanhhg123/tour-client:latest
-    #     build: ./client
-    #     container_name: client
-    #     environment:
-    #         - loglevel=none
-    #         - NODE_ENV=production
-    #     working_dir: "/app"
-    #     ports:
-    #         - "3000:3000"
-    #     command: npm start
-    #     networks:
-    #         - toursaas
+    client:
+        image: toanhhg123/tour-client:latest
+        build: ./client
+        container_name: client
+        environment:
+            - loglevel=none
+            - NODE_ENV=production
+        working_dir: "/app"
+        ports:
+            - "3000:3000"
+        command: npm start
+        networks:
+            - toursaas
 
     # prometheus:
     #     image: prom/prometheus
