@@ -63,7 +63,6 @@ const BoxFilter = ({ roles, agents, onFilter, onClear }: Props) => {
         <Search className="w-[1rem]" />
         <Input
           type="text"
-          value={filter.search}
           onChange={(e) => {
             setFilter({ ...filter, search: e.target.value })
           }}
@@ -75,7 +74,6 @@ const BoxFilter = ({ roles, agents, onFilter, onClear }: Props) => {
       <div className="my-2">
         <Badge>Roles</Badge>
         <Select
-          value={filter.roleId}
           onValueChange={(value) => {
             setFilter({ ...filter, roleId: value })
           }}
@@ -103,7 +101,6 @@ const BoxFilter = ({ roles, agents, onFilter, onClear }: Props) => {
       <div className="mt-2">
         <Badge variant={'success'}>Agents</Badge>
         <Select
-          value={filter.agentId}
           onValueChange={(value) => {
             setFilter({ ...filter, agentId: value })
           }}
@@ -133,7 +130,6 @@ const BoxFilter = ({ roles, agents, onFilter, onClear }: Props) => {
           sex
         </Badge>
         <Select
-          value={filter.sex}
           onValueChange={(value) => {
             setFilter({ ...filter, sex: value })
           }}

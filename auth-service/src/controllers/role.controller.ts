@@ -10,6 +10,19 @@ class RoleController {
   })
 
   seed = asyncHandler(async (req, res) => {
+    await roleService.createMany([
+      { name: 'Manager', desc: '' },
+      { name: 'TourMan', desc: '' },
+      { name: 'Oper.Sales', desc: '' },
+      { name: 'Oper.Visa', desc: '' },
+      { name: 'Oper.Acct', desc: '' },
+      { name: 'Oper.Guide', desc: '' },
+      { name: 'Agent.Manager', desc: '' },
+      { name: 'Agent.Sales', desc: '' },
+      { name: 'Client', desc: '' },
+      { name: 'Sys.Admin', desc: '' },
+      { name: 'Oper.Admin', desc: '' }
+    ])
     return res.json({
       message: 'success',
       element: 'seeded',

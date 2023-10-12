@@ -38,7 +38,7 @@ router.get('/agent/:id', authorize(['Oper.Sales']), getByAgentId)
 
 router.get('/', authorize(), gets)
 
-router.post('/operAdmin', authorize(['Sys.Admin']), createUserOperAdmin)
+router.post('/operAdmin', createUserOperAdmin)
 
 router.post('/tourMan', authorize(['Oper.Admin']), createTourMan)
 

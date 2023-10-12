@@ -1,4 +1,5 @@
 'use client'
+import { Empty } from '@/components/empty'
 import { Button, buttonVariants } from '@/components/ui/button'
 import PrivateRoute from '@/context/PrivateRouteContext'
 import { getAgentsThunk } from '@/features/user/actions'
@@ -82,6 +83,7 @@ const Page = () => {
               </>
             ) : (
               <>
+                {!agentOfOperSales.length && <Empty />}
                 {agentOfOperSales.map((agent) => (
                   <CardAgent
                     agent={agent}

@@ -44,6 +44,7 @@ import { useEffect, useState } from 'react'
 import FormTour from './form'
 import { usePathname, useSearchParams } from 'next/navigation'
 import Pagination from '@/components/pagination'
+import { Empty } from '@/components/empty'
 
 const PageClient = () => {
   const { tours } = useAppSelector((state) => state.tour)
@@ -69,7 +70,10 @@ const PageClient = () => {
 
   const handleDelete = () => {
     const id = sheet?.curTour?._id
-    if (id) dispatchAsyncThunk(deleteTourThunks(id), 'delete tour success')
+    if (id)
+      dispatchAsyncThunk(deleteTourThunks(id), 'delete tour success', () =>
+        setSheet({}),
+      )
     setSheet({})
   }
 
@@ -87,7 +91,8 @@ const PageClient = () => {
           tourGuide: tourGuide,
         } as TourCreate),
         'Tạo mới thành công',
-      )
+      ),
+        () => setSheet({})
 
     if (sheet?.type === 'edit' && tourGuide && userDetails && sheet.curTour)
       dispatchAsyncThunk(
@@ -100,6 +105,7 @@ const PageClient = () => {
           },
         }),
         'cập nhật thành công',
+        () => setSheet({}),
       )
   }
 
@@ -168,6 +174,8 @@ const PageClient = () => {
           </Sheet>
         </div>
       </div>
+
+      {!tours.list.length && <Empty />}
 
       {tours.list.map((tour) => {
         return (

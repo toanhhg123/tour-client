@@ -107,6 +107,7 @@ const Page = ({ params }: Props) => {
             </div>
           ) : (
             <div className="my-2 flex flex-col gap-2">
+              {!bookings.length && <Empty />}
               {bookings.map((booking) => {
                 return (
                   <CardBooking
