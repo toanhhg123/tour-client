@@ -44,6 +44,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.4.5",
     "morgan": "^1.10.0",
+    "prom-client": "^15.0.0",
     "winston": "^3.10.0"
   }
 }

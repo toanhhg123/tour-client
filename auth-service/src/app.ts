@@ -4,6 +4,7 @@ import helmet from 'helmet'
 import { handleError, notFound } from './middlewares'
 import morganMiddleware from './middlewares/morganMiddleware'
 import useRouter from './routes'
+import prometheus from './middlewares/prothemeus.middleware'
 import './grpc/index'
 
 function CreateServer() {
@@ -23,7 +24,7 @@ function CreateServer() {
   )
 
   app.use(morganMiddleware)
-
+  app.use(prometheus)
   useRouter(app)
 
   app.use(notFound)

@@ -5,6 +5,7 @@ import connectDb from './config/connect'
 import { handleError, notFound } from './middlewares'
 import morganMiddleware from './middlewares/morganMiddleware'
 import useRouter from './routes'
+import prometheus from './middlewares/prothemeus.middleware'
 
 async function BootStrap() {
   const app = express()
@@ -23,6 +24,7 @@ async function BootStrap() {
   )
 
   app.use(morganMiddleware)
+  app.use(prometheus)
 
   await connectDb(process.env.URL_DB, {
     dbName: process.env.DB_NAME
