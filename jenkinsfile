@@ -55,45 +55,10 @@ pipeline {
             }
         }
 
-
-        stage('run unitest auth-service') {
-            steps {
-               echo("success")
-            }
-        }
-
-        stage('run unitest agent-service') {
-            steps {
-               echo("success")
-            }
-        }
-
-        stage('run unitest tour-service') {
-            steps {
-               echo("success")
-            }
-        }
-
-        stage('run unitest booking-service') {
-            steps {
-               echo("success")
-            }
-        }
-
-
         stage('Build and Test') {
             steps {
                 script {
-                    // Build and start the services using Docker Compose
                     sh "docker compose build"
-                    
-                    // sh 'sleep 10'
-                    
-
-                    // sh 'docker compose ${DOCKER_COMPOSE_FILE} exec  auth-service'
-                    // sh 'docker compose ${DOCKER_COMPOSE_FILE} exec  tour-service'
-                    // sh 'docker compose ${DOCKER_COMPOSE_FILE} exec  agent-service'
-                    // sh 'docker compose -f ${DOCKER_COMPOSE_FILE} exec auth npm run test'
                 }
             }
 
@@ -101,6 +66,9 @@ pipeline {
         stage('SonarQube auth service Analysis') {
                 steps {
                     withSonarQubeEnv('sonar_server_10.2.1') {
+
+                        sh "node -v"
+
                         sh "${SONAR_SCANNER_HOME}/bin/sonar-scanner \
                             -Dsonar.projectKey=auth-server-toursaas \
                             -Dsonar.sources=./auth-service \
