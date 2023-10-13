@@ -49,7 +49,8 @@ services:
 
     client:
         image: toanhhg123/tour-client:latest
-        build: ./client
+        build: 
+            context: ./client
         container_name: client
         environment:
             - loglevel=none
