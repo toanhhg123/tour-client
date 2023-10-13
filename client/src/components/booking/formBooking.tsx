@@ -22,7 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { BookingForm, typeStatusBookingForm } from '@/features/booking/type'
+import { BookingForm, statusBookings } from '@/features/booking/type'
 import { cn } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CalendarIcon } from '@radix-ui/react-icons'
@@ -35,14 +35,12 @@ import * as z from 'zod'
 interface Props {
   initData: BookingForm
   onSave: (_booking: BookingForm) => void
-  statusBookings: typeStatusBookingForm[]
   statusVisa?: string[]
 }
 
 export default function FormBooking({
   initData: dataForm,
   onSave,
-  statusBookings,
   statusVisa,
 }: Props) {
   const form = useForm<z.infer<typeof formSchema>>({

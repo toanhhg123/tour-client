@@ -147,7 +147,6 @@ const Page = () => {
                       <FormBooking
                         onSave={handleSave}
                         initData={initBookingForm}
-                        statusBookings={[]}
                       />
                     </>
                   )}

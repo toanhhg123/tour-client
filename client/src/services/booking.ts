@@ -18,7 +18,7 @@ export const getBookingByListTours = (id: string[]) =>
 export const getBookingByAgentId = (id: string) =>
   apiAgent.get<IResponse<IBooking[]>>(`/booking/agent/${id}`)
 
-export const getMyBookingSales = () =>
+export const getMyBookings = () =>
   apiAgent.get<IResponse<IBooking[]>>(`/booking/sales`)
 
 export const getBookingInAgent = () =>

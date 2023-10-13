@@ -7,7 +7,7 @@ import {
   getBookingByTourId,
   getBookingInAgent,
   getBookingPaxByBookingId,
-  getMyBookingSales,
+  getMyBookings,
   updateBooking,
   updateBookingRoom,
 } from '@/services/booking'
@@ -62,10 +62,10 @@ export const getBookingInAgentThunk = createAsyncThunk(
   },
 )
 
-export const getBookingBySalesThunk = createAsyncThunk(
-  'booking/getBookingBySalesThunk',
+export const getMyBookingsThunk = createAsyncThunk(
+  'booking/getMyBookingsThunk',
   async (params: undefined, thunApi) => {
-    const { data } = await getMyBookingSales()
+    const { data } = await getMyBookings()
     thunApi.dispatch(getBookingsSuccess(data.element))
   },
 )
@@ -74,7 +74,7 @@ export const deleteBookingByIdThunk = createAsyncThunk(
   'booking/deleteBookingByIdThunk',
   async (params: string, thunApi) => {
     await deleteBookingById(params)
-    thunApi.dispatch(getBookingBySalesThunk())
+    thunApi.dispatch(getMyBookingsThunk())
   },
 )
 
@@ -125,7 +125,7 @@ export const updateBookingThunk = createAsyncThunk(
   'booking/updateBookingThunk',
   async (params: { id: string; booking: BookingCreate }, thunkApi) => {
     await updateBooking(params.id, params.booking)
-    thunkApi.dispatch(getBookingBySalesThunk())
+    thunkApi.dispatch(getMyBookingsThunk())
   },
 )
 

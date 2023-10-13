@@ -9,14 +9,13 @@ import PrivateRoute from '@/context/PrivateRouteContext'
 import {
   deleteBookingByIdThunk,
   getBookingByListTourThunk,
-  getBookingBySalesThunk,
+  getMyBookingsThunk,
   updateBookingThunk,
 } from '@/features/booking/actions'
 import {
   BookingForm,
   IBooking,
   mapBookingToBookingForm,
-  statusBookings,
 } from '@/features/booking/type'
 import { ITour } from '@/features/tour/type'
 import useDispatchAsync from '@/hooks/useDispatchAsync'
@@ -87,7 +86,7 @@ const Page = () => {
       )
 
       setSheet({})
-      dispatchAsyncThunk(getBookingBySalesThunk())
+      dispatchAsyncThunk(getMyBookingsThunk())
     }
   }
 
@@ -97,7 +96,7 @@ const Page = () => {
     if (curBooking) {
       dispatchAsyncThunk(deleteBookingByIdThunk(curBooking._id), 'success')
       setSheet({})
-      dispatchAsyncThunk(getBookingBySalesThunk())
+      dispatchAsyncThunk(getMyBookingsThunk())
     }
   }
 
@@ -123,7 +122,7 @@ const Page = () => {
   }
 
   useEffect(() => {
-    dispatchAsyncThunk(getBookingBySalesThunk())
+    dispatchAsyncThunk(getMyBookingsThunk())
   }, [dispatchAsyncThunk])
 
   return (
@@ -154,11 +153,7 @@ const Page = () => {
               style={{ maxWidth: 800 }}
             >
               {sheet?.bookingForm && sheet.curTour && (
-                <FormBooking
-                  initData={sheet.bookingForm}
-                  onSave={handleSave}
-                  statusBookings={statusBookings}
-                />
+                <FormBooking initData={sheet.bookingForm} onSave={handleSave} />
               )}
             </SheetContent>
           </Sheet>
@@ -167,7 +162,7 @@ const Page = () => {
               variant={'outline'}
               size={'sm'}
               onClick={() =>
-                dispatchAsyncThunk(getBookingBySalesThunk(), 'success')
+                dispatchAsyncThunk(getMyBookingsThunk(), 'success')
               }
             >
               <ReloadIcon className="me-2" />

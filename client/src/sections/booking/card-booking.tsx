@@ -1,7 +1,15 @@
 'use client'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
+import { Badge } from '@/components/ui/badge'
 import { IBooking } from '@/features/booking/type'
 import { useAppSelector } from '@/store/hooks'
-import { Mail, Phone, User } from 'lucide-react'
+import { convertToVnd } from '@/utils'
+import { DollarSign, Mail, Phone, User } from 'lucide-react'
 import { ReactNode } from 'react'
 
 type Props = {
@@ -11,7 +19,7 @@ type Props = {
 
 const CardBooking = ({ booking, renderAction }: Props) => {
   const { agents, usersInOperator } = useAppSelector((state) => state.user)
-
+  const { price, foreignFee, visaFee, vat, otherFee, singleFee } = booking
   const agent = agents.find((agent) => agent._id === booking.agent?._id)
 
   const sale = usersInOperator.find((user) => user._id === booking.sale._id)
@@ -67,7 +75,7 @@ const CardBooking = ({ booking, renderAction }: Props) => {
 
       <div className="h-[1px] bg-gray-200"></div>
 
-      <div className="flex justify-between items-end py-2">
+      <div className="flex justify-between items-start py-2">
         <div className="flex gap-1 items-center">
           <div>
             <span className="font-bold">children pax: </span>
@@ -93,6 +101,41 @@ const CardBooking = ({ booking, renderAction }: Props) => {
 
         {renderAction && renderAction(booking)}
       </div>
+      <Accordion
+        type="single"
+        // defaultValue="item-1"
+        collapsible
+        className="w-full"
+      >
+        <AccordionItem value="item-1" className=" border-none">
+          <AccordionTrigger className="p-0 font-semibold text-blue-400">
+            show all
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="flex flex-wrap  items-center">
+              {[
+                { label: 'price', value: price },
+                { label: 'visa fee', value: visaFee },
+                { label: 'foreign fee', value: foreignFee },
+                { label: 'VAT fee', value: vat },
+                { label: 'single fee', value: singleFee },
+                { label: 'other fee', value: otherFee },
+              ].map((x) => (
+                <div
+                  className="p-1 flex gap-1 items-center text-[12px]"
+                  key={x.label}
+                >
+                  <DollarSign className="w-[12px]" />
+                  {x.label} :
+                  <Badge variant={'secondary'} className="rounded bg-red-200">
+                    {convertToVnd(x.value)}
+                  </Badge>
+                </div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   )
 }
