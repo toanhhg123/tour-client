@@ -1,17 +1,25 @@
 'use client'
+import FormBooking from '@/components/booking/formBooking'
 import { Button } from '@/components/ui/button'
+import { toast } from '@/components/ui/use-toast'
 import PrivateRoute from '@/context/PrivateRouteContext'
-import { getMyBookingsThunk } from '@/features/booking/actions'
+import {
+  getMyBookingsThunk,
+  updateBookingThunk,
+} from '@/features/booking/actions'
 import { BookingForm, IBooking } from '@/features/booking/type'
+import { ITour } from '@/features/tour/type'
 import useDispatchAsync from '@/hooks/useDispatchAsync'
+import { analysisBooking } from '@/lib/utils'
 import CardBooking from '@/sections/booking/card-booking'
 import BoxFilter, { Filter } from '@/sections/my-booking/box-filter'
+import { getBookingByTourId } from '@/services/booking'
+import { getTourById } from '@/services/tour'
 import { useAppSelector } from '@/store/hooks'
 import { ReloadIcon } from '@radix-ui/react-icons'
+import _ from 'lodash'
 import { PenBox, Sofa, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import _ from 'lodash'
-import FormBooking from '@/components/booking/formBooking'
 
 const Page = () => {
   const { bookings } = useAppSelector((state) => state.booking)
@@ -19,6 +27,7 @@ const Page = () => {
     type?: 'booking-pax' | 'update'
     curBooking?: IBooking
     curBookingForm?: BookingForm
+    curTour?: ITour
   }>({})
   const { dispatchAsyncThunk } = useDispatchAsync()
 
@@ -29,7 +38,93 @@ const Page = () => {
     dispatchAsyncThunk(getMyBookingsThunk(), 'reload success')
   }
 
-  function handleSaveBooking(_booking: BookingForm) {}
+  const handleSaveBooking = async ({
+    clientName,
+    clientEmail,
+    clientPhone,
+    ...bookingForm
+  }: BookingForm) => {
+    const { type, curBooking, curTour } = sheet
+    if (type === 'update' && curBooking && curTour) {
+      const { _id, tour, childrenPax, adultPax, infanlPax } = curBooking
+
+      const paxNum = childrenPax + adultPax + infanlPax
+      const paxNumForm =
+        bookingForm.childrenPax + bookingForm.adultPax + bookingForm.infanlPax
+
+      const bookingByListTours = await getBookingByTourId(tour._id)
+
+      const { totalBooking } = analysisBooking(
+        bookingByListTours.data.element.filter(
+          (booking) => booking.tour._id === sheet.curTour?._id,
+        ) || [],
+      )
+
+      if (paxNumForm - paxNum + totalBooking > curTour.totalPax) {
+        toast({
+          variant: 'destructive',
+          title: 'Uh oh! thao tác lỗi.',
+          description: `số chỗ không hợp lệ`,
+          duration: 6000,
+        })
+        return
+      }
+
+      dispatchAsyncThunk(
+        updateBookingThunk({
+          id: _id,
+          booking: {
+            tour,
+            client: {
+              name: clientName,
+              email: clientEmail,
+              phone: clientPhone,
+            },
+            ...bookingForm,
+          },
+        }),
+        'success',
+        () => {
+          setSheet({})
+        },
+      )
+    }
+  }
+
+  const handleShowFormUpdate = async (booking: IBooking) => {
+    try {
+      const tour = getTourById(booking.tour._id)
+
+      setSheet({
+        type: 'update',
+        curBooking: booking,
+        curBookingForm: {
+          clientName: booking.client.name,
+          clientEmail: booking.client.email,
+          clientPhone: booking.client.phone,
+          ..._.omit(
+            booking,
+            '_id',
+            'operatorId',
+            'tour',
+            'agent',
+            'client',
+            'sale',
+            'createdAt',
+            'updatedAt',
+          ),
+        },
+        curTour: (await tour).data.element,
+      })
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! thao tác lỗi.',
+        description: error.message,
+        duration: 6000,
+      })
+    }
+  }
 
   useEffect(() => {
     dispatchAsyncThunk(getMyBookingsThunk())
@@ -91,28 +186,9 @@ const Page = () => {
                         <Button
                           size={'mini'}
                           variant={'success'}
-                          onClick={() =>
-                            setSheet({
-                              type: 'update',
-                              curBooking: booking,
-                              curBookingForm: {
-                                clientName: booking.client.name,
-                                clientEmail: booking.client.email,
-                                clientPhone: booking.client.phone,
-                                ..._.omit(
-                                  booking,
-                                  '_id',
-                                  'operatorId',
-                                  'tour',
-                                  'agent',
-                                  'client',
-                                  'sale',
-                                  'createdAt',
-                                  'updatedAt',
-                                ),
-                              },
-                            })
-                          }
+                          onClick={() => {
+                            handleShowFormUpdate(booking)
+                          }}
                         >
                           <PenBox className="w-[14px] mr-1" />
                           update
