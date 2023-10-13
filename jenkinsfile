@@ -109,7 +109,6 @@ pipeline {
             steps {
                withDockerRegistry(credentialsId: 'docker-hub', url: 'https://index.docker.io/v1/')
                {
-                    // sh 'docker compose build'
                     sh 'docker compose push'
                 }
 
@@ -126,7 +125,6 @@ pipeline {
                         def remoteUser = 'trinh'
                         def remoteDirectory = '/home/trinh/deploy'  // Replace with the actual path
                         
-                        // SSH into the remote server and change directory
                         sh "ssh -o StrictHostKeyChecking=no ${remoteUser}@${remoteHost} 'cd ${remoteDirectory} && touch a.html && ./deploy.sh'"
                     }
                 }
@@ -139,12 +137,7 @@ pipeline {
                 sh "docker compose -f ${DOCKER_COMPOSE_FILE} down"
                 sh "docker compose -f ${DOCKER_COMPOSE_FILE} down --rmi all"
                 sh "docker compose down --rmi all --volumes"
-                // sh "docker compose up -d"
-                // sh 'docker ps -a'
-                // sh 'docker images'
-                // sh 'docker compose -f ${DOCKER_COMPOSE_FILE} exec auth npm run test'
-    
-              
+                cleanWs()
             }
         }
         failure {
@@ -152,13 +145,11 @@ pipeline {
                 sh "docker compose -f ${DOCKER_COMPOSE_FILE} down"
                 sh "docker compose -f ${DOCKER_COMPOSE_FILE} down --rmi all"
                 sh "docker compose down --rmi all --volumes"
+                cleanWs()
+
             }
 
             echo "faild"
-        }
-
-        always {
-            cleanWs()
         }
     }
 }
