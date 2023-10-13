@@ -123,9 +123,9 @@ pipeline {
                     script {
                         def remoteHost = '103.98.160.26'
                         def remoteUser = 'trinh'
-                        def remoteDirectory = '/home/trinh/deploy'  // Replace with the actual path
+                        def remoteDirectory = '/home/trinh/deploy'
                         
-                        sh "ssh -o StrictHostKeyChecking=no ${remoteUser}@${remoteHost} 'cd ${remoteDirectory} && touch a.html && ./deploy.sh'"
+                        sh "ssh -o StrictHostKeyChecking=no ${remoteUser}@${remoteHost} 'cd ${remoteDirectory}  && ./deploy.sh'"
                     }
                 }
             }

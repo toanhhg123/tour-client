@@ -2,8 +2,8 @@ version: '3'
 
 services:
     auth:
-        build: ./auth-service
         image: toanhhg123/tour-auth-service:latest
+        build: ./auth-service
         container_name: auth-service
         environment:
             - loglevel=none
@@ -83,16 +83,16 @@ services:
     #     networks:
     #         - toursaas
        
-    nginx:
-        image: toanhhg123/tour-gateway:latest
-        build: ./api-gateway
-        container_name: api-gateway
-        ports:
-            - "90:80"
-        networks:
-            - toursaas
-        links:
-          - "auth"
+    # nginx:
+    #     image: toanhhg123/tour-gateway:latest
+    #     build: ./api-gateway
+    #     container_name: api-gateway
+    #     ports:
+    #         - "90:80"
+    #     networks:
+    #         - toursaas
+    #     links:
+    #       - "auth"
 
     # mongodb:
     #     image: mongo
