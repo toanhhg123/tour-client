@@ -59,8 +59,8 @@ pipeline {
             steps {
                 script {
                     sh "docker compose build"
-                    sh 'sleep 10'
-                    sh 'docker compose -f ${DOCKER_COMPOSE_FILE} exec auth npm run test'
+                    // sh 'sleep 10'
+                    // sh 'docker compose -f ${DOCKER_COMPOSE_FILE} exec auth npm run test'
                 }
             }
         }

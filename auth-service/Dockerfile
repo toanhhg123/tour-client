@@ -8,4 +8,6 @@ COPY . .
 
 RUN yarn 
 
+RUN yarn test
+
 RUN yarn build
