@@ -31,7 +31,7 @@ describe('app-express', () => {
         const { statusCode, body } = await supertest(app)
           .post('/auth/login')
           .send({
-            email: 'operSales@gmail.com',
+            email: 'operSales1.1@gmail.com',
             password
           })
 
