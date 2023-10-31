@@ -26,6 +26,18 @@ class BookingPaxController {
     }
   )
 
+  createPaxMany = asyncHandler(
+    async (req: Request<unknown, unknown, BookingPaxCreate[]>, res) => {
+      const data = await bookingPaxService.createManyBookingPax(req.body)
+
+      return res.json({
+        status: 'success',
+        message: 'success',
+        element: data
+      })
+    }
+  )
+
   update = asyncHandler(
     async (req: Request<{ id: string }, unknown, BookingPaxCreate>, res) => {
       const data = await bookingPaxService.updateById(req.params.id, req.body)

@@ -1,11 +1,15 @@
 import TourServiceModel, { TourServiceCreate } from './tourService.model'
 
-class TourRepository {
+class TourServiceRepository {
   async getTourServiceByTourId(id: string) {
     const tourServices = await TourServiceModel.find({ tour: id }).populate(
       'tour'
     )
     return tourServices
+  }
+
+  findById(id: string) {
+    return TourServiceModel.findById(id)
   }
 
   async create(data: TourServiceCreate) {
@@ -32,4 +36,4 @@ class TourRepository {
   }
 }
 
-export default new TourRepository()
+export default new TourServiceRepository()

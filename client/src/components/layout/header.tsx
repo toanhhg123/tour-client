@@ -86,6 +86,11 @@ const navs: INavItem[] = [
     roles: ['Oper.Admin', 'Manager'],
   },
   {
+    href: '/operadmin-tourmanager',
+    label: 'Tour Manager(oper-admin)',
+    roles: ['Oper.Admin', 'Manager'],
+  },
+  {
     href: '/agentManager',
     label: 'Agent Manager',
     roles: ['Oper.Admin', 'Manager'],

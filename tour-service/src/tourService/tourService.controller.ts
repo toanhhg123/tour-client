@@ -2,9 +2,13 @@ import { Request } from 'express'
 import { asyncHandler } from '~/core'
 import tourServiceService from './tourService.service'
 import { TourServiceCreate } from './tourService.model'
+import tourService from '~/tour/tour.service'
 
 class TourController {
   getByTourId = asyncHandler(async (req: Request<{ id: string }>, res) => {
+    const { operatorId } = req.user
+    await tourService.isInOperator(req.params.id, operatorId)
+
     const record = await tourServiceService.getByTourId(req.params.id)
 
     return res.json({
@@ -16,6 +20,11 @@ class TourController {
 
   create = asyncHandler(
     async (req: Request<unknown, unknown, TourServiceCreate>, res) => {
+      const { operatorId } = req.user
+      const { tour } = req.body
+
+      await tourService.isInOperator(tour!.toString(), operatorId)
+
       const record = await tourServiceService.create(req.body)
 
       return res.json({
@@ -41,6 +50,10 @@ class TourController {
   )
 
   remove = asyncHandler(async (req: Request<{ id: string }>, res) => {
+    const { operatorId } = req.user
+
+    await tourServiceService.checkPermission(operatorId, req.params.id)
+
     const record = await tourServiceService.deleteById(req.params.id)
 
     return res.json({

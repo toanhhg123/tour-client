@@ -203,7 +203,28 @@ export interface TourService {
   }
 }
 
-export type TourServiceCreate = Omit<TourService, '_id'>
+export type TourServiceCreate = Omit<TourService, '_id' | 'tour'> & {
+  tour: string
+}
+
+export const initTourServiceCreate: TourServiceCreate = {
+  name: '',
+  day: new Date(),
+  tour: '',
+  desc: '',
+  address: '',
+  type: '',
+  fee: 0,
+  qty: 0,
+  details: '',
+  supplier: {
+    _id: '',
+    name: '',
+    email: '',
+    phone: '',
+    address: '',
+  },
+}
 
 export interface TourServiceForm {
   name: string
@@ -222,7 +243,7 @@ export const initTourServiceForm: TourServiceForm = {
   day: new Date(),
   desc: '',
   address: '',
-  type: '',
+  type: 'nhà hàng',
   fee: 0,
   qty: 0,
   details: '',

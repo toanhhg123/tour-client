@@ -17,6 +17,7 @@ async function BootStrap() {
       extended: true
     })
   )
+
   app.use(
     cors({
       origin: '*'

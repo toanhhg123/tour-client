@@ -31,7 +31,7 @@ import { CalendarIcon } from '@radix-ui/react-icons'
 import React from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Supplier } from '@/features/user/type'
-import { Wine, HomeIcon } from 'lucide-react'
+import { Wine, HomeIcon, Save } from 'lucide-react'
 
 interface Props {
   initData: TourServiceForm
@@ -51,6 +51,7 @@ export default function FormTourService({
     defaultValues: {
       ...dataForm,
       day: new Date(dataForm.day),
+      supplierId: suppliers.at(0)?._id || '',
     },
   })
 
@@ -59,11 +60,7 @@ export default function FormTourService({
   }
 
   return (
-    <form
-      onSubmit={form.handleSubmit(onSubmit)}
-      className="space-y-8 p-1  overflow-y-auto"
-      style={{ height: '100%' }}
-    >
+    <form onSubmit={form.handleSubmit(onSubmit)}>
       <Form {...form}>
         <div className="grid grid-cols-2 gap-4">
           {Object.keys(dataForm).map((x) => {
@@ -217,7 +214,12 @@ export default function FormTourService({
           })}
         </div>
       </Form>
-      <Button type="submit">Lưu lại</Button>
+      <div className="flex justify-end">
+        <Button size={'lg'} className="mt-2 ml-auto" type="submit">
+          <Save className="w-[12px] mr-1" />
+          Lưu lại
+        </Button>
+      </div>
     </form>
   )
 }

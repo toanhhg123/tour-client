@@ -1,9 +1,10 @@
 import { Request } from 'express'
-import { asyncHandler } from '~/core'
-import bookingService from './booking.service'
-import { BookingCreate } from './booking.model'
-import { ResponseError } from '~/types'
 import mongoose from 'mongoose'
+import clientService from '~/client/client.service'
+import { asyncHandler } from '~/core'
+import { ResponseError } from '~/types'
+import { BookingCreate } from './booking.model'
+import bookingService from './booking.service'
 
 class BookingController {
   getByTourId = asyncHandler(async (req: Request<{ id: string }>, res) => {
@@ -15,6 +16,23 @@ class BookingController {
       element: data
     })
   })
+
+  getBookingByClient = asyncHandler(
+    async (
+      req: Request<unknown, unknown, unknown, { search: string }>,
+      res
+    ) => {
+      const { search } = req.query
+
+      const data = await bookingService.findBookingByClient(search)
+
+      return res.json({
+        status: 'success',
+        message: 'success',
+        element: data
+      })
+    }
+  )
 
   getByListTourId = asyncHandler(
     async (req: Request<unknown, unknown, unknown, { id: string[] }>, res) => {
@@ -31,11 +49,19 @@ class BookingController {
   create = asyncHandler(
     async (req: Request<unknown, unknown, BookingCreate>, res) => {
       const { _id, agentId, operatorId } = req.user
+      const { client } = req.body
 
       if (agentId)
         req.body.agent = {
           _id: new mongoose.Types.ObjectId(agentId)
         }
+
+      const clientBooking = await clientService.findByIdAndOperatorId(
+        client.toString(),
+        operatorId
+      )
+
+      if (!clientBooking) throw new Error('client not found')
 
       const data = await bookingService.create({
         ...req.body,

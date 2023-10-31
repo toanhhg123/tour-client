@@ -22,13 +22,9 @@ const bookingSchema = new Schema(
       required: true
     },
     client: {
-      type: {
-        name: String,
-        email: String,
-        phone: String,
-        address: String
-      },
-      required: true
+      type: Schema.ObjectId,
+      required: true,
+      ref: 'ClientBookings'
     },
     sale: {
       type: {

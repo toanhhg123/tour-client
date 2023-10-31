@@ -40,7 +40,8 @@ const Page = ({ params: { agentId } }: Props) => {
     let bookingsFilter = bookings
     if (search)
       bookingsFilter = bookingsFilter.filter(
-        ({ client }) => client.name.match(search) || client.email.match(search),
+        ({ client }) =>
+          client?.name.match(search) || client?.email.match(search),
       )
 
     if (saleId)

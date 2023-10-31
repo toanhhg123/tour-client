@@ -61,7 +61,7 @@ const BoxFilter = ({ onFilter, onClear }: Props) => {
       className="border h-max p-2 flex  flex-col gap-3 rounded-[3px] flex-shrink-0 min-w-[300px] "
     >
       <h5 className="font-semibold text-sm flex items-center gap-1">
-        User Filter <ShieldQuestionIcon className="w-[12px]" />
+        Tour Filter <ShieldQuestionIcon className="w-[12px]" />
       </h5>
 
       <div className="h-[1px] bg-gray-200"></div>

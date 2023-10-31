@@ -13,7 +13,8 @@ export interface IBooking {
     email: string
     phone: string
   }
-  client: {
+  client?: {
+    _id: string
     name: string
     email: string
     phone: string
@@ -51,11 +52,7 @@ export type BookingCreate = {
     _id: string
     name: string
   }
-  client: {
-    name: string
-    email: string
-    phone: string
-  }
+  client: string
   childrenPax: number
   adultPax: number
   infanlPax: number
@@ -73,9 +70,7 @@ export type BookingCreate = {
 }
 
 export type BookingForm = {
-  clientName: string
-  clientEmail: string
-  clientPhone: string
+  client: string
   childrenPax: number
   adultPax: number
   infanlPax: number
@@ -102,11 +97,9 @@ export const statusBookings: typeStatusBookingForm[] = [
 ]
 
 export const initBookingForm: BookingForm = {
-  clientName: '',
-  clientEmail: '',
-  clientPhone: '',
-  childrenPax: 0,
+  client: '',
   adultPax: 0,
+  childrenPax: 0,
   infanlPax: 0,
   note: '',
 }
@@ -114,15 +107,15 @@ export const initBookingForm: BookingForm = {
 export interface IBookingPax {
   _id: string
   bookingId: IBooking
-  name: string
-  dob: Date
-  sex: 'male' | 'female' | 'other'
-  nation: string
-  passport: string
-  paxportExpre: Date
+  name?: string
+  dob?: Date
+  sex?: 'male' | 'female' | 'other'
+  nation?: string
+  passport?: string
+  paxportExpre?: Date
   type: 'Adult' | 'Child' | 'Infant'
-  phone: string
-  note: string
+  phone?: string
+  note?: string
   room?: string
 }
 
@@ -153,9 +146,7 @@ export const initBookingPaxForm: BookingPaxForm = {
 
 export const mapToBookingCreateWithBookingForm = (
   {
-    clientName,
-    clientEmail,
-    clientPhone,
+    client,
     bookDate,
     expireDate,
     childrenPax,
@@ -174,11 +165,7 @@ export const mapToBookingCreateWithBookingForm = (
   tour: ITour,
 ): BookingCreate => {
   return {
-    client: {
-      name: clientName,
-      email: clientEmail,
-      phone: clientPhone,
-    },
+    client,
     bookDate,
     expireDate,
     vat,
@@ -201,7 +188,7 @@ export const mapToBookingCreateWithBookingForm = (
 }
 
 export const mapBookingToBookingForm = ({
-  client: { name, email, phone },
+  client,
   childrenPax,
   adultPax,
   infanlPax,
@@ -218,9 +205,7 @@ export const mapBookingToBookingForm = ({
   visaStatus,
 }: IBooking): BookingForm => {
   return {
-    clientName: name,
-    clientEmail: email,
-    clientPhone: phone,
+    client: client!._id,
     childrenPax,
     adultPax,
     infanlPax,

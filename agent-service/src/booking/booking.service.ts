@@ -5,8 +5,12 @@ import bookingPaymentRepository from '~/bookingPayment/bookingPayment.repository
 import { ResponseError } from '~/types'
 
 class BookingService {
-  async findByTourId(id: string) {
-    return await bookingRepository.getByTourId(id)
+  findByTourId(id: string) {
+    return bookingRepository.getByTourId(id)
+  }
+
+  async findBookingByClient(search: string) {
+    return await bookingRepository.findBookingPaxByEmailOrNumberPhone(search)
   }
 
   findBookingByListTourId(id: string[]) {
@@ -21,32 +25,32 @@ class BookingService {
       throw ResponseError.forbbidenError()
   }
 
-  async getBookingByAgentId(id: string) {
-    return await bookingRepository.findByAgentId(id)
+  getBookingByAgentId(id: string) {
+    return bookingRepository.findByAgentId(id)
   }
 
-  async create(booking: BookingCreate) {
-    return await bookingRepository.create(booking)
+  create(booking: BookingCreate) {
+    return bookingRepository.create(booking)
   }
 
-  async findById(id: string) {
-    return await bookingRepository.getById(id)
+  findById(id: string) {
+    return bookingRepository.getById(id)
   }
 
-  async getBySaleId(id: string) {
-    return await bookingRepository.getBySaleId(id)
+  getBySaleId(id: string) {
+    return bookingRepository.getBySaleId(id)
   }
 
-  async deleteById(id: string) {
-    return await Promise.all([
+  deleteById(id: string) {
+    return Promise.all([
       bookingPaxRepository.deleteByBookingId(id),
       bookingPaymentRepository.deleteByBookingId(id),
       bookingRepository.deleteById(id)
     ])
   }
 
-  async updateById(id: string, booking: BookingCreate) {
-    return await bookingRepository.updateById(id, booking)
+  updateById(id: string, booking: BookingCreate) {
+    return bookingRepository.updateById(id, booking)
   }
 }
 

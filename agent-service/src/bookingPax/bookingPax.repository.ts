@@ -6,6 +6,10 @@ class bookingPaxRepository {
     return doc
   }
 
+  createMany(bookingPaxs: BookingPaxCreate[]) {
+    return bookingPaxModel.insertMany(bookingPaxs)
+  }
+
   async get(id: string) {
     const booking = await bookingPaxModel.findById(id).populate('bookingId')
     if (!booking) throw new Error('Not found bookingPax')

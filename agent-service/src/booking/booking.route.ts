@@ -11,7 +11,8 @@ const {
   getMyBookings,
   getBookingByAgentId,
   getBookingMyAgent,
-  getByListTourId
+  getByListTourId,
+  getBookingByClient
 } = bookingController
 
 const router = Router()
@@ -41,6 +42,12 @@ router.get(
 )
 
 router.get('/', authorize(['Agent.Manager', 'Agent.Sales']), get)
+
+router.get(
+  '/client',
+  authorize(['Agent.Manager', 'Agent.Sales', 'Oper.Sales']),
+  getBookingByClient
+)
 
 router.get(
   '/agent/:id',

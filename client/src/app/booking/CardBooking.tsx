@@ -54,20 +54,20 @@ export default function CardBooking({
             <span className="text-xs leading-4 font-normal text-gray-500">
               email #
             </span>
-            {client.email}
+            {client?.email}
           </div>
           <div className="text-sm leading-5 font-semibold">
             <span className="text-xs leading-4 font-normal text-gray-500 pr">
               Họ tên #
             </span>
-            {client.name}
+            {client?.name}
           </div>
 
           <div className="text-sm leading-5 font-semibold">
             <span className="text-xs leading-4 font-normal text-gray-500 pr">
               phone #
             </span>
-            {client.phone}
+            {client?.phone}
           </div>
 
           <div className="text-sm leading-5 font-semibold border-t-2 pt-1">

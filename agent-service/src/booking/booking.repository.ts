@@ -6,6 +6,19 @@ class BookingRepository {
     return doc
   }
 
+  findBookingPaxByEmailOrNumberPhone(search: string) {
+    return bookingModel.findOne({
+      $or: [
+        {
+          'client.email': search
+        },
+        {
+          'client.phone': search
+        }
+      ]
+    })
+  }
+
   async getById(id: string) {
     const booking = await bookingModel.findById(id)
     if (!booking) throw new Error('Not found booking')
@@ -13,27 +26,24 @@ class BookingRepository {
     return booking
   }
 
-  async getByTourId(tourId: string) {
-    const booking = await bookingModel.find({ 'tour._id': tourId })
-    return booking
+  getByTourId(tourId: string) {
+    return bookingModel.find({ 'tour._id': tourId })
   }
 
-  async getByListTourId(tourId: string[]) {
-    const bookings = await bookingModel.find({ 'tour._id': { $in: tourId } })
-    return bookings
+  getByListTourId(tourId: string[]) {
+    return bookingModel.find({ 'tour._id': { $in: tourId } })
   }
 
-  async getBySaleId(id: string) {
-    const booking = await bookingModel.find({ 'sale._id': id })
-    return booking
+  getBySaleId(id: string) {
+    return bookingModel.find({ 'sale._id': id })
   }
 
   async findAll() {
     return await bookingModel.find()
   }
 
-  async findByAgentId(id: string) {
-    return await bookingModel.find({ 'agent._id': id })
+  findByAgentId(id: string) {
+    return bookingModel.find({ 'agent._id': id })
   }
 
   async updateById(id: string, bookingParam: BookingCreate) {

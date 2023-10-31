@@ -8,10 +8,10 @@ const router = Router()
 
 router.get('/tour/:id', authorize(), getByTourId)
 
-router.post('/', authorize(['TourMan']), create)
+router.post('/', authorize(['TourMan', 'Oper.Admin']), create)
 
-router.patch('/:id', authorize(['TourMan']), update)
+router.patch('/:id', authorize(['TourMan', 'Oper.Admin']), update)
 
-router.delete('/:id', authorize(['TourMan']), remove)
+router.delete('/:id', authorize(['TourMan', 'Oper.Admin']), remove)
 
 export default router

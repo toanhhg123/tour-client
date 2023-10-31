@@ -16,6 +16,10 @@ class BookingService {
   async create(dataUpdate: BookingPaxCreate) {
     return await bookingPaxRepo.create(dataUpdate)
   }
+
+  createManyBookingPax(bookingPaxCreates: BookingPaxCreate[]) {
+    return bookingPaxRepo.createMany(bookingPaxCreates)
+  }
 }
 
 export default new BookingService()

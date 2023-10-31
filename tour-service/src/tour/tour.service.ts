@@ -14,6 +14,7 @@ class TourService {
     const tour = await TourModel.findById(tourId)
 
     if (!tour) throw new Error('not found tour')
+
     if (tour.operator?._id?.toString() !== operId)
       throw ResponseError.forbbidenError()
   }

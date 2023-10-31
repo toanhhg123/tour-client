@@ -1,5 +1,10 @@
 import API from '@/config/axios'
-import { ITour, TourCreate, TourService } from '@/features/tour/type'
+import {
+  ITour,
+  TourCreate,
+  TourService,
+  TourServiceCreate,
+} from '@/features/tour/type'
 import { IResponse } from '@/types'
 import { IPaginationResponse, ITourQuery } from '@/utils'
 
@@ -22,5 +27,14 @@ export const updateTour = (id: string, tour: TourCreate) =>
 export const getTourServiceByTourId = (id: string) =>
   apiTour.get<IResponse<TourService[]>>(`/tourService/tour/${id}`)
 
+export const createTourService = (tourService: TourServiceCreate) =>
+  apiTour.post<IResponse<TourService>>(`/tourService`, tourService)
+
+export const updateTourService = (id: string, tourService: TourServiceCreate) =>
+  apiTour.patch<IResponse<TourService>>(`/tourService/${id}`, tourService)
+
 export const deleteTour = (id: string) =>
   apiTour.delete<IResponse<ITour>>(`/tour/${id}`)
+
+export const deleteTourService = (id: string) =>
+  apiTour.delete<IResponse<TourService>>(`/tourService/${id}`)
