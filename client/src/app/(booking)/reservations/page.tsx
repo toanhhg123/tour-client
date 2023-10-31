@@ -57,14 +57,7 @@ const Page = () => {
     if (sheet?.type === 'create' && sheet.curTour) {
       const tour = sheet.curTour
 
-      const {
-        childrenPax,
-        adultPax,
-        infanlPax,
-        clientEmail,
-        clientName,
-        clientPhone,
-      } = booking
+      const { childrenPax, adultPax, infanlPax, client } = booking
 
       const paxNum = childrenPax + adultPax + infanlPax
 
@@ -88,11 +81,7 @@ const Page = () => {
           _id: tour._id,
           name: tour.name,
         },
-        client: {
-          name: clientName,
-          email: clientEmail,
-          phone: clientPhone,
-        },
+        client: client,
         childrenPax,
         adultPax,
         infanlPax,

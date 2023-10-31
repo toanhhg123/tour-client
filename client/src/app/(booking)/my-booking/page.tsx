@@ -38,12 +38,7 @@ const Page = () => {
     dispatchAsyncThunk(getMyBookingsThunk(), 'reload success')
   }
 
-  const handleSaveBooking = async ({
-    clientName,
-    clientEmail,
-    clientPhone,
-    ...bookingForm
-  }: BookingForm) => {
+  const handleSaveBooking = async ({ client, ...bookingForm }: BookingForm) => {
     const { type, curBooking, curTour } = sheet
     if (type === 'update' && curBooking && curTour) {
       const { _id, tour, childrenPax, adultPax, infanlPax } = curBooking
@@ -75,11 +70,7 @@ const Page = () => {
           id: _id,
           booking: {
             tour,
-            client: {
-              name: clientName,
-              email: clientEmail,
-              phone: clientPhone,
-            },
+            client,
             ...bookingForm,
           },
         }),
@@ -99,9 +90,7 @@ const Page = () => {
         type: 'update',
         curBooking: booking,
         curBookingForm: {
-          clientName: booking.client.name,
-          clientEmail: booking.client.email,
-          clientPhone: booking.client.phone,
+          client: booking.client!?._id,
           ..._.omit(
             booking,
             '_id',

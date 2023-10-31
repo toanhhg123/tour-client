@@ -31,14 +31,14 @@ const CardBooking = ({ booking, renderAction }: Props) => {
           <User className="w-[12px]" />
           client name:
           <span className="p-1 rounded-sm bg-blue-100 font-semibold">
-            {booking.client.name}
+            {booking.client?.name}
           </span>
         </div>
         <div className="flex items-center gap-1">
           <Mail className="w-[12px]" />
           email:
           <span className="p-1 rounded-sm bg-blue-100 font-semibold">
-            {booking.client.email}
+            {booking.client?.email}
           </span>
         </div>
 
@@ -46,7 +46,7 @@ const CardBooking = ({ booking, renderAction }: Props) => {
           <Phone className="w-[12px]" />
           Phone:
           <span className="p-1 rounded-sm bg-blue-100 font-semibold">
-            {booking.client.phone}
+            {booking.client?.phone}
           </span>
         </div>
       </div>

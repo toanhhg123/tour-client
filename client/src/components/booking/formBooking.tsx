@@ -217,9 +217,7 @@ export default function FormBooking({
 }
 
 const formSchema = z.object({
-  clientName: z.string().min(1, { message: 'không được bỏ trống phần này' }),
-  clientEmail: z.string().min(1, { message: 'không đươc bỏ trống phần này' }),
-  clientPhone: z.string().min(1, { message: 'không đươc bỏ trống phần này' }),
+  client: z.string().min(1, { message: 'không đươc bỏ trống phần này' }),
   childrenPax: z.number().min(0, { message: 'không hợp lệ' }),
   adultPax: z.number().min(0, { message: 'không hợp lệ' }),
   infanlPax: z.number().min(0, { message: 'không hợp lệ' }),

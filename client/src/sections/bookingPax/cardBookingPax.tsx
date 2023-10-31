@@ -82,7 +82,7 @@ const CardBookingPax = ({ bookingPax }: Props) => {
             <Calendar className="w-[12px]" />
             dob:
             <span className="font-semibold">
-              {format(new Date(bookingPax.dob), 'dd/MM/yyyy')}
+              {format(new Date(bookingPax.dob || new Date()), 'dd/MM/yyyy')}
             </span>
           </div>
           <div className="flex items-center gap-1">
