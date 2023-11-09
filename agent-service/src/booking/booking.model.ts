@@ -104,7 +104,10 @@ const bookingSchema = new Schema(
 
 export type Booking = InferSchemaType<typeof bookingSchema>
 
-export type BookingCreate = Omit<Booking, '_id'>
+export type BookingCreate = Omit<Booking, '_id'> & {
+  clientEmail: string
+  clientPhone: string
+}
 
 bookingSchema.pre('find', function () {})
 

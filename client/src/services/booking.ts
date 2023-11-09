@@ -2,6 +2,7 @@ import API from '@/config/axios'
 import {
   BookingCreate,
   BookingPaxCreate,
+  Client,
   IBooking,
   IBookingPax,
 } from '@/features/booking/type'
@@ -39,6 +40,9 @@ export const updateBooking = (id: string, body: BookingCreate) =>
 export const updateBookingPax = (id: string, body: BookingPaxCreate) =>
   apiAgent.patch<IResponse<IBookingPax>>(`/bookingPax/${id}`, body)
 
+export const createOrUpdateBookingPax = (id: string, body: BookingPaxCreate) =>
+  apiAgent.put<IResponse<IBookingPax>>(`/bookingPax/${id || 'NON_ID'}`, body)
+
 export const updateBookingRoom = (id: string, name: string) =>
   apiAgent.patch<IResponse<IBookingPax>>(`/bookingPax/room/${id}`, {
     room: name,
@@ -49,3 +53,13 @@ export const deleteBookingPax = (id: string) =>
 
 export const deleteBookingById = (id: string) =>
   apiAgent.delete<IResponse<IBooking>>(`/booking/${id}`)
+
+export const findByEmailOrPhoneClient = (search: string) => {
+  return apiAgent.get<IResponse<Client>>('/client/findByEmailOrPhone', {
+    params: { search },
+  })
+}
+
+export const getClientInOperator = () => {
+  return apiAgent.get<IResponse<Client[]>>('/client/operator')
+}

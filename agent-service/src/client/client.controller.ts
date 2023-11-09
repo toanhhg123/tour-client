@@ -49,6 +49,8 @@ export class ClientController {
         operatorId
       )
 
+      if (!data) throw new Error('not found client')
+
       return res.json({
         status: 'success',
         message: 'success',

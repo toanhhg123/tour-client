@@ -23,14 +23,17 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { BookingForm, statusBookings } from '@/features/booking/type'
+import useFetch from '@/hooks/useFetch'
 import { cn } from '@/lib/utils'
+import { findByEmailOrPhoneClient } from '@/services/booking'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CalendarIcon } from '@radix-ui/react-icons'
 import { format } from 'date-fns'
-import { Save } from 'lucide-react'
+import { Save, User } from 'lucide-react'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
+import { toast } from '../ui/use-toast'
 
 interface Props {
   initData: BookingForm
@@ -54,8 +57,33 @@ export default function FormBooking({
     },
   })
 
+  const [_, fetchCallBack] = useFetch()
+
+  const clientEmail = form.getValues('clientEmail')
+  const clientPhone = form.getValues('clientPhone')
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     onSave(values as BookingForm)
+  }
+
+  const handleGetInfoClient = async () => {
+    const { data, error } = await fetchCallBack(() =>
+      findByEmailOrPhoneClient(clientEmail || clientPhone || ''),
+    )
+    if (error) {
+      toast({
+        title: 'Uh oh! .',
+        description: error,
+        duration: 2000,
+      })
+
+      return
+    }
+
+    if (data) {
+      form.setValue('clientEmail', data.data.element.email)
+      form.setValue('clientPhone', data.data.element.phone)
+    }
   }
 
   return (
@@ -139,12 +167,14 @@ export default function FormBooking({
                   }
 
                   if (
-                    field.name === 'price' ||
-                    field.name === 'visaFee' ||
-                    field.name === 'otherFee' ||
-                    field.name === 'foreignFee' ||
-                    field.name === 'singleFee' ||
-                    field.name === 'vat'
+                    [
+                      'price',
+                      'visaFee',
+                      'otherFee',
+                      'foreignFee',
+                      'singleFee',
+                      'vat',
+                    ].includes(field.name)
                   ) {
                     component = (
                       <FormControl>
@@ -206,7 +236,19 @@ export default function FormBooking({
           })}
         </div>
       </Form>
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-2">
+        <Button
+          disabled={clientEmail || clientPhone ? false : true}
+          onClick={handleGetInfoClient}
+          size={'lg'}
+          className="font-semibold"
+          variant={'success'}
+          type="button"
+        >
+          <User />
+          get info customer
+        </Button>
+
         <Button type="submit" size={'lg'} className="font-semibold">
           <Save className="w-[14px] mr-1" />
           save
@@ -217,7 +259,6 @@ export default function FormBooking({
 }
 
 const formSchema = z.object({
-  client: z.string().min(1, { message: 'không đươc bỏ trống phần này' }),
   childrenPax: z.number().min(0, { message: 'không hợp lệ' }),
   adultPax: z.number().min(0, { message: 'không hợp lệ' }),
   infanlPax: z.number().min(0, { message: 'không hợp lệ' }),
@@ -232,4 +273,9 @@ const formSchema = z.object({
   visaFee: z.number().optional(),
   otherFee: z.number().optional(),
   visaStatus: z.string().nullable().optional(),
+  clientEmail: z
+    .string()
+    .min(1, { message: 'không được bỏ trống phần này' })
+    .email('vui lòng nhập đúng định dạng email !!'),
+  clientPhone: z.string().min(1, { message: 'không đươc bỏ trống phần này' }),
 })

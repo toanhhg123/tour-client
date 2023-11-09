@@ -20,7 +20,7 @@ router.use(
 )
 
 router.get('/operator', getByOperatorId)
-router.get('/findByEmail', findByEmailOrPhone)
+router.get('/findByEmailOrPhone', findByEmailOrPhone)
 
 router.post('/', create)
 

@@ -8,9 +8,7 @@ const bookingPaxSchema = new Schema(
       required: true
     },
     name: {
-      type: String,
-      required: true,
-      default: ''
+      type: String
     },
     dob: {
       type: Schema.Types.Date

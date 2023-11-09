@@ -1,5 +1,3 @@
-import { ITour } from '../tour/type'
-
 export interface IBooking {
   _id: string
   operatorId: string
@@ -13,12 +11,7 @@ export interface IBooking {
     email: string
     phone: string
   }
-  client?: {
-    _id: string
-    name: string
-    email: string
-    phone: string
-  }
+  client?: Client
   sale: {
     _id: string
     name: string
@@ -52,7 +45,8 @@ export type BookingCreate = {
     _id: string
     name: string
   }
-  client: string
+  clientEmail: string
+  clientPhone: string
   childrenPax: number
   adultPax: number
   infanlPax: number
@@ -70,7 +64,8 @@ export type BookingCreate = {
 }
 
 export type BookingForm = {
-  client: string
+  clientEmail: string
+  clientPhone: string
   childrenPax: number
   adultPax: number
   infanlPax: number
@@ -97,7 +92,8 @@ export const statusBookings: typeStatusBookingForm[] = [
 ]
 
 export const initBookingForm: BookingForm = {
-  client: '',
+  clientEmail: '',
+  clientPhone: '',
   adultPax: 0,
   childrenPax: 0,
   infanlPax: 0,
@@ -119,9 +115,50 @@ export interface IBookingPax {
   room?: string
 }
 
+export const initBookingPax: IBookingPax = {
+  _id: '',
+  bookingId: {
+    _id: '',
+    operatorId: '',
+    tour: {
+      _id: '',
+      name: '',
+    },
+    sale: {
+      _id: '',
+      name: '',
+      email: '',
+    },
+    childrenPax: 0,
+    adultPax: 0,
+    infanlPax: 0,
+    bookDate: new Date(),
+    expireDate: new Date(),
+    vat: 0,
+    note: '',
+    status: 'deposit',
+    price: 0,
+    singleFee: 0,
+    foreignFee: 0,
+    visaFee: 0,
+    otherFee: 0,
+    visaStatus: null,
+  },
+  name: '',
+  dob: new Date(),
+  paxportExpre: new Date(),
+  nation: 'Viet Nam',
+  passport: '',
+  type: 'Adult',
+  phone: '',
+  note: '',
+  sex: 'male',
+  room: '',
+}
+
 export type TypeBookingPaxForm = { key: string; label: string }
 
-export const typeBookingPaxs: TypeBookingPaxForm[] = [
+export const typeBookingPaxes: TypeBookingPaxForm[] = [
   { key: 'Adult', label: 'Người lớn' },
   { key: 'Child', label: 'Trẻ em' },
   { key: 'Infant', label: 'Trẻ nhỏ' },
@@ -144,81 +181,11 @@ export const initBookingPaxForm: BookingPaxForm = {
   note: '',
 }
 
-export const mapToBookingCreateWithBookingForm = (
-  {
-    client,
-    bookDate,
-    expireDate,
-    childrenPax,
-    adultPax,
-    infanlPax,
-    vat,
-    note,
-    status,
-    price,
-    singleFee,
-    foreignFee,
-    visaFee,
-    otherFee,
-    visaStatus,
-  }: BookingForm,
-  tour: ITour,
-): BookingCreate => {
-  return {
-    client,
-    bookDate,
-    expireDate,
-    vat,
-    note,
-    status,
-    price,
-    singleFee,
-    foreignFee,
-    visaFee,
-    otherFee,
-    visaStatus,
-    childrenPax,
-    adultPax,
-    infanlPax,
-    tour: {
-      name: tour.name,
-      _id: tour._id,
-    },
-  }
-}
-
-export const mapBookingToBookingForm = ({
-  client,
-  childrenPax,
-  adultPax,
-  infanlPax,
-  bookDate,
-  price,
-  expireDate,
-  vat,
-  note,
-  status,
-  singleFee,
-  foreignFee,
-  visaFee,
-  otherFee,
-  visaStatus,
-}: IBooking): BookingForm => {
-  return {
-    client: client!._id,
-    childrenPax,
-    adultPax,
-    infanlPax,
-    bookDate,
-    price,
-    expireDate,
-    vat,
-    note,
-    status,
-    singleFee,
-    foreignFee,
-    visaFee,
-    otherFee,
-    visaStatus,
-  }
+export type Client = {
+  _id: string
+  name?: string
+  email: string
+  phone: string
+  operatorId: string
+  address?: string
 }

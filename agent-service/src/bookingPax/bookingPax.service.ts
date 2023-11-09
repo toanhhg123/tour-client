@@ -1,6 +1,17 @@
+import { ResponseError } from '~/types'
 import { BookingPaxCreate } from './bookingPax.model'
 import bookingPaxRepo from './bookingPax.repository'
-class BookingService {
+class BookingPaxService {
+  async validatePermission(bookingPaxId: string, operatorId: string) {
+    const bookingPax = await bookingPaxRepo.get(bookingPaxId)
+    if (!bookingPax) throw new Error('not found booking pax')
+
+    const booking = bookingPax.bookingId
+    if (!booking) throw new Error('not found booking')
+
+    if (booking.operatorId !== operatorId) throw ResponseError.forbiddenError()
+  }
+
   async getByBookingId(id: string) {
     return await bookingPaxRepo.getByBookingId(id)
   }
@@ -20,6 +31,10 @@ class BookingService {
   createManyBookingPax(bookingPaxCreates: BookingPaxCreate[]) {
     return bookingPaxRepo.createMany(bookingPaxCreates)
   }
+
+  updateOrCreateBookingPax(id: string, bookingPax: BookingPaxCreate) {
+    return bookingPaxRepo.createOrUpdateBookingPax(id, bookingPax)
+  }
 }
 
-export default new BookingService()
+export default new BookingPaxService()

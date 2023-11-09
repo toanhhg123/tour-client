@@ -2,8 +2,15 @@ import { Router } from 'express'
 import { authorize } from '~/middlewares/authen.middleware'
 import bookingPaxController from './bookingPax.controller'
 
-const { getByBookingId, update, updateRoom, remove, create, createPaxMany } =
-  bookingPaxController
+const {
+  getByBookingId,
+  update,
+  updateRoom,
+  remove,
+  create,
+  createPaxMany,
+  createOrUpdateBookingPax
+} = bookingPaxController
 const router = Router()
 
 router.get(
@@ -28,6 +35,12 @@ router.patch(
   '/:id',
   authorize(['Agent.Manager', 'Oper.Sales', 'Agent.Sales']),
   update
+)
+
+router.put(
+  '/:id',
+  authorize(['Agent.Manager', 'Oper.Sales', 'Agent.Sales']),
+  createOrUpdateBookingPax
 )
 
 router.patch('/room/:id', authorize(['TourMan']), updateRoom)

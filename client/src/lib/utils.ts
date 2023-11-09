@@ -1,5 +1,6 @@
 import { IBooking } from '@/features/booking/type'
 import { type ClassValue, clsx } from 'clsx'
+import { format } from 'date-fns'
 import { twMerge } from 'tailwind-merge'
 
 export function cn(...inputs: ClassValue[]) {
@@ -47,4 +48,8 @@ export function analysisBooking(bookings: IBooking[]) {
     paid,
     totalBooking,
   }
+}
+
+export const formatDateDDMMYYYY = (date?: string | Date | number) => {
+  return format(new Date(date || new Date()), 'dd/MM/yyyy')
 }

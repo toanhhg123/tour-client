@@ -22,9 +22,8 @@ import BoxFilter, { Filter } from '@/sections/tour/box-filter'
 import { useAppSelector } from '@/store/hooks'
 import { ReloadIcon } from '@radix-ui/react-icons'
 import { Pen, UserX, X } from 'lucide-react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { usePathname, useSearchParams } from 'next/navigation'
-import { useRouter } from 'next/navigation'
 
 const Page = () => {
   const { tours } = useAppSelector((state) => state.tour)
@@ -57,7 +56,8 @@ const Page = () => {
     if (sheet?.type === 'create' && sheet.curTour) {
       const tour = sheet.curTour
 
-      const { childrenPax, adultPax, infanlPax, client } = booking
+      const { childrenPax, adultPax, infanlPax, clientEmail, clientPhone } =
+        booking
 
       const paxNum = childrenPax + adultPax + infanlPax
 
@@ -81,10 +81,11 @@ const Page = () => {
           _id: tour._id,
           name: tour.name,
         },
-        client: client,
         childrenPax,
         adultPax,
         infanlPax,
+        clientEmail,
+        clientPhone,
       }
 
       await dispatchAsyncThunk(createBookingThunks(bookingCreate), 'success')

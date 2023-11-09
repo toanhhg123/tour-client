@@ -64,6 +64,25 @@ class BookingPaxController {
     }
   )
 
+  createOrUpdateBookingPax = asyncHandler(
+    async (req: Request<{ id: string }, unknown, BookingPaxCreate>, res) => {
+      const { operatorId } = req.user
+
+      await bookingPaxService.validatePermission(req.params.id, operatorId)
+
+      const data = await bookingPaxService.updateOrCreateBookingPax(
+        req.params.id,
+        req.body
+      )
+
+      return res.json({
+        status: 'success',
+        message: 'success',
+        element: data
+      })
+    }
+  )
+
   remove = asyncHandler(async (req: Request<{ id: string }>, res) => {
     const data = await bookingPaxService.deleteById(req.params.id)
 

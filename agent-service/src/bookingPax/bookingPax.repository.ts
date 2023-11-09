@@ -1,4 +1,6 @@
+import { Booking } from '~/booking/booking.model'
 import bookingPaxModel, { BookingPaxCreate } from './bookingPax.model'
+import { Types } from 'mongoose'
 
 class bookingPaxRepository {
   async create(booking: BookingPaxCreate) {
@@ -6,12 +8,24 @@ class bookingPaxRepository {
     return doc
   }
 
+  async createOrUpdateBookingPax(id: string, body: BookingPaxCreate) {
+    const bookingPax = await bookingPaxModel.findOne({
+      _id: new Types.ObjectId(id)
+    })
+
+    if (bookingPax) return bookingPaxModel.findByIdAndUpdate(id, body)
+
+    return bookingPaxModel.create(body)
+  }
+
   createMany(bookingPaxs: BookingPaxCreate[]) {
     return bookingPaxModel.insertMany(bookingPaxs)
   }
 
   async get(id: string) {
-    const booking = await bookingPaxModel.findById(id).populate('bookingId')
+    const booking = await bookingPaxModel
+      .findById(id)
+      .populate<{ bookingId: Booking }>('bookingId')
     if (!booking) throw new Error('Not found bookingPax')
 
     return booking

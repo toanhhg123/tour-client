@@ -49,22 +49,21 @@ class BookingController {
   create = asyncHandler(
     async (req: Request<unknown, unknown, BookingCreate>, res) => {
       const { _id, agentId, operatorId } = req.user
-      const { client } = req.body
+      const { clientEmail, clientPhone } = req.body
 
       if (agentId)
         req.body.agent = {
           _id: new mongoose.Types.ObjectId(agentId)
         }
 
-      const clientBooking = await clientService.findByIdAndOperatorId(
-        client.toString(),
+      const clientBooking = await clientService.findOrCreateClient(
+        { email: clientEmail, phone: clientPhone },
         operatorId
       )
 
-      if (!clientBooking) throw new Error('client not found')
-
       const data = await bookingService.create({
         ...req.body,
+        client: clientBooking._id,
         sale: {
           _id
         },
@@ -124,12 +123,23 @@ class BookingController {
 
   update = asyncHandler(
     async (req: Request<{ id: string }, unknown, BookingCreate>, res) => {
+      const { operatorId } = req.user
+      const { clientEmail, clientPhone } = req.body
+
       const booking = await bookingService.findById(req.params.id)
 
       if (booking.sale._id?.toString() !== req.user._id)
-        throw ResponseError.forbbidenError()
+        throw ResponseError.forbiddenError()
 
-      const data = await bookingService.updateById(req.params.id, req.body)
+      const clientBooking = await clientService.findOrCreateClient(
+        { email: clientEmail, phone: clientPhone },
+        operatorId
+      )
+
+      const data = await bookingService.updateById(req.params.id, {
+        ...req.body,
+        client: clientBooking._id
+      })
 
       return res.json({
         status: 'success',

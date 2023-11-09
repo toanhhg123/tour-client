@@ -6,12 +6,10 @@ const clientBookingSchema = new Schema(
       type: String
     },
     email: {
-      type: String,
-      required: true
+      type: String
     },
     phone: {
-      type: String,
-      required: true
+      type: String
     },
     operatorId: {
       type: Schema.Types.ObjectId,

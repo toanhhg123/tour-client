@@ -20,7 +20,7 @@ const handleError = (error: AxiosError<any>) => {
       const arrMessage = additionalInfo?.details
       message = arrMessage.map((x: any) => x.message).join(', ')
     } else message = error?.response?.data?.message ?? error.message
-
+    console.log(message)
     throw new Error(message)
   }
 }
@@ -59,7 +59,7 @@ apiTour.interceptors.request.use(handleRequest, handleError)
 apiTour.interceptors.response.use((config) => config, handleError)
 
 apiAgent.interceptors.request.use(handleRequest, handleError)
-apiTour.interceptors.response.use((config) => config, handleError)
+apiAgent.interceptors.response.use((config) => config, handleError)
 
 const API = {
   apiAuth,

@@ -27,23 +27,23 @@ class BookingRepository {
   }
 
   getByTourId(tourId: string) {
-    return bookingModel.find({ 'tour._id': tourId })
+    return bookingModel.find({ 'tour._id': tourId }).populate('client')
   }
 
   getByListTourId(tourId: string[]) {
-    return bookingModel.find({ 'tour._id': { $in: tourId } })
+    return bookingModel.find({ 'tour._id': { $in: tourId } }).populate('client')
   }
 
   getBySaleId(id: string) {
-    return bookingModel.find({ 'sale._id': id })
+    return bookingModel.find({ 'sale._id': id }).populate('client')
   }
 
   async findAll() {
-    return await bookingModel.find()
+    return await bookingModel.find().populate('client')
   }
 
   findByAgentId(id: string) {
-    return bookingModel.find({ 'agent._id': id })
+    return bookingModel.find({ 'agent._id': id }).populate('client')
   }
 
   async updateById(id: string, bookingParam: BookingCreate) {

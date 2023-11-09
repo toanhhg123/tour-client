@@ -15,10 +15,10 @@ export class ResponseError {
     this.additionalInfo = additionalInfo
   }
 
-  static forbbidenError(
+  static forbiddenError(
     message?: string,
     additionalInfo?: unknown
   ): ResponseError {
-    return new ResponseError(message ?? 'forbbiden', 403, additionalInfo ?? {})
+    return new ResponseError(message ?? 'forbidden', 403, additionalInfo ?? {})
   }
 }

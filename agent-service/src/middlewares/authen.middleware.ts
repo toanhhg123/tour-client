@@ -13,7 +13,7 @@ export const authorize = (roles?: RoleType[]) =>
     const decode = await verifyToken(token)
 
     if (roles && roles.length && !roles.some((x) => x === decode.role)) {
-      throw ResponseError.forbbidenError()
+      throw ResponseError.forbiddenError()
     }
 
     req.user = decode

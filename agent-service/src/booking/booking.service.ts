@@ -22,7 +22,7 @@ class BookingService {
     if (!booking) throw new Error('not found booking')
 
     if (booking.agent?._id?.toString() !== agentId)
-      throw ResponseError.forbbidenError()
+      throw ResponseError.forbiddenError()
   }
 
   getBookingByAgentId(id: string) {
