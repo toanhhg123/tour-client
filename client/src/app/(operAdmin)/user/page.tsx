@@ -6,6 +6,7 @@ import {
   changeUserPasswordThunk,
   createUserThunk,
   getUsersInOperatorThunk,
+  updateUserThunk,
 } from '@/features/user/actions'
 import { IUser, IUserForm, initUserForm } from '@/features/user/type'
 import useDispatchAsync from '@/hooks/useDispatchAsync'
@@ -16,6 +17,7 @@ import { useAppSelector } from '@/store/hooks'
 import { ReloadIcon } from '@radix-ui/react-icons'
 import { Lock, PenLine, Plus, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import _ from 'lodash'
 
 const Page = () => {
   const { roles } = useAppSelector((state) => state.role)
@@ -27,6 +29,7 @@ const Page = () => {
   const [sheet, setSheet] = useState<{
     type?: 'create' | 'edit' | 'change-password'
     curUser?: IUser
+    userForm?: IUserForm
   }>({})
 
   const roleAllows =
@@ -41,6 +44,16 @@ const Page = () => {
       if (role)
         await dispatchAsyncThunk(
           createUserThunk({ ...userForm, role: role?.name }),
+          'success',
+          () => setSheet({}),
+        )
+    }
+
+    if (type === 'edit' && sheet.curUser) {
+      const role = roles.find((role) => role._id === userForm.roleId)
+      if (role)
+        await dispatchAsyncThunk(
+          updateUserThunk({ ...userForm, id: sheet.curUser._id }),
           'success',
           () => setSheet({}),
         )
@@ -99,7 +112,7 @@ const Page = () => {
 
             <Button
               onClick={() => {
-                setSheet({ type: 'create' })
+                setSheet({ type: 'create', userForm: initUserForm })
               }}
               variant={'outLinePrimary'}
               size={'mini'}
@@ -129,15 +142,16 @@ const Page = () => {
                     </div>
                   )}
 
-                  {sheet.type === 'create' && (
-                    <div className="my-2">
-                      <FormUser
-                        defaultValue={initUserForm}
-                        handleSubmit={handleSubmitUser}
-                        roles={rolesForm}
-                      />
-                    </div>
-                  )}
+                  {['create', 'edit'].includes(sheet.type) &&
+                    sheet.userForm && (
+                      <div className="my-2">
+                        <FormUser
+                          defaultValue={sheet.userForm}
+                          handleSubmit={handleSubmitUser}
+                          roles={rolesForm}
+                        />
+                      </div>
+                    )}
 
                   {sheet.type === 'change-password' && sheet.curUser && (
                     <div className="my-2">
@@ -157,7 +171,24 @@ const Page = () => {
                         <div className="flex items-center justify-end gap-1">
                           <Button
                             onClick={() => {
-                              setSheet({ type: 'edit', curUser: user })
+                              setSheet({
+                                type: 'edit',
+                                curUser: user,
+                                userForm: {
+                                  ..._.omit(
+                                    user,
+                                    '_id',
+                                    'password',
+                                    'roleId',
+                                    'agentId',
+                                    'createdAt',
+                                    'operatorId',
+                                    'updatedAt',
+                                  ),
+                                  roleId: user.roleId._id,
+                                  agentId: user.agentId?._id,
+                                },
+                              })
                             }}
                             size={'mini'}
                             variant={'outLineSuccess'}

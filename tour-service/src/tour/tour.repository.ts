@@ -49,6 +49,7 @@ class TourRepository {
     const pageIndex = Number(query?.pageIndex || 1) || 1
     const fromDate = new Date(query?.fromDate || '1975-01-01')
     const endDate = new Date(query?.endDate || '3000-01-01')
+    const tourManId = query?.tourManId
 
     const filter: FilterQuery<Tour> = {
       'operator._id': id,
@@ -60,6 +61,10 @@ class TourRepository {
       returnDate: {
         $lt: endDate
       }
+    }
+
+    if (tourManId) {
+      filter.tourMan._id = tourManId
     }
 
     const [count, tours] = await Promise.all([

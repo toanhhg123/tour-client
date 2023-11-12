@@ -55,7 +55,12 @@ const FormUser = ({ defaultValue, roles, handleSubmit, agents }: Props) => {
   }
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+    <form
+      onSubmit={form.handleSubmit(onSubmit, (e) => {
+        console.log(e)
+      })}
+      className="space-y-2"
+    >
       <Form {...form}>
         <div className="grid gap-2 mb-3">
           {Object.keys(defaultValue).map((x) => {
@@ -200,7 +205,10 @@ const formSchema = z.object({
     .string()
     .min(1, { message: 'không được bỏ trống phần này' })
     .email('vui lòng nhập đúng định dạng email !!'),
-  password: z.string().min(8, { message: 'mật khẩu ít nhất phải 8 kí tự' }),
+  password: z
+    .string()
+    .min(8, { message: 'mật khẩu ít nhất phải 8 kí tự' })
+    .optional(),
   phone: z.string({ required_error: 'không được bỏ trông phần này' }),
   roleId: z.string(),
   address: z.string().optional(),

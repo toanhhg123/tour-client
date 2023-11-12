@@ -45,6 +45,9 @@ const mapPostUser: { [_key in RoleType]: string } = {
 export const createUser = (user: IUserForm, role: RoleType) =>
   apiAuth.post<IResponse<IUser>>(`/user/${mapPostUser[role]}`, user)
 
+export const updateUser = (id: string, user: IUserForm) =>
+  apiAuth.patch<IResponse<IUser>>(`/user/${id}`, user)
+
 export const getAgentByOperSales = () =>
   apiAuth.get<IResponse<IAgent[]>>('/agent/agentByOperSales')
 

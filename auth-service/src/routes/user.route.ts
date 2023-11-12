@@ -56,7 +56,7 @@ router.post(
   createAgentSales
 )
 
-router.patch('/:id', update)
+router.patch('/:id', authorize(['Oper.Admin']), update)
 
 router.patch(
   '/password/:id',

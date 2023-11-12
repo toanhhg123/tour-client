@@ -11,6 +11,7 @@ import {
   updateAgent,
   updateSalesAgent,
   updateSupplier,
+  updateUser,
 } from '@/services/auth'
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import {
@@ -72,6 +73,14 @@ export const createUserThunk = createAsyncThunk(
   'userSlice/createUser',
   async (params: IUserForm & { role: RoleType }, apiThunk) => {
     await createUser(params, params.role)
+    apiThunk.dispatch(getUsersInOperatorThunk())
+  },
+)
+
+export const updateUserThunk = createAsyncThunk(
+  'userSlice/updateUserThunk',
+  async (params: IUserForm & { id: string }, apiThunk) => {
+    await updateUser(params.id, params)
     apiThunk.dispatch(getUsersInOperatorThunk())
   },
 )

@@ -3,4 +3,5 @@ export interface ITourQuery {
   fromDate?: Date
   endDate?: Date
   search?: string
+  tourManId?: string
 }

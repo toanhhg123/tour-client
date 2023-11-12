@@ -72,7 +72,7 @@ export interface IUserForm {
   birthDay: Date
   sex: 'male' | 'female' | 'other'
   agentId?: string
-  password: string
+  password?: string
 }
 
 export const initUserForm: IUserForm = {
