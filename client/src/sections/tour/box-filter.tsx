@@ -141,6 +141,48 @@ const BoxFilter = ({ onFilter, onClear }: Props) => {
       </div>
 
       <div className="mt-2">
+        <Badge className="my-1" variant={'outline'}>
+          End Date
+        </Badge>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant={'outline'}
+              size={'sm'}
+              className={cn(
+                'w-full justify-start text-left font-normal bg-white z-40',
+                !filter.endDate && 'text-muted-foreground',
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {filter.endDate ? (
+                format(new Date(filter.endDate.toString()), 'dd/MM/yyyy')
+              ) : (
+                <span>Pick a date</span>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent
+            className="w-auto p-0 z-50 bg-white border"
+            align="start"
+          >
+            <Calendar
+              className=""
+              mode="single"
+              selected={new Date(filter.endDate?.toString() || new Date())}
+              onSelect={(value) =>
+                setFilter({
+                  ...filter,
+                  endDate: new Date(value || new Date()).toISOString(),
+                })
+              }
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
+
+      <div className="mt-2">
         <Badge>tour manager</Badge>
         <Select
           onValueChange={(value) => {

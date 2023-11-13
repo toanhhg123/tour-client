@@ -16,9 +16,12 @@ export interface IPaginationResponse<T> {
 
 export interface ITourQuery {
   pageIndex?: number
-  fromDate?: Date
-  endDate?: Date
+  fromDate?: string
+  endDate?: string
   search?: string
+  tourManId?: string
+  tourGuideId?: string
+  status?: string
 }
 
 export const handleToastError = (message: string) => {

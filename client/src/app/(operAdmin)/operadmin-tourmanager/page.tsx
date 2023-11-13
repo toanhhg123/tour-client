@@ -14,6 +14,7 @@ import { useEffect, useState } from 'react'
 import BoxTourServices from './box-tourService'
 import Pagination from '@/components/pagination'
 import { usePathname, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 const Page = () => {
   const tours = useAppSelector((state) => state.tour.tours)
@@ -25,26 +26,56 @@ const Page = () => {
 
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const router = useRouter()
 
   const search = searchParams.get('search') || ''
   const pageIndex = Number(searchParams.get('pageIndex') || 1)
+  const status = searchParams.get('status') || undefined
+  const fromDate = searchParams.get('fromDate') || undefined
+  const endDate = searchParams.get('endDate') || undefined
+  const tourManId = searchParams.get('tourManId') || undefined
+  const tourGuideId = searchParams.get('tourGuideId') || undefined
 
   const { total, limit } = tours
 
   const handleFilterTour = (filter: Filter) => {
-    console.log(filter)
+    const query = new URLSearchParams(filter)
+    router.push(`${pathname}?${query}`)
+  }
+
+  const handleClearFilter = () => {
+    dispatchAsyncThunk(getToursThunk())
   }
 
   useEffect(() => {
-    dispatchAsyncThunk(getToursThunk({ pageIndex, search }))
-  }, [dispatchAsyncThunk, pageIndex, search])
+    dispatchAsyncThunk(
+      getToursThunk({
+        pageIndex,
+        search,
+        status,
+        fromDate,
+        endDate,
+        tourManId,
+        tourGuideId,
+      }),
+    )
+  }, [
+    dispatchAsyncThunk,
+    pageIndex,
+    search,
+    status,
+    fromDate,
+    endDate,
+    tourManId,
+    tourGuideId,
+  ])
 
   return (
     <PrivateRoute roles={['Oper.Admin']}>
       {/* modal  */}
 
       <div className="w-full text-gray-700  flex flex-wrap  justify-between gap-2">
-        <BoxFilter onFilter={handleFilterTour} />
+        <BoxFilter onFilter={handleFilterTour} onClear={handleClearFilter} />
 
         <div className="flex-1">
           {/* layout layout */}
