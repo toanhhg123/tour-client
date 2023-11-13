@@ -28,8 +28,8 @@ export type Filter = {
   tourManId: string
   tourGuideId: string
   status: 'available' | 'soutOut' | 'cancel' | string
-  fromDate?: Date
-  returnDate?: Date
+  fromDate: string
+  endDate: string
 }
 
 type Props = {
@@ -43,8 +43,8 @@ const BoxFilter = ({ onFilter, onClear }: Props) => {
     tourManId: '',
     tourGuideId: '',
     status: '',
-    fromDate: new Date(),
-    returnDate: new Date(),
+    fromDate: '',
+    endDate: '',
   })
   const { usersInOperator } = useAppSelector((state) => state.user)
 
@@ -62,7 +62,14 @@ const BoxFilter = ({ onFilter, onClear }: Props) => {
   }
 
   const handleClear = () => {
-    setFilter({ search: '', tourManId: '', tourGuideId: '', status: '' })
+    setFilter({
+      search: '',
+      tourManId: '',
+      tourGuideId: '',
+      status: '',
+      endDate: '',
+      fromDate: '',
+    })
 
     if (onClear) onClear()
   }
@@ -107,7 +114,7 @@ const BoxFilter = ({ onFilter, onClear }: Props) => {
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
               {filter.fromDate ? (
-                format(filter.fromDate, 'dd/MM/yyyy')
+                format(new Date(filter.fromDate.toString()), 'dd/MM/yyyy')
               ) : (
                 <span>Pick a date</span>
               )}
@@ -120,11 +127,11 @@ const BoxFilter = ({ onFilter, onClear }: Props) => {
             <Calendar
               className=""
               mode="single"
-              selected={filter.fromDate}
+              selected={new Date(filter.fromDate?.toString() || new Date())}
               onSelect={(value) =>
                 setFilter({
                   ...filter,
-                  fromDate: new Date(value || new Date()),
+                  fromDate: new Date(value || new Date()).toISOString(),
                 })
               }
               initialFocus
