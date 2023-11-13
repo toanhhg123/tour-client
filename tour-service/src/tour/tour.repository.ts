@@ -50,6 +50,8 @@ class TourRepository {
     const fromDate = new Date(query?.fromDate || '1975-01-01')
     const endDate = new Date(query?.endDate || '3000-01-01')
     const tourManId = query?.tourManId
+    const tourGuideId = query?.tourGuideId
+    const status = query?.status
 
     const filter: FilterQuery<Tour> = {
       'operator._id': id,
@@ -64,7 +66,15 @@ class TourRepository {
     }
 
     if (tourManId) {
-      filter.tourMan._id = tourManId
+      filter['tourMan._id'] = tourManId
+    }
+
+    if (tourGuideId) {
+      filter['tourGuide._id'] = tourGuideId
+    }
+
+    if (status) {
+      filter.status = status
     }
 
     const [count, tours] = await Promise.all([

@@ -1,6 +1,7 @@
 'use client'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
+import { Calendar } from '@/components/ui/calendar'
 import { Input } from '@/components/ui/input'
 import {
   Select,
@@ -11,8 +12,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { cn } from '@/lib/utils'
 import { useAppSelector } from '@/store/hooks'
-import { Search, ShieldQuestionIcon } from 'lucide-react'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@radix-ui/react-popover'
+import { format } from 'date-fns'
+import { CalendarIcon, Search, ShieldQuestionIcon } from 'lucide-react'
 import { FormEventHandler, useState } from 'react'
 
 export type Filter = {
@@ -20,6 +28,8 @@ export type Filter = {
   tourManId: string
   tourGuideId: string
   status: 'available' | 'soutOut' | 'cancel' | string
+  fromDate?: Date
+  returnDate?: Date
 }
 
 type Props = {
@@ -33,6 +43,8 @@ const BoxFilter = ({ onFilter, onClear }: Props) => {
     tourManId: '',
     tourGuideId: '',
     status: '',
+    fromDate: new Date(),
+    returnDate: new Date(),
   })
   const { usersInOperator } = useAppSelector((state) => state.user)
 
@@ -77,6 +89,48 @@ const BoxFilter = ({ onFilter, onClear }: Props) => {
           placeholder="...email or username"
           className="h-fit focus-visible:ring-0 border-none shadow-none placeholder:text-[12px] text-[12px]"
         />
+      </div>
+
+      <div className="mt-2">
+        <Badge className="my-1" variant={'outline'}>
+          From Date
+        </Badge>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant={'outline'}
+              size={'sm'}
+              className={cn(
+                'w-full justify-start text-left font-normal bg-white z-40',
+                !filter.fromDate && 'text-muted-foreground',
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {filter.fromDate ? (
+                format(filter.fromDate, 'dd/MM/yyyy')
+              ) : (
+                <span>Pick a date</span>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent
+            className="w-auto p-0 z-50 bg-white border"
+            align="start"
+          >
+            <Calendar
+              className=""
+              mode="single"
+              selected={filter.fromDate}
+              onSelect={(value) =>
+                setFilter({
+                  ...filter,
+                  fromDate: new Date(value || new Date()),
+                })
+              }
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
       </div>
 
       <div className="mt-2">

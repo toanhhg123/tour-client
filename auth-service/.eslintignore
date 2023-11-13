@@ -3,3 +3,4 @@ dist/
 pb/
 jest*
 **/grpc/**
+jest.config.js

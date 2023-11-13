@@ -4,4 +4,6 @@ export interface ITourQuery {
   endDate?: Date
   search?: string
   tourManId?: string
+  tourGuideId?: string
+  status?: string
 }

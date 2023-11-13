@@ -1,13 +1,12 @@
 import cors from 'cors'
 import express from 'express'
 import helmet from 'helmet'
-import connectDb from './config/connect'
 import { handleError, notFound } from './middlewares'
 import morganMiddleware from './middlewares/morganMiddleware'
-import useRouter from './routes'
 import prometheus from './middlewares/prothemeus.middleware'
+import useRouter from './routes'
 
-async function BootStrap() {
+function CreateServer() {
   const app = express()
 
   app.use(helmet())
@@ -27,20 +26,12 @@ async function BootStrap() {
   app.use(morganMiddleware)
   app.use(prometheus)
 
-  await connectDb(process.env.URL_DB, {
-    dbName: process.env.DB_NAME
-  })
-
   useRouter(app)
 
   app.use(notFound)
   app.use(handleError)
 
-  const port = process.env.PORT
-
-  app.listen(port, () => {
-    console.log('app listening in port ' + port)
-  })
+  return app
 }
 
-export default BootStrap
+export default CreateServer

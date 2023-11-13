@@ -3,7 +3,19 @@ import Agent, { AgentCreate } from '~/models/agent.model'
 import { ResponseError } from '~/types'
 
 class AgentService {
-  create(agent: AgentCreate) {
+  async create(agent: AgentCreate) {
+    const [isExistEmail, isExistPhone] = await Promise.all([
+      Agent.findOne({
+        email: agent.email
+      }),
+      Agent.findOne({
+        phone: agent.phone
+      })
+    ])
+
+    if (isExistEmail) throw new Error('agent email is exist')
+    if (isExistPhone) throw new Error('agent phone is exist')
+
     return Agent.create(agent)
   }
 

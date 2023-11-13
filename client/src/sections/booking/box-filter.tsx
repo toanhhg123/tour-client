@@ -18,6 +18,8 @@ import { FormEventHandler, useState } from 'react'
 export type Filter = {
   search: string
   saleId: string
+  fromDate?: Date
+  endDate?: Date
 }
 
 type Props = {

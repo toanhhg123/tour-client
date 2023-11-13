@@ -19,7 +19,6 @@ class TourServiceRepository {
 
   async deleteById(id: string) {
     const tourService = await TourServiceModel.findByIdAndDelete(id)
-    if (!tourService) throw new Error('not found tour service')
     return tourService
   }
 
