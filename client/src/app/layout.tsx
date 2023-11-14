@@ -21,7 +21,7 @@ export default function RootLayout({
           <div className="flex-col md:flex">
             <HeaderClient />
 
-            <div className="container mt-3">
+            <div className="mt-[5rem] mx-10">
               <DispatchAsync>{children}</DispatchAsync>
             </div>
           </div>

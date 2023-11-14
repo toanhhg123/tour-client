@@ -38,7 +38,7 @@ const PrivateRoute = ({ children, roles }: Props) => {
     }
   }, [auth, roles, router])
 
-  return <div className="mt-[5rem]">{children}</div>
+  return children
 }
 
 export default PrivateRoute

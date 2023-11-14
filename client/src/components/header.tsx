@@ -10,8 +10,8 @@ const HeaderClient = () => {
   const { userDetails } = useAppSelector((state) => state.auth)
 
   return userDetails ? (
-    <div className="border-b fixed left-0 top-0 right-0 z-30 bg-white">
-      <div className="flex justify-between h-16 items-center px-4">
+    <div className="border-b h-16 fixed left-0 top-0 right-0 z-30 bg-white px-4">
+      <div className="flex justify-between h-full  items-center ">
         <Link href={'/dashboard'}>
           <Image
             src={'/logo.webp'}

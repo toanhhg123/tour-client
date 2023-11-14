@@ -34,7 +34,11 @@ router.get('/me', authorize(), getMe)
 
 router.get('/operator', authorize(), getUserInOperator)
 
-router.get('/agent/:id', authorize(['Oper.Sales']), getByAgentId)
+router.get(
+  '/agent/:id',
+  authorize(['Oper.Sales', 'Agent.Manager']),
+  getByAgentId
+)
 
 router.get('/', authorize(), gets)
 

@@ -20,7 +20,7 @@ const SideBar = ({ groups }: Props) => {
   const page = params.get('page') || 'NO_MATCH'
 
   return (
-    <div className="border min-h-screen w-[300px] pt-16 fixed top-0 left-0 z-10 overflow-auto">
+    <div className="border min-h-screen w-[300px] pt-16 absolute top-0 left-0 z-10 overflow-auto">
       {groups.map(({ name, items }) => {
         return (
           <div className="px-3 py-2" key={name}>
@@ -50,6 +50,18 @@ const SideBar = ({ groups }: Props) => {
           </div>
         )
       })}
+    </div>
+  )
+}
+
+type PropsContent = {
+  children: ReactNode
+}
+
+export const Content = ({ children }: PropsContent) => {
+  return (
+    <div className="absolute  left-[310px] right-10 overflow-hidden">
+      {children}
     </div>
   )
 }

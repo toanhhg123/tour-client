@@ -3,6 +3,7 @@ import { IUserDetails } from '@/features/auth/type'
 import { IRole, RoleType } from '@/features/role/type'
 import {
   AgentCreate,
+  AgentDetails,
   IAgent,
   IUser,
   IUserForm,
@@ -50,6 +51,9 @@ export const updateUser = (id: string, user: IUserForm) =>
 
 export const getAgentByOperSales = () =>
   apiAuth.get<IResponse<IAgent[]>>('/agent/agentByOperSales')
+
+export const getMyAgent = () =>
+  apiAuth.get<IResponse<AgentDetails>>('/agent/my-agent')
 
 export const createAgent = (agent: AgentCreate) =>
   apiAuth.post<IResponse<IAgent>>('/agent', agent)

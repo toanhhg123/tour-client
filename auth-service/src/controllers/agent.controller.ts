@@ -31,6 +31,15 @@ class AgentController {
     }
   )
 
+  getMyAgent = asyncHandler(
+    async (req: Request<unknown, unknown, AgentCreate>, res) => {
+      const { agentId } = req.user
+
+      const data = await agentService.findById(agentId)
+      return res.json({ message: 'success', element: data, status: 'success' })
+    }
+  )
+
   getAgnetByOperSales = asyncHandler(
     async (req: Request<unknown, unknown, AgentCreate>, res) => {
       const { _id } = req.user
@@ -56,11 +65,10 @@ class AgentController {
       await agentService.checkInOperator(req.params.id, operatorId)
 
       delete req.body.operSaleId
+      delete req.body.operId
 
       const data = await agentService.updateById(req.params.id, {
-        ...req.body,
-        operId: undefined,
-        operSaleId: undefined
+        ...req.body
       })
 
       return res.json({ message: 'success', element: data, status: 'success' })

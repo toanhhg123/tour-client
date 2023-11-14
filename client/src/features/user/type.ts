@@ -1,11 +1,29 @@
 import { IRole } from '../role/type'
 
+export type AgentDetails = {
+  _id: string
+  name: string
+  email: string
+  phone: string
+  address?: string
+  operId?: IOper
+  operSaleId?: IUser
+}
+
+export const initAgentDetails: AgentDetails = {
+  _id: '',
+  name: '',
+  email: '',
+  phone: '',
+  address: '',
+}
+
 export interface IAgent {
   _id: string
   name: string
   email: string
   phone: string
-  address: string
+  address?: string
   operId: string
   operSaleId: string
 }

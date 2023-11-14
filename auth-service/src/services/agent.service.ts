@@ -19,6 +19,10 @@ class AgentService {
     return Agent.create(agent)
   }
 
+  findById(id: string) {
+    return Agent.findById(id).populate('operId').populate('operSaleId')
+  }
+
   async updateById(id: string, agent: AgentCreate) {
     return Agent.findByIdAndUpdate(id, agent)
   }

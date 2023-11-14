@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -10,6 +11,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { AgentCreate, initAgentCreate } from '@/features/user/type'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Save } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
@@ -35,7 +37,7 @@ export default function FormAgent({ initData: dataForm, onSave }: Props) {
       style={{ height: '100%' }}
     >
       <Form {...form}>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid  gap-4">
           {Object.keys(initAgentCreate).map((x) => {
             const key = x as keyof AgentCreate
 
@@ -57,6 +59,9 @@ export default function FormAgent({ initData: dataForm, onSave }: Props) {
                       <FormLabel>{key}</FormLabel>
                       {component}
                       <FormMessage />
+                      <FormDescription>
+                        This is your public display {field.name}.
+                      </FormDescription>
                     </FormItem>
                   )
                 }}
@@ -65,14 +70,21 @@ export default function FormAgent({ initData: dataForm, onSave }: Props) {
           })}
         </div>
       </Form>
-      <Button type="submit">Lưu lại</Button>
+      <div className="flex justify-end">
+        <Button type="submit" size={'lg'} className="font-semibold">
+          <Save className="w-[14px] mr-1" />
+          save
+        </Button>
+      </div>
     </form>
   )
 }
 
 const formSchema = z.object({
-  name: z.string({ required_error: 'không được bỏ trống phần này' }),
-  email: z.string({ required_error: 'không được bỏ trống phần này' }),
+  name: z.string({ required_error: 'không được bỏ trống phần này' }).min(1),
+  email: z.string({ required_error: 'không được bỏ trống phần này' }).email(),
   phone: z.string({ required_error: 'không được bỏ trống phần này' }),
-  address: z.string({ required_error: 'không được bỏ trống phần này' }),
+  address: z
+    .string({ required_error: 'không được bỏ trống phần này' })
+    .optional(),
 })
