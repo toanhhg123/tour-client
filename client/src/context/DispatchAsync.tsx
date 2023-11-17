@@ -54,8 +54,6 @@ export default function Provider({ children }: IProps) {
             description: messageSuccess,
             variant: 'success',
             duration: 2000,
-            className:
-              'bg-white  rounded-none shadow border-l-4 border-l-green-400 shadow-green-200',
           })
         }
         if (onSuccess) onSuccess()

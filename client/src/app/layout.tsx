@@ -16,12 +16,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body className="">
         <StoreProvider>
           <div className="flex-col md:flex">
             <HeaderClient />
 
-            <div className="mt-[5rem] mx-10">
+            <div className="mt-[5rem] relative min-h-screen mx-10">
               <DispatchAsync>{children}</DispatchAsync>
             </div>
           </div>

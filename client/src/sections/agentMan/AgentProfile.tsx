@@ -44,8 +44,7 @@ const AgentProfile = () => {
   }, [getInitAgent])
 
   return (
-    <div className="p-1 min-h-[300px]">
-      {status.loading && <Loading />}
+    <div className="p-1 min-h-[300px] relative">
       <div className="pb-2 border-b">
         <p className="">Name</p>
         <h3 className="text-sm text-muted-foreground flex justify-between items-center">
@@ -56,6 +55,7 @@ const AgentProfile = () => {
         </h3>
       </div>
 
+      {status.loading && <Loading />}
       {agentDetails && (
         <FormAgent
           initData={{ ..._.omit(agentDetails, '_id', 'operId', 'operSalesId') }}

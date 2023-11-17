@@ -33,9 +33,11 @@ import { format } from 'date-fns'
 import {
   CreditCard,
   DollarSignIcon,
+  List,
   MailIcon,
   Plane,
   PlaneLanding,
+  PlusIcon,
   Star,
   TrafficCone,
 } from 'lucide-react'
@@ -45,6 +47,7 @@ import FormTour from './form'
 import { usePathname, useSearchParams } from 'next/navigation'
 import Pagination from '@/components/pagination'
 import { Empty } from '@/components/empty'
+import SideBar, { Content, GroupType } from '@/components/sideBar'
 
 const PageClient = () => {
   const { tours } = useAppSelector((state) => state.tour)
@@ -116,221 +119,257 @@ const PageClient = () => {
 
   return (
     <PrivateRoute>
-      <ToastWarring
-        handleClose={() => setSheet({})}
-        isOpen={sheet?.type === 'delete'}
-        handleContinue={handleDelete}
-      />
+      <SideBar groups={groups} />
+      <Content>
+        <ToastWarring
+          handleClose={() => setSheet({})}
+          isOpen={sheet?.type === 'delete'}
+          handleContinue={handleDelete}
+        />
 
-      <div className="w-full relative flex flex-col items-start md:flex-row md:items-center justify-between">
-        <h3 className="text-xl font-semibold leading-tight tracking-tighter md:text-2xl lg:leading-[1.1]">
-          Tour Manager
-        </h3>
+        <div className="w-full relative flex flex-col items-start md:flex-row md:items-center justify-between">
+          <h3 className="text-xl font-semibold leading-tight tracking-tighter md:text-2xl lg:leading-[1.1]">
+            Tour Manager
+          </h3>
 
-        <div className="flex align-middle gap-2">
-          <Button variant={'outline'} size={'sm'} onClick={handleReload}>
-            <ReloadIcon className="me-2" />
-            Reload
-          </Button>
+          <div className="flex align-middle gap-2">
+            <Button variant={'outline'} size={'sm'} onClick={handleReload}>
+              <ReloadIcon className="me-2" />
+              Reload
+            </Button>
 
-          <Sheet
-            open={sheet?.type === 'create' || sheet?.type === 'edit'}
-            onOpenChange={(open) => {
-              if (!open) setSheet({})
-            }}
-          >
-            <SheetTrigger asChild>
-              <Button
-                size={'sm'}
-                onClick={() => {
-                  setSheet({
-                    type: 'create',
-                    curData: initTourForm,
-                  })
-                }}
-              >
-                Tạo mới
-              </Button>
-            </SheetTrigger>
-            <SheetContent
-              side="right"
-              className="w-3/4 overflow-y-auto"
-              style={{ maxWidth: 800 }}
+            <Sheet
+              open={sheet?.type === 'create' || sheet?.type === 'edit'}
+              onOpenChange={(open) => {
+                if (!open) setSheet({})
+              }}
             >
-              <SheetHeader>
-                <SheetTitle>Thêm một tour mới</SheetTitle>
-                <SheetDescription>
-                  Vui lòng nhập vào các mục bên dưới !!
-                </SheetDescription>
-              </SheetHeader>
-              {sheet?.curData && (
-                <FormTour
-                  handleSubmit={handleSubmit}
-                  users={users}
-                  initData={sheet.curData}
-                />
-              )}
-            </SheetContent>
-          </Sheet>
-        </div>
-      </div>
-
-      {!tours.list.length && <Empty />}
-
-      {tours.list.map((tour) => {
-        return (
-          <div
-            key={tour._id}
-            className="rounded-[2px]  border-blue-100 mt-2 border  p-3"
-          >
-            <div className="flex justify-between items-center">
-              <div className="flex gap-2">
-                <Link
-                  href={tour.programLink}
-                  target="_blank"
-                  className="flex underline text-blue-500 font-semibold gap-1 text-sm items-center"
-                >
-                  <Star className="w-[1rem]" /> {tour.name}
-                </Link>
-                <Badge variant={'secondary'}>{tour.status}</Badge>
-              </div>
-
-              <div className="font-semibold text-sm flex gap-1 items-center">
-                Total Pax:
-                <span className="p-1 bg-green-200 rounded-sm">
-                  {tour.totalPax}
-                </span>
-              </div>
-            </div>
-
-            <div className="flex justify-between">
-              <div className="flex m-1 flex-wrap text-[12px] items-center gap-2">
-                <div className="font-semibold">
-                  Go Date:
-                  <span className="text-gray-500">
-                    {format(new Date(tour.goDate), 'dd/MM/yyyy')}
-                  </span>
-                </div>
-
-                <div className="font-semibold">
-                  Return Date:
-                  <span className="text-gray-500">
-                    {format(new Date(tour.goDate), 'dd/MM/yyyy')}
-                  </span>
-                </div>
-
-                <div className="font-semibold">
-                  Duration:
-                  <span className="text-gray-500">{tour.duration}</span>
-                </div>
-              </div>
-
-              <div className="flex gap-2 flex-wrap items-center">
-                <div className="font-semibold text-[12px] flex items-center">
-                  <MailIcon className="w-[12px]" />
-                  Tour Manager:
-                  <span className="text-gray-500">{tour.tourMan?.email}</span>
-                </div>
-
-                <div className="font-semibold text-[12px] flex items-center">
-                  <MailIcon className="w-[12px]" />
-                  Tour Guide:
-                  <span className="text-gray-500">{tour.tourGuide?.email}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="h-[1px] bg-gray-200 my-2"></div>
-
-            <div className="flex justify-between items-end">
-              <div>
-                <div className="font-semibold text-[12px]">
-                  <div className="flex items-center">
-                    <Plane className="w-[12px]" />
-                    Go Fight:
-                    <span>{tour.goFlight}</span>
-                  </div>
-                </div>
-
-                <div className="font-semibold text-[12px]">
-                  <div className="flex items-center">
-                    <PlaneLanding className="w-[12px]" />
-                    Return Fight:
-                    <span> {tour.goFlight}</span>
-                  </div>
-                </div>
-
-                <div className="font-semibold text-[12px]">
-                  <div className="flex items-center">
-                    <TrafficCone className="w-[12px]" />
-                    Transport:
-                    <span> {tour.transport}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <div className="font-semibold text-[12px]">
-                  <div className="flex items-center">
-                    <CreditCard className="w-[12px]" />
-                    Visa Date:
-                    <span>{format(new Date(tour.visaDate), 'dd/MM/yyyy')}</span>
-                  </div>
-                </div>
-                <div className="font-semibold text-[12px]">
-                  <div className="flex items-center">
-                    <DollarSignIcon className="w-[12px]" />
-                    commision:
-                    <span>{convertToVnd(tour.commision)}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex item-center gap-1">
+              <SheetTrigger asChild>
                 <Button
+                  size={'sm'}
                   onClick={() => {
                     setSheet({
-                      curData: mapTourToTourForm(tour),
-                      curTour: tour,
-                      type: 'edit',
+                      type: 'create',
+                      curData: initTourForm,
                     })
                   }}
-                  size={'sm'}
-                  variant={'success'}
                 >
-                  Edit
+                  Tạo mới
                 </Button>
-                <Link
-                  className={buttonVariants({
-                    size: 'sm',
-                    variant: 'outline',
-                  })}
-                  href={`/tours/booking/${tour._id}`}
-                >
-                  bookings
-                </Link>
-                <Link
-                  className={buttonVariants({ size: 'sm', variant: 'warning' })}
-                  href={`/tours/service/${tour._id}`}
-                >
-                  services
-                </Link>
-              </div>
-            </div>
+              </SheetTrigger>
+              <SheetContent
+                side="right"
+                className="w-3/4 overflow-y-auto"
+                style={{ maxWidth: 800 }}
+              >
+                <SheetHeader>
+                  <SheetTitle>Thêm một tour mới</SheetTitle>
+                  <SheetDescription>
+                    Vui lòng nhập vào các mục bên dưới !!
+                  </SheetDescription>
+                </SheetHeader>
+                {sheet?.curData && (
+                  <FormTour
+                    handleSubmit={handleSubmit}
+                    users={users}
+                    initData={sheet.curData}
+                  />
+                )}
+              </SheetContent>
+            </Sheet>
           </div>
-        )
-      })}
+        </div>
 
-      <div className="my-2">
-        <Pagination
-          query={{ search }}
-          length={Math.ceil(total / limit)}
-          pageIndex={pageIndex}
-          pathName={`${pathname}`}
-        />
-      </div>
+        {!tours.list.length && <Empty />}
+
+        <div className="flex gap-2 flex-wrap">
+          {tours.list.map((tour) => {
+            return (
+              <div
+                key={tour._id}
+                className="rounded-[2px] w-[300px] border-blue-100 mt-2 border  p-3"
+              >
+                <div className="">
+                  <div className="flex gap-2 flex-wrap">
+                    <Link
+                      href={tour.programLink}
+                      target="_blank"
+                      className="flex underline text-blue-500 font-semibold gap-1 text-sm items-center"
+                    >
+                      <Star className="w-[1rem]" /> {tour.name}
+                    </Link>
+                    <Badge variant={'secondary'}>{tour.status}</Badge>
+                  </div>
+
+                  <div className="font-semibold text-sm flex gap-1 items-center">
+                    Total Pax:{' '}
+                    <span className="p-1 bg-green-200 rounded-sm">
+                      {tour.totalPax}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="h-[1px] bg-gray-200 my-2"></div>
+
+                <div className="text-[12px] ">
+                  <div className="font-semibold">
+                    Go Date:{' '}
+                    <span className="text-gray-500">
+                      {format(new Date(tour.goDate), 'dd/MM/yyyy')}
+                    </span>
+                  </div>
+
+                  <div className="font-semibold">
+                    Return Date:{' '}
+                    <span className="text-gray-500">
+                      {format(new Date(tour.goDate), 'dd/MM/yyyy')}
+                    </span>
+                  </div>
+
+                  <div className="font-semibold">
+                    Duration:{' '}
+                    <span className="text-gray-500">{tour.duration}</span>
+                  </div>
+                  <div className="h-[1px] bg-gray-200 my-2"></div>
+
+                  <div className="">
+                    <div className="font-semibold text-[12px] flex items-center">
+                      <MailIcon className="w-[12px]" />
+                      Tour Manager:{' '}
+                      <span className="text-gray-500">
+                        {tour.tourMan?.email}
+                      </span>
+                    </div>
+
+                    <div className="font-semibold text-[12px] flex items-center">
+                      <MailIcon className="w-[12px]" />
+                      Tour Guide:{' '}
+                      <span className="text-gray-500">
+                        {tour.tourGuide?.email}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="h-[1px] bg-gray-200 my-2"></div>
+
+                <div className="flex justify-between items-end flex-wrap">
+                  <div>
+                    <div className="font-semibold text-[12px]">
+                      <div className="flex items-center">
+                        <Plane className="w-[12px]" />
+                        Go Fight: <span>{tour.goFlight}</span>
+                      </div>
+                    </div>
+
+                    <div className="font-semibold text-[12px]">
+                      <div className="flex items-center">
+                        <PlaneLanding className="w-[12px]" />
+                        Return Fight: <span> {tour.goFlight}</span>
+                      </div>
+                    </div>
+
+                    <div className="font-semibold text-[12px]">
+                      <div className="flex items-center">
+                        <TrafficCone className="w-[12px]" />
+                        Transport: <span> {tour.transport}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="font-semibold text-[12px]">
+                      <div className="flex items-center">
+                        <CreditCard className="w-[12px]" />
+                        Visa Date:{' '}
+                        <span>
+                          {format(new Date(tour.visaDate), 'dd/MM/yyyy')}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="font-semibold text-[12px]">
+                      <div className="flex items-center">
+                        <DollarSignIcon className="w-[12px]" />
+                        commision:
+                        <span>{convertToVnd(tour.commision)}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex item-center gap-1 mt-2">
+                    <Button
+                      onClick={() => {
+                        setSheet({
+                          curData: mapTourToTourForm(tour),
+                          curTour: tour,
+                          type: 'edit',
+                        })
+                      }}
+                      size={'sm'}
+                      variant={'success'}
+                    >
+                      Edit
+                    </Button>
+                    <Link
+                      className={buttonVariants({
+                        size: 'sm',
+                        variant: 'outline',
+                      })}
+                      href={`/tours/booking/${tour._id}`}
+                    >
+                      bookings
+                    </Link>
+                    <Link
+                      className={buttonVariants({
+                        size: 'sm',
+                        variant: 'warning',
+                      })}
+                      href={`/tours/service/${tour._id}`}
+                    >
+                      services
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+
+        <div className="my-2">
+          <Pagination
+            query={{ search }}
+            length={Math.ceil(total / limit)}
+            pageIndex={pageIndex}
+            pathName={`${pathname}`}
+          />
+        </div>
+      </Content>
     </PrivateRoute>
   )
 }
+
+enum _TAB_PAGE {
+  _general = 'list',
+  _USER = 'USER',
+  _Bookings = 'Bookings',
+}
+
+const groups: GroupType[] = [
+  {
+    name: 'Tour sidebar',
+    items: [
+      {
+        name: 'Tours',
+        href: `/tours/?page=${_TAB_PAGE._general}`,
+        Icon: <List className="w-[14px]" />,
+      },
+      {
+        name: 'create tour',
+        href: `/tours/?page=${_TAB_PAGE._USER}`,
+        Icon: <PlusIcon className="w-[14px]" />,
+      },
+    ],
+  },
+]
 
 export default PageClient

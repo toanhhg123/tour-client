@@ -29,6 +29,9 @@ export const getUserInOperator = () =>
 export const getAgentInOperator = () =>
   apiAuth.get<IResponse<IAgent[]>>('/agent/operator')
 
+export const getUserWithAgentManager = () =>
+  apiAuth.get<IResponse<IUser[]>>('/user/getUserWithAgentManager')
+
 const mapPostUser: { [_key in RoleType]: string } = {
   Manager: 'manager',
   TourMan: 'tourMan',

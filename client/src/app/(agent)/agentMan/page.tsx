@@ -1,9 +1,11 @@
+'use client'
 import SideBar, { Content, GroupType } from '@/components/sideBar'
 import PrivateRoute from '@/context/PrivateRouteContext'
 import AgentProfile from '@/sections/agentMan/AgentProfile'
-import { PenBox, User, UserCog2Icon } from 'lucide-react'
-import * as _ from 'lodash'
+import Booking from '@/sections/agentMan/bookings'
 import UserTable from '@/sections/agentMan/user-table'
+import * as _ from 'lodash'
+import { PenBox, User, UserCog2Icon } from 'lucide-react'
 
 type Props = {
   searchParams: {
@@ -22,6 +24,7 @@ const Page = ({ searchParams }: Props) => {
       <Content>
         {match === _TAB_PAGE._general && <AgentProfile />}
         {match === _TAB_PAGE._USER && <UserTable />}
+        {match === _TAB_PAGE._Bookings && <Booking />}
       </Content>
     </PrivateRoute>
   )

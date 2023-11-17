@@ -2,14 +2,31 @@
 
 import { columns } from '@/components/agentMan/comlumn'
 import { DataTable } from '@/components/agentMan/data-table-user'
-import { useAppSelector } from '@/store/hooks'
-import React from 'react'
+import Loading from '@/components/loading'
+import { IUser } from '@/features/user/type'
+import useFetch from '@/hooks/useFetch'
+import { getUserWithAgentManager } from '@/services/auth'
+import { handleToastError } from '@/utils'
+import { useCallback, useEffect, useState } from 'react'
 
 const UserTable = () => {
-  const { usersInOperator } = useAppSelector((state) => state.user)
+  const [userAgents, setUserAgents] = useState<IUser[]>([])
+  const [status, fetch] = useFetch()
+
+  const getInitUser = useCallback(async () => {
+    const { data, error } = await fetch(getUserWithAgentManager)
+    if (error) handleToastError(error)
+    if (data) setUserAgents(data.data.element)
+  }, [fetch])
+
+  useEffect(() => {
+    getInitUser()
+  }, [getInitUser])
+
   return (
-    <div className="mt-5">
-      <DataTable columns={columns} data={usersInOperator} />
+    <div className="mt-5 min-h-[300px] relative">
+      {status.loading && <Loading />}
+      <DataTable columns={columns} data={userAgents} />
     </div>
   )
 }
