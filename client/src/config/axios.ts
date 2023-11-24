@@ -33,6 +33,8 @@ const handleRequest = (config: InternalAxiosRequestConfig<any>) => {
   return config
 }
 
+const axiosInstance = axios.create({})
+
 const url =
   process.env.NODE_ENV === 'production'
     ? 'http://103.98.160.26'
@@ -40,16 +42,20 @@ const url =
 
 const portAuth = process.env.NODE_ENV === 'production' ? 8090 : 8081
 
+export const URL_AUTH_API = `${url}:${portAuth}`
+export const URL_TOUR_API = `${url}:8082`
+export const URL_TOUR_AGENT = `${url}:8083`
+
 const apiAuth = axios.create({
-  baseURL: `${url}:${portAuth}`,
+  baseURL: URL_AUTH_API,
 })
 
 const apiTour = axios.create({
-  baseURL: `${url}:8082`,
+  baseURL: URL_TOUR_API,
 })
 
 const apiAgent = axios.create({
-  baseURL: `${url}:8083`,
+  baseURL: URL_TOUR_AGENT,
 })
 
 apiAuth.interceptors.request.use(handleRequest, handleError)
@@ -61,10 +67,14 @@ apiTour.interceptors.response.use((config) => config, handleError)
 apiAgent.interceptors.request.use(handleRequest, handleError)
 apiAgent.interceptors.response.use((config) => config, handleError)
 
+axiosInstance.interceptors.request.use(handleRequest, handleError)
+axiosInstance.interceptors.response.use((config) => config, handleError)
+
 const API = {
   apiAuth,
   apiAgent,
   apiTour,
+  axiosInstance,
 }
 
 export default API

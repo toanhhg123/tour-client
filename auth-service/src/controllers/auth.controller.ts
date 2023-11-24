@@ -6,7 +6,7 @@ import { IUserLogin } from '../models/user.model'
 class AuthController {
   login = asyncHandler(
     async (req: Request<unknown, unknown, IUserLogin>, res) => {
-      const data = await authService.authencate(req.body)
+      const data = await authService.authenticate(req.body)
 
       return res.json({
         message: 'success',
@@ -16,7 +16,7 @@ class AuthController {
     }
   )
 
-  valiate = asyncHandler(async (req, res) => {
+  validate = asyncHandler(async (req, res) => {
     return res.json({
       message: 'success',
       element: req.user,

@@ -1,3 +1,5 @@
+import { RoleType } from '~/types/authorize'
+import Role from '~/models/role.model'
 import User, { IUser, IUserCreate } from '~/models/user.model'
 
 class UserRepositoty {
@@ -12,8 +14,18 @@ class UserRepositoty {
     return user as IUser
   }
 
-  async findUsersByOperatorid(id: string) {
+  findUsersByOperatorid(id: string) {
     return User.find({ operatorId: id })
+      .populate('roleId')
+      .populate('operatorId')
+      .populate('agentId')
+      .exec()
+  }
+
+  async getTourGuideInOperator(operatorId: string) {
+    const role = await Role.findOne({ name: 'Oper.Guide' })
+
+    return User.find({ operatorId, roleId: role!.id })
       .populate('roleId')
       .populate('operatorId')
       .populate('agentId')

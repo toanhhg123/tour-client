@@ -1,7 +1,5 @@
-'use client'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
 import { ReactNode } from 'react'
 import { buttonVariants } from './ui/button'
 
@@ -15,20 +13,14 @@ type Props = {
 }
 
 const SideBar = ({ groups }: Props) => {
-  const params = useSearchParams()
-
-  const page = params.get('page') || 'NO_MATCH'
-
   return (
-    <div className="border min-h-screen h-full w-[300px] pt-16 fixed top-0 left-0 z-10 overflow-auto">
+    <div className="border min-h-screen h-full w-[300px] pt-16 fixed top-0 left-0 z-50 overflow-auto">
       {groups.map(({ name, items }) => {
         return (
           <div className="px-3 py-2" key={name}>
             <h2 className="mb-2 px-4 font-semibold tracking-tight">{name}</h2>
 
             {items.map(({ name, href, Icon }) => {
-              const match = href.match(page) ? true : false
-
               return (
                 <div className="space-y-1" key={href}>
                   <Link
@@ -37,7 +29,7 @@ const SideBar = ({ groups }: Props) => {
                       buttonVariants({
                         className:
                           'w-full justify-start text-[14px] flex items-center gap-1',
-                        variant: match ? 'secondary' : 'ghost',
+                        variant: 'ghost',
                       }),
                     )}
                   >

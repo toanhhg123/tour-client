@@ -6,6 +6,21 @@ export interface IAgent {
   operId: ITour
 }
 
+export type TourDestination = {
+  _id: string
+  name: string
+  description?: string
+  userCreatedAt: {
+    _id: string
+    operatorId: string
+  }
+}
+
+export type TourDestinationCreate = Omit<
+  TourDestination,
+  'userCreatedAt' | '_id'
+>
+
 export interface IOper {
   name: string
   email: string

@@ -12,6 +12,7 @@ declare global {
   namespace Express {
     export interface Request {
       user: {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         _id: string | any
         role: string
         operatorId: string

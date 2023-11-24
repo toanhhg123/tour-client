@@ -3,14 +3,14 @@ import User, { IUser, IUserLogin } from '~/models/user.model'
 import { signToken } from '~/utils/jwt.util'
 
 class AuthService {
-  async authencate(user: IUserLogin) {
+  async authenticate(user: IUserLogin) {
     const { email, password } = user
 
     const record: IUser | null = await User.findOne({ email })
       .select('+password')
       .populate('roleId')
 
-    if (!record) throw new Error('Không tìm thấy email !!!')
+    if (!record) throw new Error('email not found !!!')
 
     if (!(await record.comparePassword(password)))
       throw new Error('mật khẩu không chính xác !!!')

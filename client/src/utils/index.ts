@@ -27,8 +27,7 @@ export interface ITourQuery {
 export const handleToastError = (message: string) => {
   toast({
     variant: 'destructive',
-    title: 'Uh oh! thao tác lỗi.',
-    description: message,
+    title: message,
     duration: 6000,
   })
 }

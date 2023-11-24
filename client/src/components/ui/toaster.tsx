@@ -1,5 +1,4 @@
 'use client'
-
 import {
   Toast,
   ToastClose,
@@ -20,7 +19,7 @@ export function Toaster() {
           <Toast
             key={id}
             {...props}
-            className="w-max min-w-[300px]  right-0 shadow border border-gray-100"
+            className="w-max min-w-[300px]  right-2 shadow border border-gray-100"
           >
             <div
               className={cn(

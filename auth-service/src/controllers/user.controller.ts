@@ -24,6 +24,12 @@ class UserController {
     return res.json({ message: 'success', element: data, status: 'success' })
   })
 
+  getTourGuideInOperator = asyncHandler(async (req: Request, res) => {
+    const { operatorId } = req.user
+    const data = await userService.getTourGuidesByOperatorId(operatorId)
+    return res.json({ message: 'success', element: data, status: 'success' })
+  })
+
   getUserWithAgentManager = asyncHandler(async (req, res) => {
     const { agentId } = req.user
     const data = await userService.findUserByAgentId(agentId)

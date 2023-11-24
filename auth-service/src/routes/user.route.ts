@@ -17,7 +17,8 @@ const {
   getByAgentId,
   getUserWithAgentManager,
   getUserInOperator,
-  createOperGuide
+  createOperGuide,
+  getTourGuideInOperator
 } = userController
 
 const router = Router()
@@ -29,6 +30,8 @@ router.get(
   authorize(['Agent.Manager']),
   getUserWithAgentManager
 )
+
+router.get('/getTourGuideInOperator', authorize(), getTourGuideInOperator)
 
 router.get('/me', authorize(), getMe)
 

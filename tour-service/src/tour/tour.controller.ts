@@ -7,7 +7,10 @@ import mongoose from 'mongoose'
 class TourController {
   gets = asyncHandler(async (req, res) => {
     const { operatorId } = req.user
-    const record = await tourService.findByOperId(operatorId, req.query)
+    const record = await tourService.findByOperId(
+      operatorId.toString(),
+      req.query
+    )
 
     return res.json({
       status: 'success',
@@ -49,7 +52,10 @@ class TourController {
 
   update = asyncHandler(
     async (req: Request<{ id: string }, unknown, TourCreate>, res) => {
-      await tourService.isInOperator(req.params.id, req.user.operatorId)
+      await tourService.isInOperator(
+        req.params.id,
+        req.user.operatorId.toString()
+      )
 
       delete req.body.tourMan
       delete req.body.operator

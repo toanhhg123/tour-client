@@ -1,3 +1,4 @@
+import { toast } from '@/components/ui/use-toast'
 import { IBooking } from '@/features/booking/type'
 import { type ClassValue, clsx } from 'clsx'
 import { format } from 'date-fns'
@@ -52,4 +53,21 @@ export function analysisBooking(bookings: IBooking[]) {
 
 export const formatDateDDMMYYYY = (date?: string | Date | number) => {
   return format(new Date(date || new Date()), 'dd/MM/yyyy')
+}
+
+export const showToastError = (error: string) => {
+  toast({
+    variant: 'destructive',
+    title: error,
+    description: error,
+    duration: 6000,
+  })
+}
+
+export const showToastSuccess = (message: string = 'success') => {
+  toast({
+    title: message,
+    variant: 'success',
+    duration: 2000,
+  })
 }

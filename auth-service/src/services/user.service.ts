@@ -16,6 +16,10 @@ class UserService {
     return userRepository.findUserByOperatorId(id)
   }
 
+  getTourGuidesByOperatorId(operatorId: string) {
+    return userRepository.getTourGuideInOperator(operatorId)
+  }
+
   async createUserWithRoleName(user: IUserCreate, roleName: RoleType) {
     const role = await roleRepository.getRoleByRoleName(roleName)
 
