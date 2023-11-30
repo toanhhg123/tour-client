@@ -18,8 +18,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { URL_AUTH_API } from '@/config/axios'
-import { initTour } from '@/features/tour/type'
+import { URL_AUTH_API, URL_TOUR_API } from '@/config/axios'
+import { TourDestination, initTour } from '@/features/tour/type'
 import { IUser } from '@/features/user/type'
 import useAxios from '@/hooks/useAxios'
 import useFetch from '@/hooks/useFetch'
@@ -38,19 +38,31 @@ const Page = () => {
   const { data: tourGuides } = useAxios<IUser[]>({
     baseURL: URL_AUTH_API + '/user/getTourGuideInOperator',
   })
+  const { data: tourDestinations } = useAxios<TourDestination[]>({
+    baseURL: URL_TOUR_API + '/tourDestination/myDestination',
+  })
 
   const router = useRouter()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { name: '' },
+    defaultValues: {
+      name: '',
+    },
   })
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (status.loading) return
 
     const { data, error } = await fetch(() =>
-      createTour({ ..._.omit(initTour, '_id'), name: values.name }),
+      createTour({
+        ..._.omit(initTour, '_id'),
+        name: values.name,
+        tourDes: values.tourDes,
+        tourGuide: {
+          _id: values.tourGuideId,
+        },
+      }),
     )
     if (error) showToastError(error)
     if (data) {
@@ -87,7 +99,7 @@ const Page = () => {
               render={({ field }) => {
                 return (
                   <FormItem className="flex flex-col">
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel className="font-normal">Name</FormLabel>
                     <FormControl>
                       <Input
                         placeholder={'please enter name tour'}
@@ -106,11 +118,17 @@ const Page = () => {
               name={'tourGuideId'}
               render={({ field }) => {
                 return (
-                  <FormItem className="flex flex-col mt-3 relative">
+                  <FormItem className="flex flex-col mt-6 relative">
                     {!tourGuides && <Loader />}
-                    <FormLabel>Select Tour Guide</FormLabel>
+                    <FormLabel className="font-normal">
+                      Select Tour Guide
+                    </FormLabel>
                     <FormControl>
-                      <Select {...field} value={field.value}>
+                      <Select
+                        {...field}
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="select tour guide..." />
@@ -131,7 +149,45 @@ const Page = () => {
                 )
               }}
             />
+
+            <FormField
+              control={form.control}
+              name={'tourDes'}
+              render={({ field }) => {
+                return (
+                  <FormItem className="flex flex-col mt-6 relative">
+                    {!tourDestinations && <Loader />}
+                    <FormLabel className="font-normal">
+                      Select Tour Destination
+                    </FormLabel>
+                    <FormControl>
+                      <Select
+                        {...field}
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="select tour destination..." />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {tourDestinations &&
+                            tourDestinations.map((des) => (
+                              <SelectItem value={des._id} key={des._id}>
+                                {des.name}
+                              </SelectItem>
+                            ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )
+              }}
+            />
           </CardContent>
+
           <CardFooter>
             <div className="w-full flex justify-between">
               <Link
@@ -164,6 +220,7 @@ const Page = () => {
 const formSchema = z.object({
   name: z.string().min(1, { message: 'không được bỏ trống phần này' }),
   tourGuideId: z.string().min(1, { message: 'không được bỏ trống phần này' }),
+  tourDes: z.string().min(1, { message: 'không được bỏ trống phần này' }),
 })
 
 export default Page

@@ -6,4 +6,7 @@ export interface ITourQuery {
   tourManId?: string
   tourGuideId?: string
   status?: string
+  sortGoDate?: 'asc' | 'desc'
+  sortReturnDate?: 'asc' | 'desc'
+  tourDes?: string
 }

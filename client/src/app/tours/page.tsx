@@ -1,3 +1,4 @@
+'use client'
 import ListTour from '@/sections/tour/list-tour'
 
 const PageClient = () => {

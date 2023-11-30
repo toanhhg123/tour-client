@@ -21,8 +21,10 @@ export default function useAxios<T = unknown>(config: AxiosRequestConfig) {
 
   const cancelRequest = useRef<boolean>(false)
 
-  const fetchData = useCallback(async () => {
+  const fetchData = useCallback(async (config?: AxiosRequestConfig) => {
     try {
+      if (!config) return
+
       const url = config.baseURL
 
       const { data } = await API.axiosInstance<IResponse<T>>({ ...config })
@@ -69,12 +71,11 @@ export default function useAxios<T = unknown>(config: AxiosRequestConfig) {
 
     dispatch({ type: 'loading' })
 
-    // If a cache exists for this url, return it
     if (cache.current[url]) {
       dispatch({ type: 'fetched', payload: cache.current[url] })
       return
     }
-    void fetchData()
+    void fetchData(config)
 
     return () => {
       cancelRequest.current = true

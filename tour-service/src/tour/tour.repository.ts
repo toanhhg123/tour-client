@@ -5,11 +5,49 @@ import { IPaginationResponse } from '~/types'
 import { LIMIT_PAGE } from '~/utils/consts'
 
 class TourRepository {
-  async getToursByTourManId(tourManId: string) {
-    return await TourModel.find({
+  async getToursByTourManId(tourManId: string, query: ITourQuery = {}) {
+    const search = { $regex: new RegExp(query?.search || ''), $options: 'i' }
+    const pageIndex = query?.pageIndex || 1
+    const startDate = new Date(query?.fromDate || '1975-01-01')
+    const endDate = new Date(query?.endDate || '3000-01-01')
+    const sortGoDate = query.sortGoDate === 'asc' ? 'asc' : 'desc'
+    const sortReturnDate = query.sortReturnDate === 'asc' ? 'asc' : 'desc'
+
+    const tourDes = query.tourDes
+
+    const status = query.status || 'available'
+
+    const filter: FilterQuery<Tour> = {
       'tourMan._id': tourManId,
-      isDeleted: false
-    }).exec()
+      isDeleted: false,
+      name: search,
+      status,
+      goDate: {
+        $gt: startDate,
+        $lt: endDate
+      }
+    }
+
+    if (tourDes) {
+      filter.tourDes = tourDes
+    }
+
+    const [count, tours] = await Promise.all([
+      TourModel.find(filter).count().exec(),
+      TourModel.find(filter)
+        .sort({ goDate: sortGoDate, returnDate: sortReturnDate })
+        .populate('tourDes')
+        .skip((pageIndex - 1) * LIMIT_PAGE)
+        .limit(LIMIT_PAGE)
+        .exec()
+    ])
+
+    return {
+      limit: LIMIT_PAGE,
+      pageIndex,
+      list: tours,
+      total: count
+    } as IPaginationResponse<typeof tours>
   }
 
   async getByTourGuideId(tourGuideId: string, query?: ITourQuery) {
@@ -33,6 +71,7 @@ class TourRepository {
       TourModel.find(filter)
         .skip((pageIndex - 1) * LIMIT_PAGE)
         .limit(LIMIT_PAGE)
+
         .exec()
     ])
 
@@ -82,6 +121,7 @@ class TourRepository {
       TourModel.find(filter)
         .skip((pageIndex - 1) * LIMIT_PAGE)
         .limit(LIMIT_PAGE)
+        .sort({ goDate: 'asc' })
         .exec()
     ])
 
@@ -99,11 +139,13 @@ class TourRepository {
     }).exec()
   }
 
-  async findById(_id: string) {
-    return await TourModel.findOne({
+  findById(_id: string) {
+    return TourModel.findOne({
       _id,
       isDeleted: false
-    }).exec()
+    })
+      .populate('tourDes')
+      .exec()
   }
 
   async removeTourById(_id: string) {

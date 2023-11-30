@@ -37,6 +37,7 @@ export interface ITour {
   price: number
   duration: string
   transport: string
+  tourDes?: TourDestination
   goDate: Date
   goFlight: string
   returnDate: Date
@@ -112,7 +113,9 @@ export const initTour: ITour = {
   price: 0,
 }
 
-export type TourCreate = Omit<ITour, '_id'>
+export type TourCreate = Omit<ITour, '_id' | 'tourDes' | 'operator'> & {
+  tourDes?: string
+}
 
 export interface ITourForm {
   name: string
@@ -195,7 +198,7 @@ export const mapTourToTourForm = ({
 }
 
 export const mapTourToTourCreate = ({ _id, ...rest }: ITour) => {
-  return { ...rest } as TourCreate
+  return { ...rest, tourDes: rest.tourDes?._id } as TourCreate
 }
 
 export interface TourService {

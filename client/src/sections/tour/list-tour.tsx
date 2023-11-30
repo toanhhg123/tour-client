@@ -1,299 +1,107 @@
 'use client'
 import { Empty } from '@/components/empty'
+import Loader from '@/components/loader'
 import Pagination from '@/components/pagination'
-import ToastWarring from '@/components/toastWarning'
-import { Badge } from '@/components/ui/badge'
-import { Button, buttonVariants } from '@/components/ui/button'
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet'
-import { deleteTourThunks, getToursThunk } from '@/features/tour/actions'
-import {
-  ITour,
-  ITourForm,
-  initTourForm,
-  mapTourToTourForm,
-} from '@/features/tour/type'
-import { getUserThunks } from '@/features/user/actions'
-import useDispatchAsync from '@/hooks/useDispatchAsync'
-import { useAppSelector } from '@/store/hooks'
-import { convertToVnd } from '@/utils'
-import { ReloadIcon } from '@radix-ui/react-icons'
-import { format } from 'date-fns'
-import {
-  CreditCard,
-  DollarSignIcon,
-  MailIcon,
-  Plane,
-  PlaneLanding,
-  Star,
-  TrafficCone,
-} from 'lucide-react'
-import Link from 'next/link'
-import { usePathname, useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { URL_TOUR_API } from '@/config/axios'
+import { ITour } from '@/features/tour/type'
+import useAxios from '@/hooks/useAxios'
+import { IPaginationResponse, handleToastError } from '@/utils'
+import { Filter, X } from 'lucide-react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { useEffect } from 'react'
+import CardTourItem from './card-tour-item'
+import FilterTour, { Filter as TypeFilterTour } from './filter-tour'
+import SearchDebounceTour from './search-tour-debounce'
 
 const ListTour = () => {
-  const { tours } = useAppSelector((state) => state.tour)
-
-  const [sheet, setSheet] = useState<{
-    type?: 'edit' | 'create' | 'delete'
-    curData?: ITourForm
-    curTour?: ITour
-  }>({})
-
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const router = useRouter()
 
-  const search = searchParams.get('search') || ''
-  const pageIndex = Number(searchParams.get('pageIndex') || 1)
-
-  const { total, limit } = tours
-
-  const { dispatchAsyncThunk } = useDispatchAsync()
-
-  const handleDelete = () => {
-    const id = sheet?.curTour?._id
-    if (id)
-      dispatchAsyncThunk(deleteTourThunks(id), 'delete tour success', () =>
-        setSheet({}),
-      )
-    setSheet({})
+  const filterParams = {
+    search: searchParams.get('search') || '',
+    tourDes: searchParams.get('tourDes') || '',
+    sortGoDate: searchParams.get('sortGoDate') || '',
+    sortReturnDate: searchParams.get('sortReturnDate') || '',
+    pageIndex: searchParams.get('pageIndex') || '',
   }
 
-  const handleReload = () => {
-    dispatchAsyncThunk(getToursThunk(), 'reload success')
+  const query = new URLSearchParams({
+    ...filterParams,
+  })
+
+  const { data: tours, error } = useAxios<IPaginationResponse<ITour[]>>({
+    baseURL: URL_TOUR_API + `/tour/getByTourMan?${query}`,
+  })
+
+  const total = tours?.total || 0
+  const limit = tours?.limit || 0
+
+  const handleSearchTour = (search: string) => {
+    const query = new URLSearchParams({
+      ...filterParams,
+      search,
+    })
+    router.push(`${pathname}?${query}`)
+  }
+
+  const handleFilter = (filter: TypeFilterTour) => {
+    const query = new URLSearchParams({
+      ...filterParams,
+      ...filter,
+    })
+
+    router.push(`${pathname}?${query}`)
+  }
+
+  const handleReset = () => {
+    router.push(`${pathname}`)
   }
 
   useEffect(() => {
-    dispatchAsyncThunk(getToursThunk({ pageIndex, search }))
-    dispatchAsyncThunk(getUserThunks())
-  }, [dispatchAsyncThunk, pageIndex, search])
+    if (error) {
+      handleToastError(error.message)
+    }
+  }, [error])
 
   return (
     <div className="min-h-[300px] w-full relative">
-      <ToastWarring
-        handleClose={() => setSheet({})}
-        isOpen={sheet?.type === 'delete'}
-        handleContinue={handleDelete}
-      />
-
-      <div className="w-full relative flex flex-col items-start md:flex-row md:items-center justify-between">
+      <div className="w-full relative flex  flex-col items-start md:flex-row md:items-center justify-between">
         <h3 className="text-xl font-semibold leading-tight tracking-tighter md:text-2xl lg:leading-[1.1]">
           Tour Manager
         </h3>
 
-        <div className="flex align-middle gap-2">
-          <Button variant={'outline'} size={'sm'} onClick={handleReload}>
-            <ReloadIcon className="me-2" />
-            Reload
+        <div className="flex gap-2 items-center">
+          <SearchDebounceTour onSearchFinish={handleSearchTour} />
+          <FilterTour onFilter={handleFilter}>
+            <Button size={'sm'} variant={'outline'}>
+              <Filter className="w-[14px] mr-1" />
+              filter
+            </Button>
+          </FilterTour>
+          <Button onClick={handleReset} size={'sm'} variant={'outline'}>
+            <X className="w-[14px] mr-1" />
+            reset
           </Button>
-
-          <Sheet
-            open={sheet?.type === 'create' || sheet?.type === 'edit'}
-            onOpenChange={(open) => {
-              if (!open) setSheet({})
-            }}
-          >
-            <SheetTrigger asChild>
-              <Button
-                size={'sm'}
-                onClick={() => {
-                  setSheet({
-                    type: 'create',
-                    curData: initTourForm,
-                  })
-                }}
-              >
-                Tạo mới
-              </Button>
-            </SheetTrigger>
-            <SheetContent
-              side="right"
-              className="w-3/4 overflow-y-auto"
-              style={{ maxWidth: 800 }}
-            >
-              <SheetHeader>
-                <SheetTitle>Thêm một tour mới</SheetTitle>
-                <SheetDescription>
-                  Vui lòng nhập vào các mục bên dưới !!
-                </SheetDescription>
-              </SheetHeader>
-              {/* {sheet?.curData && (
-            // <FormTour
-            //   handleSubmit={handleSubmit}
-            //   users={users}
-            //   initData={sheet.curData}
-            // />
-          )} */}
-            </SheetContent>
-          </Sheet>
         </div>
       </div>
 
-      {!tours.list.length && <Empty />}
+      {!tours && <Loader />}
 
-      <div className="flex gap-2 flex-wrap">
-        {tours.list.map((tour) => {
-          return (
-            <div
-              key={tour._id}
-              className="rounded-[2px] w-[300px] border-blue-100 mt-2 border  p-3"
-            >
-              <div className="">
-                <div className="flex gap-2 flex-wrap">
-                  <Link
-                    href={tour.programLink}
-                    target="_blank"
-                    className="flex underline text-blue-500 font-semibold gap-1 text-sm items-center"
-                  >
-                    <Star className="w-[1rem]" /> {tour.name}
-                  </Link>
-                  <Badge variant={'secondary'}>{tour.status}</Badge>
-                </div>
+      {!tours?.list.length && <Empty />}
 
-                <div className="font-semibold text-sm flex gap-1 items-center">
-                  Total Pax:{' '}
-                  <span className="p-1 bg-green-200 rounded-sm">
-                    {tour.totalPax}
-                  </span>
-                </div>
-              </div>
-
-              <div className="h-[1px] bg-gray-200 my-2"></div>
-
-              <div className="text-[12px] ">
-                <div className="font-semibold">
-                  Go Date:{' '}
-                  <span className="text-gray-500">
-                    {format(new Date(tour.goDate), 'dd/MM/yyyy')}
-                  </span>
-                </div>
-
-                <div className="font-semibold">
-                  Return Date:{' '}
-                  <span className="text-gray-500">
-                    {format(new Date(tour.goDate), 'dd/MM/yyyy')}
-                  </span>
-                </div>
-
-                <div className="font-semibold">
-                  Duration:{' '}
-                  <span className="text-gray-500">{tour.duration}</span>
-                </div>
-                <div className="h-[1px] bg-gray-200 my-2"></div>
-
-                <div className="">
-                  <div className="font-semibold text-[12px] flex items-center">
-                    <MailIcon className="w-[12px]" />
-                    Tour Manager:{' '}
-                    <span className="text-gray-500">{tour.tourMan?.email}</span>
-                  </div>
-
-                  <div className="font-semibold text-[12px] flex items-center">
-                    <MailIcon className="w-[12px]" />
-                    Tour Guide:{' '}
-                    <span className="text-gray-500">
-                      {tour.tourGuide?.email}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="h-[1px] bg-gray-200 my-2"></div>
-
-              <div className="flex justify-between items-end flex-wrap">
-                <div>
-                  <div className="font-semibold text-[12px]">
-                    <div className="flex items-center">
-                      <Plane className="w-[12px]" />
-                      Go Fight: <span>{tour.goFlight}</span>
-                    </div>
-                  </div>
-
-                  <div className="font-semibold text-[12px]">
-                    <div className="flex items-center">
-                      <PlaneLanding className="w-[12px]" />
-                      Return Fight: <span> {tour.goFlight}</span>
-                    </div>
-                  </div>
-
-                  <div className="font-semibold text-[12px]">
-                    <div className="flex items-center">
-                      <TrafficCone className="w-[12px]" />
-                      Transport: <span> {tour.transport}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <div className="font-semibold text-[12px]">
-                    <div className="flex items-center">
-                      <CreditCard className="w-[12px]" />
-                      Visa Date:{' '}
-                      <span>
-                        {format(new Date(tour.visaDate), 'dd/MM/yyyy')}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="font-semibold text-[12px]">
-                    <div className="flex items-center">
-                      <DollarSignIcon className="w-[12px]" />
-                      commision:
-                      <span>{convertToVnd(tour.commision)}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex item-center gap-1 mt-2">
-                  <Button
-                    onClick={() => {
-                      setSheet({
-                        curData: mapTourToTourForm(tour),
-                        curTour: tour,
-                        type: 'edit',
-                      })
-                    }}
-                    size={'sm'}
-                    variant={'success'}
-                  >
-                    Edit
-                  </Button>
-                  <Link
-                    className={buttonVariants({
-                      size: 'sm',
-                      variant: 'outline',
-                    })}
-                    href={`/tours/booking/${tour._id}`}
-                  >
-                    bookings
-                  </Link>
-                  <Link
-                    className={buttonVariants({
-                      size: 'sm',
-                      variant: 'warning',
-                    })}
-                    href={`/tours/service/${tour._id}`}
-                  >
-                    services
-                  </Link>
-                </div>
-              </div>
-            </div>
-          )
+      <div className="grid md:grid-cols-1 lg:grid-cols-2 flex-col gap-4 my-5">
+        {tours?.list.map((tour) => {
+          return <CardTourItem key={tour._id} tour={tour} />
         })}
       </div>
 
       <div className="my-2">
         <Pagination
-          query={{ search }}
+          query={{ search: filterParams.search }}
           length={Math.ceil(total / limit)}
-          pageIndex={pageIndex}
+          pageIndex={Number(filterParams.pageIndex) || 1}
           pathName={`${pathname}`}
         />
       </div>

@@ -26,8 +26,10 @@ class BookingRepository {
     return booking
   }
 
-  getByTourId(tourId: string) {
-    return bookingModel.find({ 'tour._id': tourId }).populate('client')
+  getByTourId(tourId: string, operatorId: string) {
+    return bookingModel
+      .find({ 'tour._id': tourId, operatorId })
+      .populate('client')
   }
 
   getByListTourId(tourId: string[]) {

@@ -5,8 +5,8 @@ import bookingPaymentRepository from '~/bookingPayment/bookingPayment.repository
 import { ResponseError } from '~/types'
 
 class BookingService {
-  findByTourId(id: string) {
-    return bookingRepository.getByTourId(id)
+  findByTourId(id: string, operatorId: string) {
+    return bookingRepository.getByTourId(id, operatorId)
   }
 
   async findBookingByClient(search: string) {

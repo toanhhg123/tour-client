@@ -26,6 +26,9 @@ export const createTour = (tour: TourCreate) =>
 export const updateTour = (id: string, tour: TourCreate) =>
   apiTour.patch<IResponse<TourCreate>>(`/tour/${id}`, tour)
 
+export const updateStatusTour = (id: string, status: string) =>
+  apiTour.patch<IResponse<ITour>>(`/tour/${id}`, { status })
+
 export const getTourServiceByTourId = (id: string) =>
   apiTour.get<IResponse<TourService[]>>(`/tourService/tour/${id}`)
 

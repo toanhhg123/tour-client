@@ -1,8 +1,8 @@
-import { asyncHandler } from '~/core'
-import tourService from './tour.service'
 import { Request } from 'express'
+import { Types } from 'mongoose'
+import { asyncHandler } from '~/core'
 import { TourCreate } from './tour.model'
-import mongoose from 'mongoose'
+import tourService from './tour.service'
 
 class TourController {
   gets = asyncHandler(async (req, res) => {
@@ -11,6 +11,17 @@ class TourController {
       operatorId.toString(),
       req.query
     )
+
+    return res.json({
+      status: 'success',
+      message: 'success',
+      element: record
+    })
+  })
+
+  getByTourManager = asyncHandler(async (req, res) => {
+    const { _id } = req.user
+    const record = await tourService.findByTourManId(_id, req.query)
 
     return res.json({
       status: 'success',
@@ -29,16 +40,31 @@ class TourController {
     })
   })
 
+  findById = asyncHandler(async (req: Request<{ id: string }>, res) => {
+    const { _id } = req.user
+
+    await tourService.isTourMan(_id, req.params.id)
+
+    const record = await tourService.findOne(req.params.id)
+
+    return res.json({
+      status: 'success',
+      message: 'success',
+      element: record
+    })
+  })
+
   create = asyncHandler(
     async (req: Request<unknown, unknown, TourCreate>, res) => {
+      console.log(req.user)
       const record = await tourService.create({
         ...req.body,
         tourMan: {
           ...req.user
         },
         operator: {
-          _id: new mongoose.Types.ObjectId(req.user.operatorId),
-          ...req.body.operator
+          ...req.body.operator,
+          _id: new Types.ObjectId(req.user.operatorId)
         }
       })
 

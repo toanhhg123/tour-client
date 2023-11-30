@@ -9,6 +9,10 @@ const tourSchema = new Schema(
       type: Number,
       default: 0
     },
+    tourDes: {
+      type: Schema.Types.ObjectId,
+      ref: 'TourDestinations'
+    },
     totalPax: {
       type: Number
     },

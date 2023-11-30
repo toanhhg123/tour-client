@@ -1,12 +1,15 @@
 import { Router } from 'express'
-import tourController from './tour.controller'
 import { authorize } from '~/middlewares/authen.middleware'
+import tourController from './tour.controller'
 
-const { gets, create, update, get, remove } = tourController
+const { gets, create, update, remove, getByTourManager, findById } =
+  tourController
 
 const router = Router()
 
-router.get('/:id', authorize(), get)
+router.get('/getByTourMan', authorize(['TourMan']), getByTourManager)
+
+router.get('/:id', authorize(['TourMan']), findById)
 
 router.get('/', authorize([]), gets)
 

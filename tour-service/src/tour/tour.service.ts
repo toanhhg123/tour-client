@@ -10,6 +10,12 @@ class TourService {
       throw ResponseError.forbbidenError()
   }
 
+  async isTourMan(userId: string, tourId: string) {
+    const tour = await tourRepo.findById(tourId)
+    if (tour?.tourMan?._id?.toString() !== userId)
+      throw ResponseError.forbbidenError('user not is tour manager')
+  }
+
   async isInOperator(tourId: string, operId: string) {
     const tour = await TourModel.findById(tourId)
 
@@ -38,16 +44,16 @@ class TourService {
     return await TourModel.findByIdAndUpdate(id, tour)
   }
 
-  async findByTourManId(_id: string) {
-    return await tourRepo.getToursByTourManId(_id)
+  findByTourManId(_id: string, query: ITourQuery) {
+    return tourRepo.getToursByTourManId(_id, query)
   }
 
-  async findByTourGuideId(_id: string) {
-    return await tourRepo.getByTourGuideId(_id)
+  findByTourGuideId(_id: string) {
+    return tourRepo.getByTourGuideId(_id)
   }
 
-  async removeTourById(_id: string) {
-    return await tourRepo.removeTourById(_id)
+  removeTourById(_id: string) {
+    return tourRepo.removeTourById(_id)
   }
 }
 

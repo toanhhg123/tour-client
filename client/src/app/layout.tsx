@@ -2,6 +2,7 @@ import HeaderClient from '@/components/header'
 import React from 'react'
 import StoreProvider from '../store/provider'
 import DispatchAsync from '@/context/DispatchAsync'
+
 import './globals.css'
 
 export const metadata = {

@@ -51,7 +51,7 @@ type PropsContent = {
 }
 
 export const Content = ({ children }: PropsContent) => {
-  return <div className="absolute left-[300px] right-10">{children}</div>
+  return <div className="absolute left-[300px] right-2">{children}</div>
 }
 
 export default SideBar

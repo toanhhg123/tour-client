@@ -8,7 +8,8 @@ import bookingService from './booking.service'
 
 class BookingController {
   getByTourId = asyncHandler(async (req: Request<{ id: string }>, res) => {
-    const data = await bookingService.findByTourId(req.params.id)
+    const { operatorId } = req.user
+    const data = await bookingService.findByTourId(req.params.id, operatorId)
 
     return res.json({
       status: 'success',
@@ -79,7 +80,8 @@ class BookingController {
   )
 
   get = asyncHandler(async (req: Request<{ id: string }>, res) => {
-    const data = await bookingService.findByTourId(req.params.id)
+    const { operatorId } = req.user
+    const data = await bookingService.findByTourId(req.params.id, operatorId)
 
     return res.json({
       status: 'success',
