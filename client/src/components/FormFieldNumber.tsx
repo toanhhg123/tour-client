@@ -36,7 +36,7 @@ const FormFieldNumber = <T extends FieldValues>({
                     const value = Number(e.target.value.toString())
                     form.setValue(field.name, value as PathValue<T, Path<T>>)
                   }}
-                  value={Number(valueString)}
+                  value={Number(valueString) || 0}
                   type="number"
                 />
               </div>

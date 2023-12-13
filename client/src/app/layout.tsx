@@ -4,6 +4,7 @@ import StoreProvider from '../store/provider'
 import DispatchAsync from '@/context/DispatchAsync'
 
 import './globals.css'
+import ReactQueryProvider from '@/context/query-client'
 
 export const metadata = {
   title: 'Tour Dasboard',
@@ -18,15 +19,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="">
-        <StoreProvider>
-          <div className="flex-col md:flex">
-            <HeaderClient />
+        <ReactQueryProvider>
+          <StoreProvider>
+            <div className="flex-col md:flex">
+              <HeaderClient />
 
-            <div className="mt-[5rem] relative min-h-screen mx-10">
-              <DispatchAsync>{children}</DispatchAsync>
+              <div className="mt-[5rem] relative min-h-screen mx-10">
+                <DispatchAsync>{children}</DispatchAsync>
+              </div>
             </div>
-          </div>
-        </StoreProvider>
+          </StoreProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   )

@@ -23,7 +23,6 @@ const bookingSchema = new Schema(
     },
     client: {
       type: Schema.ObjectId,
-      required: true,
       ref: 'ClientBookings'
     },
     sale: {

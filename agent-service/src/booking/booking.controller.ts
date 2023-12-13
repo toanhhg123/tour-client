@@ -1,6 +1,5 @@
 import { Request } from 'express'
 import mongoose from 'mongoose'
-import clientService from '~/client/client.service'
 import { asyncHandler } from '~/core'
 import { ResponseError } from '~/types'
 import { BookingCreate } from './booking.model'
@@ -50,21 +49,14 @@ class BookingController {
   create = asyncHandler(
     async (req: Request<unknown, unknown, BookingCreate>, res) => {
       const { _id, agentId, operatorId } = req.user
-      const { clientEmail, clientPhone } = req.body
 
       if (agentId)
         req.body.agent = {
           _id: new mongoose.Types.ObjectId(agentId)
         }
 
-      const clientBooking = await clientService.findOrCreateClient(
-        { email: clientEmail, phone: clientPhone },
-        operatorId
-      )
-
       const data = await bookingService.create({
         ...req.body,
-        client: clientBooking._id,
         sale: {
           _id
         },
@@ -82,6 +74,19 @@ class BookingController {
   get = asyncHandler(async (req: Request<{ id: string }>, res) => {
     const { operatorId } = req.user
     const data = await bookingService.findByTourId(req.params.id, operatorId)
+
+    return res.json({
+      status: 'success',
+      message: 'success',
+      element: data
+    })
+  })
+
+  getBookingById = asyncHandler(async (req: Request<{ id: string }>, res) => {
+    const { _id } = req.user
+    const data = await bookingService.findById(req.params.id)
+
+    if (data.sale._id?.toString() !== _id) throw ResponseError.forbiddenError()
 
     return res.json({
       status: 'success',
@@ -125,22 +130,13 @@ class BookingController {
 
   update = asyncHandler(
     async (req: Request<{ id: string }, unknown, BookingCreate>, res) => {
-      const { operatorId } = req.user
-      const { clientEmail, clientPhone } = req.body
-
       const booking = await bookingService.findById(req.params.id)
 
       if (booking.sale._id?.toString() !== req.user._id)
         throw ResponseError.forbiddenError()
 
-      const clientBooking = await clientService.findOrCreateClient(
-        { email: clientEmail, phone: clientPhone },
-        operatorId
-      )
-
       const data = await bookingService.updateById(req.params.id, {
-        ...req.body,
-        client: clientBooking._id
+        ...req.body
       })
 
       return res.json({

@@ -9,7 +9,7 @@ const router = Router()
 
 router.get('/getByTourMan', authorize(['TourMan']), getByTourManager)
 
-router.get('/:id', authorize(['TourMan']), findById)
+router.get('/:id', findById)
 
 router.get('/', authorize([]), gets)
 

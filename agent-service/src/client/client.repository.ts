@@ -8,11 +8,30 @@ class ClientRepository {
           email: { $regex: search, $options: 'i' }
         },
         {
-          phone: search
+          phone: { $regex: search, $options: 'i' }
         }
       ],
       operatorId
     })
+  }
+
+  search(search: string, operatorId: string) {
+    return clientBooking
+      .find({
+        $or: [
+          {
+            email: { $regex: search, $options: 'i' }
+          },
+          {
+            name: { $regex: search, $options: 'i' }
+          },
+          {
+            phone: { $regex: search, $options: 'i' }
+          }
+        ],
+        operatorId
+      })
+      .limit(10)
   }
 
   findByIdAndOperatorId(id: string, operatorId: string) {

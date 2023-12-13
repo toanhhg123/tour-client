@@ -16,6 +16,18 @@ export class ClientController {
     })
   })
 
+  search = asyncHandler(async (req, res) => {
+    const search = req.query.search || ''
+
+    const data = await clientService.search(search, req.user.operatorId)
+
+    return res.json({
+      status: 'success',
+      message: 'success',
+      element: data
+    })
+  })
+
   create = asyncHandler(
     async (req: Request<unknown, unknown, ClientBookingCreate>, res) => {
       const data = await clientService.create(req.body)

@@ -40,7 +40,7 @@ const TourServiceCard = ({ data }: Props) => {
         <div className="mt-2 text-sm flex items-center gap-1">
           <Hotel className=" w-4" />
           <span>Nhà tài trợ: </span>
-          <Badge variant={'secondary'}>{supplier.name}</Badge>
+          <Badge variant={'secondary'}>{supplier?.name}</Badge>
         </div>
       </div>
 

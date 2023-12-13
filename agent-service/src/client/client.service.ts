@@ -7,6 +7,10 @@ class ClientBookingService {
     return clientRepository.findByOperatorId(operatorId)
   }
 
+  search(search: string, operatorId: string) {
+    return clientRepository.search(search, operatorId)
+  }
+
   findByIdAndOperatorId(id: string, operatorId: string) {
     return clientRepository.findByIdAndOperatorId(id, operatorId)
   }

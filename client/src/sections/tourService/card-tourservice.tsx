@@ -24,7 +24,9 @@ interface Props {
 const CardTourService = ({ tourService, renderActions }: Props) => {
   const { suppliers } = useAppSelector((state) => state.user)
 
-  const supplier = suppliers.find((sup) => sup._id === tourService.supplier._id)
+  const supplier = suppliers.find(
+    (sup) => sup._id === tourService.supplier?._id,
+  )
 
   return (
     <div className="w-full p-2 border border-gray-200  rounded">

@@ -41,10 +41,6 @@ class TourController {
   })
 
   findById = asyncHandler(async (req: Request<{ id: string }>, res) => {
-    const { _id } = req.user
-
-    await tourService.isTourMan(_id, req.params.id)
-
     const record = await tourService.findOne(req.params.id)
 
     return res.json({

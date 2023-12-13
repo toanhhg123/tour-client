@@ -34,7 +34,7 @@ export const getBookingPaxByBookingId = (id: string) =>
 export const createBookingPax = (body: BookingPaxCreate) =>
   apiAgent.post<IResponse<IBookingPax>>(`/bookingPax`, body)
 
-export const updateBooking = (id: string, body: BookingCreate) =>
+export const updateBooking = (id: string, body: Partial<BookingCreate>) =>
   apiAgent.patch<IResponse<IBooking>>(`/booking/${id}`, body)
 
 export const updateBookingPax = (id: string, body: BookingPaxCreate) =>
@@ -42,6 +42,10 @@ export const updateBookingPax = (id: string, body: BookingPaxCreate) =>
 
 export const createOrUpdateBookingPax = (id: string, body: BookingPaxCreate) =>
   apiAgent.put<IResponse<IBookingPax>>(`/bookingPax/${id || 'NON_ID'}`, body)
+
+export const getBookingById = (id: string) => {
+  return apiAgent.get<IResponse<IBooking>>(`/booking/${id}`)
+}
 
 export const updateBookingRoom = (id: string, name: string) =>
   apiAgent.patch<IResponse<IBookingPax>>(`/bookingPax/room/${id}`, {
@@ -62,4 +66,10 @@ export const findByEmailOrPhoneClient = (search: string) => {
 
 export const getClientInOperator = () => {
   return apiAgent.get<IResponse<Client[]>>('/client/operator')
+}
+
+export const searchClient = (search: string) => {
+  return apiAgent.get<IResponse<Client[]>>('/client/search', {
+    params: { search },
+  })
 }

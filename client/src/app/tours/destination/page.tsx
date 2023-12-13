@@ -25,29 +25,35 @@ const Page = () => {
 
   return (
     <div className="min-h-[300px]">
-      <div className="flex justify-between  items-center">
-        <h3 className="font-semibold">List tour destination</h3>
+      <div className="flex justify-between flex-wrap gap-5  items-center p-5">
+        <div>
+          <h3 className="font-semibold">Destinations</h3>
+          <p className="w-56 font-medium text-sm text-gray-600">
+            A tour always has its destination, set a destination for the tour
+          </p>
+        </div>
         <Link
           className={buttonVariants({
             className: 'flex gap-2 items-center',
-            size: 'lg',
           })}
           href={'/tours/destination/create'}
         >
-          <PlusCircle className="w-[14px]" />
+          <PlusCircle className="w-4" />
           Add new
         </Link>
       </div>
 
       <Separator className="mt-2 mb-4" />
 
-      {data.map((tourDes) => (
-        <CardTourDestination
-          prefetch={prefetch}
-          tourDes={tourDes}
-          key={tourDes._id}
-        />
-      ))}
+      <div className="p-5">
+        {data.map((tourDes) => (
+          <CardTourDestination
+            prefetch={prefetch}
+            tourDes={tourDes}
+            key={tourDes._id}
+          />
+        ))}
+      </div>
     </div>
   )
 }

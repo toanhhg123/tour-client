@@ -95,7 +95,7 @@ const Page = () => {
   }, [usersInOperator])
 
   return (
-    <PrivateRoute>
+    <PrivateRoute roles={['Oper.Admin', 'Manager']}>
       <div className="w-full text-gray-700  flex flex-wrap  justify-between gap-2">
         <BoxFilter
           onClear={handleReload}

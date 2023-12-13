@@ -1,7 +1,7 @@
 import SideBar, { Content, GroupType } from '@/components/sideBar'
 import PrivateRoute from '@/context/PrivateRouteContext'
-import React, { ReactNode } from 'react'
-import { List, PlusIcon } from 'lucide-react'
+import { List, MapIcon } from 'lucide-react'
+import { ReactNode } from 'react'
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const groups: GroupType[] = [
@@ -11,27 +11,12 @@ const Layout = ({ children }: { children: ReactNode }) => {
         {
           name: 'Tours',
           href: `/tours`,
-          Icon: <List className="w-[14px]" />,
+          Icon: <List className="w-4" />,
         },
-        {
-          name: 'create tour',
-          href: `/tours/create`,
-          Icon: <PlusIcon className="w-[14px]" />,
-        },
-      ],
-    },
-    {
-      name: 'Tour Destination',
-      items: [
         {
           name: 'Destinations',
           href: `/tours/destination`,
-          Icon: <List className="w-[14px]" />,
-        },
-        {
-          name: 'Create',
-          href: `/tours/destination/create`,
-          Icon: <PlusIcon className="w-[14px]" />,
+          Icon: <MapIcon className="w-4" />,
         },
       ],
     },

@@ -20,7 +20,7 @@ class BookingRepository {
   }
 
   async getById(id: string) {
-    const booking = await bookingModel.findById(id)
+    const booking = await bookingModel.findById(id).populate('client')
     if (!booking) throw new Error('Not found booking')
 
     return booking
@@ -37,7 +37,10 @@ class BookingRepository {
   }
 
   getBySaleId(id: string) {
-    return bookingModel.find({ 'sale._id': id }).populate('client')
+    return bookingModel
+      .find({ 'sale._id': id })
+      .populate('client')
+      .sort({ createdAt: -1 })
   }
 
   async findAll() {

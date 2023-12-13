@@ -1,3 +1,5 @@
+import CreateBooking from '@/components/booking/create-booking'
+import { Button } from '@/components/ui/button'
 import { ITour } from '@/features/tour/type'
 import { analysisBooking } from '@/lib/utils'
 import { useAppSelector } from '@/store/hooks'
@@ -8,6 +10,7 @@ import {
   CreditCard,
   FileCheckIcon,
   RockingChair,
+  UserX,
 } from 'lucide-react'
 import { ReactNode } from 'react'
 import CardTour from '../tour/card-tour'
@@ -20,7 +23,7 @@ type Props = {
   ) => ReactNode
 }
 
-const CardBookingTour = ({ tour, renderAction }: Props) => {
+const CardBookingTour = ({ tour }: Props) => {
   const { bookingByListTours } = useAppSelector((state) => state.booking)
 
   const { reservations, deposit, paid, done, totalBooking } = analysisBooking(
@@ -33,7 +36,7 @@ const CardBookingTour = ({ tour, renderAction }: Props) => {
       key={tour._id}
       renderBottomElement={(tour) => {
         return (
-          <div className="flex justify-between items-end flex-wrap mt-2 mx-1  text-[14px]">
+          <div className="flex justify-between flex-wrap w-full">
             <div className="flex gap-1 items-center">
               <div className="font-semibold text-[12px] px-1">
                 <div className="flex items-center">
@@ -86,14 +89,16 @@ const CardBookingTour = ({ tour, renderAction }: Props) => {
               </div>
             </div>
 
-            {renderAction &&
-              renderAction(tour, {
-                reservations,
-                deposit,
-                paid,
-                done,
-                totalBooking,
-              })}
+            <div>
+              {totalBooking < tour.totalPax ? (
+                <CreateBooking tour={tour} />
+              ) : (
+                <Button variant={'destructive'}>
+                  <UserX className="w-4 mr-2" />
+                  FULL SLOT
+                </Button>
+              )}
+            </div>
           </div>
         )
       }}

@@ -1,4 +1,5 @@
 import { toast } from '@/components/ui/use-toast'
+import { AxiosError } from 'axios'
 
 export const convertToVnd = (price?: number) => {
   return new Intl.NumberFormat('vi-VN', {
@@ -30,6 +31,17 @@ export const handleToastError = (message: string) => {
     title: message,
     duration: 6000,
   })
+}
+
+export const handleToastAxiosError = (e: unknown) => {
+  if (e instanceof AxiosError) {
+    handleToastError(e.response?.data?.message || e.message)
+    return
+  }
+
+  const error = e as { message?: string }
+
+  handleToastError(error?.message || 'malfunction, or faulty operation')
 }
 
 export const handleToastSuccess = (message: string) => {

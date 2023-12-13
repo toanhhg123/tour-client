@@ -3,7 +3,9 @@ import { authorize } from '~/middlewares/authen.middleware'
 import bookingController from './booking.controller'
 
 const {
+  get,
   getByTourId,
+  getBookingById,
   create,
   update,
   deleteById,
@@ -15,6 +17,8 @@ const {
 } = bookingController
 
 const router = Router()
+
+router.get('/', authorize(['Agent.Manager', 'Agent.Sales']), get)
 
 router.get(
   '/tour/:id',
@@ -45,6 +49,8 @@ router.get(
   authorize(['Agent.Manager', 'Agent.Sales', 'Oper.Sales']),
   getBookingByClient
 )
+
+router.get('/:id', authorize(), getBookingById)
 
 router.get(
   '/agent/:id',

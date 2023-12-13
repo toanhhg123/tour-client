@@ -1,4 +1,5 @@
 import { FieldValues, Path, UseFormReturn } from 'react-hook-form'
+import Tiptap from './tip-tap'
 import {
   FormControl,
   FormField,
@@ -6,7 +7,6 @@ import {
   FormLabel,
   FormMessage,
 } from './ui/form'
-import { Input } from './ui/input'
 
 interface Props<T extends FieldValues> {
   form: UseFormReturn<T, any, undefined>
@@ -14,7 +14,7 @@ interface Props<T extends FieldValues> {
   label: string
 }
 
-const FormFieldText = <T extends FieldValues>({
+const FormFieldTextEditor = <T extends FieldValues>({
   form,
   name,
   label,
@@ -28,11 +28,7 @@ const FormFieldText = <T extends FieldValues>({
           <FormItem className="flex flex-col">
             <FormLabel className="font-medium text-gray-700">{label}</FormLabel>
             <FormControl>
-              <Input
-                placeholder={`please enter  ${label}`}
-                {...field}
-                value={field.value}
-              />
+              <Tiptap value={field.value} onChange={field.onChange} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -42,4 +38,4 @@ const FormFieldText = <T extends FieldValues>({
   )
 }
 
-export default FormFieldText
+export default FormFieldTextEditor

@@ -45,8 +45,8 @@ export type BookingCreate = {
     _id: string
     name: string
   }
-  clientEmail: string
-  clientPhone: string
+  clientEmail?: string
+  clientPhone?: string
   childrenPax: number
   adultPax: number
   infanlPax: number
@@ -58,14 +58,15 @@ export type BookingCreate = {
   price?: number
   singleFee?: number
   foreignFee?: number
+  client?: string
   visaFee?: number
   otherFee?: number
   visaStatus?: string | null
 }
 
 export type BookingForm = {
-  clientEmail: string
-  clientPhone: string
+  clientEmail?: string
+  clientPhone?: string
   childrenPax: number
   adultPax: number
   infanlPax: number

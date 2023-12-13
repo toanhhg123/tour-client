@@ -212,7 +212,7 @@ export interface TourService {
   fee: number
   qty: number
   details: string
-  supplier: {
+  supplier?: {
     _id: string
     name: string
     email: string

@@ -118,10 +118,10 @@ const Page = () => {
             </Button>
           </div>
 
-          <div className="border my-2 p-2  overflow-y-auto">
+          <div className="flex flex-col gap-4 my-2 p-2  overflow-y-auto">
             {sheet.type ? (
               <>
-                <div className="relative p-2 border my-2 border-blue-100">
+                <div className="relative p-2  my-2 ">
                   <Button
                     variant={'destructive'}
                     size={'mini'}

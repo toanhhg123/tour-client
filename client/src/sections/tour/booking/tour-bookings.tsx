@@ -43,20 +43,21 @@ const TourBookings = ({ tourId }: Props) => {
           }}
         />
 
-        {bookings.map((booking) => {
-          const agent = agents?.find(
-            (agent) => agent._id === booking.agent?._id,
-          )
+        <div className="flex flex-col gap-8">
+          {bookings.map((booking) => {
+            const agent = agents?.find(
+              (agent) => agent._id === booking.agent?._id,
+            )
 
-          return (
-            <CardBookingTour
-              onclickListPax={(booking) => setBookingSelected(booking)}
-              key={booking._id}
-              agent={agent}
-              booking={booking}
-            />
-          )
-        })}
+            return (
+              <CardBookingTour
+                key={booking._id}
+                agent={agent}
+                booking={booking}
+              />
+            )
+          })}
+        </div>
       </CardContent>
     </Card>
   )
