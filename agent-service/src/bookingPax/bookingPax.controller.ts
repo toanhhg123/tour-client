@@ -16,6 +16,7 @@ class BookingPaxController {
 
   create = asyncHandler(
     async (req: Request<unknown, unknown, BookingPaxCreate>, res) => {
+      console.log(req.body)
       const data = await bookingPaxService.create(req.body)
 
       return res.json({

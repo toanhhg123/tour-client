@@ -6,8 +6,9 @@ import { getBookingById } from '@/services/booking'
 import { useQuery } from 'react-query'
 import DetailsBooking from './details-booking'
 import Loading from './loading'
-import { UserCheck } from 'lucide-react'
+import { UserCheck, UserPlus2 } from 'lucide-react'
 import ClientBooking from './client-booking'
+import BookingPaxes from './booking-pax'
 
 interface Props {
   params: { id: string }
@@ -44,6 +45,13 @@ const Page = ({ params }: Props) => {
           </h3>
           <ClientBooking booking={booking} />
         </div>
+      </div>
+      <div className="col-span-2 my-10">
+        <h3 className="text-primary font-bold flex mb-2 items-center">
+          <UserPlus2 className="mr-2" />
+          Booking Paxes
+        </h3>
+        <BookingPaxes booking={booking} />
       </div>
     </PrivateRoute>
   )
