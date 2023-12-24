@@ -6,7 +6,7 @@ import {
   IBooking,
   IBookingPax,
 } from '@/features/booking/type'
-import { IResponse } from '@/types'
+import { IResponse, IResponsePagination } from '@/types'
 
 const { apiAgent } = API
 
@@ -65,7 +65,7 @@ export const findByEmailOrPhoneClient = (search: string) => {
 }
 
 export const getClientInOperator = () => {
-  return apiAgent.get<IResponse<Client[]>>('/client/operator')
+  return apiAgent.get<IResponsePagination<Client>>('/client/operator')
 }
 
 export const searchClient = (search: string) => {

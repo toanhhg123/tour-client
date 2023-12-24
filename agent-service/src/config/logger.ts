@@ -17,7 +17,7 @@ const level = () => {
 const colors = {
   error: 'red',
   warn: 'yellow',
-  info: 'green',
+  info: 'blue',
   http: 'magenta',
   debug: 'white'
 }

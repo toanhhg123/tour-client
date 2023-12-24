@@ -81,8 +81,8 @@ export default function FormBooking({
     }
 
     if (data) {
-      form.setValue('clientEmail', data.data.element.email)
-      form.setValue('clientPhone', data.data.element.phone)
+      form.setValue('clientEmail', data.data.element.email || '')
+      form.setValue('clientPhone', data.data.element.phone || '')
     }
   }
 

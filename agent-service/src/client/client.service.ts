@@ -1,10 +1,23 @@
 import mongoose from 'mongoose'
-import { ClientBookingCreate } from './client.model'
+import { BaseService } from '~/base/base.service'
+import clientBooking, {
+  ClientBooking,
+  ClientBookingCreate
+} from './client.model'
 import clientRepository from './client.repository'
 
-class ClientBookingService {
-  findByOperatorId(operatorId: string) {
-    return clientRepository.findByOperatorId(operatorId)
+class ClientBookingService extends BaseService<ClientBooking> {
+  constructor() {
+    super(clientBooking, ['email', 'name', 'phone'])
+  }
+
+  findByOperatorId(operatorId: string, keyword?: string) {
+    return this.getList(
+      {
+        operatorId
+      },
+      { keyword }
+    )
   }
 
   search(search: string, operatorId: string) {
@@ -17,10 +30,6 @@ class ClientBookingService {
 
   findByEmailOrPhone(search: string, operatorId: string) {
     return clientRepository.findByEmailOrNumberPhone(search, operatorId)
-  }
-
-  create(client: ClientBookingCreate) {
-    return clientRepository.create(client)
   }
 
   deleteById(id: string) {
@@ -43,7 +52,7 @@ class ClientBookingService {
     let client = client1 || client2
 
     if (!client)
-      client = await this.create({
+      client = await this.model.create({
         email,
         phone,
         operatorId: new mongoose.Types.ObjectId(operatorId)

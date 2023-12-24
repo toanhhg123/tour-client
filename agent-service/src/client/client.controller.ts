@@ -1,19 +1,35 @@
-import { Request } from 'express'
+import { Request, Response } from 'express'
+import BaseController from '~/base/base.controller'
 import { asyncHandler } from '~/core'
-import clientService from './client.service'
 import { ClientBookingCreate } from './client.model'
+import clientService from './client.service'
 
-export class ClientController {
-  getByOperatorId = asyncHandler(async (req, res) => {
-    const { operatorId } = req.user
+export class ClientController extends BaseController<typeof clientService> {
+  constructor() {
+    super(clientService)
 
-    const data = await clientService.findByOperatorId(operatorId)
+    this.getByOperatorId = this.getByOperatorId.bind(this)
+  }
 
-    return res.json({
-      status: 'success',
-      message: 'success',
-      element: data
+  getByOperatorId = asyncHandler(async (req: Request, res: Response) => {
+    const data = await this.service.findByOperatorId(
+      req.user.operatorId,
+      req.query.keyword as string
+    )
+
+    return this.onSuccess(res, data)
+  })
+
+  create = asyncHandler(async (req: Request, res: Response) => {
+    const { operatorId, _id } = req.user
+
+    const data = await this.service.create({
+      ...req.body,
+      operatorId,
+      userCreatedId: _id
     })
+
+    return this.onSuccess(res, data)
   })
 
   search = asyncHandler(async (req, res) => {
@@ -27,18 +43,6 @@ export class ClientController {
       element: data
     })
   })
-
-  create = asyncHandler(
-    async (req: Request<unknown, unknown, ClientBookingCreate>, res) => {
-      const data = await clientService.create(req.body)
-
-      return res.json({
-        status: 'success',
-        message: 'success',
-        element: data
-      })
-    }
-  )
 
   update = asyncHandler(
     async (req: Request<{ id: string }, unknown, ClientBookingCreate>, res) => {

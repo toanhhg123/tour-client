@@ -102,6 +102,7 @@ const CreateBookingPax = ({ booking }: Props) => {
                 ]}
                 form={form}
               />
+
               <FormFieldSelect
                 name="type"
                 label="Type"

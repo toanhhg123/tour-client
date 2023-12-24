@@ -1,6 +1,11 @@
 import { InferSchemaType, Schema, model } from 'mongoose'
 
-const clientBookingSchema = new Schema(
+export enum ClientType {
+  LEAD = 'LEAD',
+  CUSTOMER = 'CUSTOMER'
+}
+
+export const clientBookingSchema = new Schema(
   {
     name: {
       type: String
@@ -14,6 +19,17 @@ const clientBookingSchema = new Schema(
     operatorId: {
       type: Schema.Types.ObjectId,
       required: true
+    },
+    userCreatedId: {
+      type: Schema.Types.ObjectId
+    },
+    type: {
+      type: String,
+      enum: ClientType,
+      default: ClientType.LEAD
+    },
+    note: {
+      type: String
     },
     address: String
   },
@@ -30,6 +46,9 @@ export type ClientBookingCreate = Omit<
   '_id' | 'createdAt' | 'updatedAt'
 >
 
-const clientBooking = model('ClientBookings', clientBookingSchema)
+const clientBooking = model<ClientBooking>(
+  'ClientBookings',
+  clientBookingSchema
+)
 
 export default clientBooking

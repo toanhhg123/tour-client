@@ -182,11 +182,15 @@ export const initBookingPaxForm: BookingPaxForm = {
   note: '',
 }
 
+export type ClientType = 'LEAD' | 'CUSTOMER'
+
 export type Client = {
   _id: string
   name?: string
-  email: string
-  phone: string
-  operatorId: string
+  email?: string
+  phone?: string
+  operatorId?: string
   address?: string
+  type: ClientType
+  note?: string
 }
