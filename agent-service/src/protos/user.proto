@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package user;
+
+message UserId {
+  string id = 1; 
+}
+
+message UserResponse {
+
+}

@@ -1,0 +1,156 @@
+pipeline {
+    agent any
+    environment {
+        DOCKER_COMPOSE_FILE = 'docker-compose.yml'
+        SONAR_SCANNER_HOME = tool 'sonar-scaner-v1.0'
+        SONAR_TOKEN	= credentials('sonar_token_v1_ex30')
+    }
+    tools {
+        nodejs "nodejs-16.20"
+    }
+
+    stages {
+        stage('Create .env File to auth-service') {
+            steps {
+                script {
+                    sh "java -version"
+
+                    def envContent = """\
+                    PORT="8081"
+                    URL_DB="mongodb://root:30122002@103.98.160.26:27020"
+                    DB_NAME="S3_AUTH"
+                    NODE_ENV="production"
+                    """
+                    writeFile file: './auth-service/.env', text: envContent
+                }
+            }
+        }
+         stage('Create .env File to tour-service') {
+            steps {
+                script {
+                    def envContent = """\
+                        PORT="8082"
+                        URL_DB="mongodb://root:30122002@103.98.160.26:27020"
+                        DB_NAME="S3_TOUR"
+                        NODE_ENV="production"
+                        GRPC_PORT_AUTH="10002"
+                    """
+                    writeFile file: './tour-service/.env', text: envContent
+                }
+            }
+        }
+
+         stage('Create .env File to agent-service') {
+            steps {
+                script {
+                    def envContent = """\
+                    PORT="8083"
+                    URL_DB="mongodb://root:30122002@103.98.160.26:27020"
+                    DB_NAME="S3_BOOKING"
+                    NODE_ENV="production"
+                    GRPC_PORT_AUTH="10002"
+                    """
+                    writeFile file: './agent-service/.env', text: envContent
+                }
+            }
+        }
+
+        stage('Build and Test') {
+            steps {
+                script {
+                    sh "docker compose build"
+                    // sh 'sleep 10'
+                    // sh 'docker compose -f ${DOCKER_COMPOSE_FILE} exec auth npm run test'
+                }
+            }
+        }
+        stage('SonarQube auth service Analysis') {
+                steps {
+                    withSonarQubeEnv('sonar_server_10.2.1') {
+
+                        sh "node -v"
+
+                        sh "${SONAR_SCANNER_HOME}/bin/sonar-scanner \
+                            -Dsonar.projectKey=auth-server-toursaas \
+                            -Dsonar.sources=./auth-service \
+                            -Dsonar.host.url=http://103.98.160.26:9090 \
+                            -Dsonar.token=${SONAR_TOKEN}"
+                    }
+
+            }
+        }
+
+        stage('SonarQube booking service Analysis') {
+                steps {
+                    withSonarQubeEnv('sonar_server_10.2.1') {
+                        sh "${SONAR_SCANNER_HOME}/bin/sonar-scanner \
+                            -Dsonar.projectKey=booking-server-toursaas \
+                            -Dsonar.sources=./agent-service \
+                            -Dsonar.host.url=http://103.98.160.26:9090 \
+                            -Dsonar.token=${SONAR_TOKEN}"
+                    }
+
+            }
+        }
+
+         stage('SonarQube tour service Analysis') {
+                steps {
+                    withSonarQubeEnv('sonar_server_10.2.1') {
+                        sh "${SONAR_SCANNER_HOME}/bin/sonar-scanner \
+                            -Dsonar.projectKey=tour-server-toursaas \
+                            -Dsonar.sources=./tour-service \
+                            -Dsonar.host.url=http://103.98.160.26:9090 \
+                            -Dsonar.token=${SONAR_TOKEN}"
+                    }
+
+            }
+        }
+
+        stage('push to docker-hub') {
+            steps {
+               withDockerRegistry(credentialsId: 'docker-hub', url: 'https://index.docker.io/v1/')
+               {
+                    sh 'docker compose push'
+               }
+            }
+
+            
+        }
+
+        stage('deploy') {
+            steps {
+                sshagent (credentials: ['ssh-server-tour']) {
+                    script {
+                        def remoteHost = '103.98.160.26'
+                        def remoteUser = 'trinh'
+                        def remoteDirectory = '/home/trinh/deploy'
+                        
+                        sh "ssh -o StrictHostKeyChecking=no ${remoteUser}@${remoteHost} 'cd ${remoteDirectory}  && ./deploy.sh'"
+                    }
+                }
+            }
+        }
+    }
+    post {
+        success {
+            script {
+                sh "docker compose -f ${DOCKER_COMPOSE_FILE} down"
+                sh "docker compose -f ${DOCKER_COMPOSE_FILE} down --rmi all"
+                sh "docker compose down --rmi all --volumes"
+                sh "docker system prune -f"
+                cleanWs()
+            }
+        }
+        failure {
+            script {    
+                sh "docker compose -f ${DOCKER_COMPOSE_FILE} down"
+                sh "docker compose -f ${DOCKER_COMPOSE_FILE} down --rmi all"
+                sh "docker compose down --rmi all --volumes"
+                sh "docker system prune -f"
+                cleanWs()
+            }
+
+            echo "faild"
+        }
+    }
+}

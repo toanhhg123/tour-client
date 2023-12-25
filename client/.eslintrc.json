@@ -1,0 +1,15 @@
+{
+  "extends": ["next", "prettier", "eslint:recommended"],
+  "rules": {
+    "@next/next/no-sync-scripts": ["error"],
+    "@next/next/no-img-element": ["error"],
+    "no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }
+    ]
+  }
+}
