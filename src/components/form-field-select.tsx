@@ -46,7 +46,7 @@ const FormFieldSelect = <T extends FieldValues>({
               >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="select tour guide..." />
+                    <SelectValue placeholder={`Select ${label}`} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>

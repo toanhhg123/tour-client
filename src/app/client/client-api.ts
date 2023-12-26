@@ -35,6 +35,15 @@ export const clientApi = createApi({
       }),
       providesTags: [TAG_TYPES],
     }),
+
+    addClient: builder.mutation<any, Client>({
+      query: (newEntity) => ({
+        url: 'client/operator',
+        method: 'POST',
+        body: newEntity,
+      }),
+      invalidatesTags: [TAG_TYPES],
+    }),
   }),
 })
-export const { useGetPokemonByNameQuery } = clientApi
+export const { useGetPokemonByNameQuery, useAddClientMutation } = clientApi

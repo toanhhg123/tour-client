@@ -33,7 +33,7 @@ const FormFieldDate = <T extends FieldValues>({
       name={name}
       render={({ field }) => {
         return (
-          <FormItem className="flex flex-col mt-6 relative">
+          <FormItem className="flex flex-col relative">
             <FormLabel className="font-normal">{label}</FormLabel>
             <Popover>
               <PopoverTrigger asChild>
@@ -41,7 +41,7 @@ const FormFieldDate = <T extends FieldValues>({
                   <Button
                     variant={'outline'}
                     className={cn(
-                      'w-[240px] pl-3 text-left font-normal',
+                      'w-full pl-3 text-left font-normal h-9',
                       !field.value && 'text-muted-foreground',
                     )}
                   >

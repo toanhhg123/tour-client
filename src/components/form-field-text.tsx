@@ -29,7 +29,7 @@ const FormFieldText = <T extends FieldValues>({
             <FormLabel className="font-medium text-gray-700">{label}</FormLabel>
             <FormControl>
               <Input
-                placeholder={`please enter  ${label}`}
+                placeholder={`Please enter ${label.toLowerCase()}`}
                 {...field}
                 value={field.value}
               />
