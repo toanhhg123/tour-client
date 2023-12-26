@@ -1,4 +1,6 @@
 import { toast } from '@/components/ui/use-toast'
+import { SerializedError } from '@reduxjs/toolkit'
+import { FetchBaseQueryError } from '@reduxjs/toolkit/query'
 import { AxiosError } from 'axios'
 
 export const convertToVnd = (price?: number) => {
@@ -29,6 +31,15 @@ export const handleToastError = (message: string) => {
   toast({
     variant: 'destructive',
     title: message,
+    duration: 6000,
+  })
+}
+
+export const handleToastErrorRTK = (error: unknown) => {
+  const e = error as { data: { message: string } }
+  toast({
+    variant: 'destructive',
+    title: e.data.message,
     duration: 6000,
   })
 }

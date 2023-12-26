@@ -1,14 +1,14 @@
 'use client'
 import { Empty } from '@/components/empty'
-import { QUERY_GET_BOOKING_BY_ID } from '@/config/query-consts'
 import PrivateRoute from '@/context/PrivateRouteContext'
-import { getBookingById } from '@/services/booking'
-import { useQuery } from 'react-query'
+import { UserCheck, UserPlus2 } from 'lucide-react'
+import BookingPaxes from './booking-pax'
+import ClientBooking from './client-booking'
 import DetailsBooking from './details-booking'
 import Loading from './loading'
-import { UserCheck, UserPlus2 } from 'lucide-react'
-import ClientBooking from './client-booking'
-import BookingPaxes from './booking-pax'
+import { useGetMyBookingDetailsQuery } from './my-booking-details-api'
+import Head from './head'
+import Tabs from '@/components/tabs'
 
 interface Props {
   params: { id: string }
@@ -17,24 +17,45 @@ interface Props {
 const Page = ({ params }: Props) => {
   const { id } = params
 
-  const {
-    data: resBooking,
-    isFetching,
-    isLoading,
-  } = useQuery([QUERY_GET_BOOKING_BY_ID, id], {
-    queryFn: () => getBookingById(id),
-    cacheTime: Infinity,
-    refetchOnWindowFocus: false,
-    staleTime: Infinity,
-    refetchInterval: false,
-  })
+  const { data, isLoading, isFetching } = useGetMyBookingDetailsQuery(id)
 
-  if (!resBooking) return <Empty />
-  const booking = resBooking.data.element
+  if (!data) return <Empty />
+  const booking = data.element
   return (
     <PrivateRoute>
       {(isFetching || isLoading) && <Loading />}
 
+      <div className="my-4">
+        <Head booking={booking} />
+      </div>
+
+      <div className="py-4">
+        <Tabs
+          defaultValue="client"
+          tabs={[
+            {
+              labelHead: 'Client & Pax Information',
+              value: 'client',
+              component: <h3>client</h3>,
+            },
+            {
+              labelHead: 'Price & Booking',
+              value: 'price',
+              component: <h3>booking</h3>,
+            },
+            {
+              labelHead: 'Visa & Visa Fee',
+              value: 'Visa',
+              component: <h3>Visa</h3>,
+            },
+            {
+              labelHead: 'Tour Booking Information',
+              value: 'Tour',
+              component: <h3>Tour</h3>,
+            },
+          ]}
+        />
+      </div>
       <DetailsBooking booking={booking} />
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 my-8 gap-4">

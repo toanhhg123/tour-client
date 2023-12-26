@@ -1,17 +1,16 @@
 'use client'
 
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { URL_TOUR_API } from '@/config/axios'
 import PrivateRoute from '@/context/PrivateRouteContext'
 import { ITour } from '@/features/tour/type'
 import useAxios from '@/hooks/useAxios'
 import CardTourDetails from './card-tour-details'
-import HeadPage from './head-page'
-import FormTourUpdate from './form-tour-update'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import FormStatusTour from './form-status'
-import FormTourSchedule from './tour-schedule'
-import PaxesSetup from './\bpaxes-setup'
+import FormTourUpdate from './form-tour-update'
+import HeadPage from './head-page'
 import Service from './services'
+import FormTourSchedule from './tour-schedule'
 
 type Props = {
   params: {
@@ -32,7 +31,7 @@ const Page = ({ params }: Props) => {
         </div>
         <div className="p-5">
           <Tabs defaultValue="Overview">
-            <TabsList className="flex gap-1 w-max">
+            <TabsList className="flex gap-1 justify-start">
               <TabsTrigger value="Overview">Overview</TabsTrigger>
               <TabsTrigger value="Update">Update</TabsTrigger>
               <TabsTrigger value="Schedule">Schedule</TabsTrigger>
@@ -53,7 +52,7 @@ const Page = ({ params }: Props) => {
             </TabsContent>
 
             <TabsContent value="Paxes-Setup">
-              {data && <PaxesSetup tour={data} />}
+              {/* {data && <PaxesSetup tour={data} />} */}
             </TabsContent>
 
             <TabsContent value="combo">
