@@ -7,8 +7,7 @@ import { columns } from './column-table'
 import { DataTableToolbar } from './table-toolbar'
 
 const Page = () => {
-  const { error, isLoading, isFetching, data, refetch } =
-    useGetPokemonByNameQuery({})
+  const { isLoading, isFetching, data } = useGetPokemonByNameQuery({})
 
   return (
     <PrivateRoute>

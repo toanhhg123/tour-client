@@ -26,9 +26,13 @@ export const clientApi = createApi({
   endpoints: (builder) => ({
     getPokemonByName: builder.query<
       IResponsePagination<Client>,
-      { pageIndex?: number }
+      { pageIndex?: number; keyword?: string }
     >({
-      query: ({ pageIndex }) => `client/operator?pageIndex${pageIndex}`,
+      query: ({ pageIndex, keyword }) => ({
+        url: `client/operator`,
+        params: { pageIndex, keyword },
+        method: 'GET',
+      }),
       providesTags: [TAG_TYPES],
     }),
   }),
