@@ -7,7 +7,9 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu'
 import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu'
-import { LucideIndent, PlusCircle } from 'lucide-react'
+import { LucideIndent } from 'lucide-react'
+
+import { AddNewClient } from './add-new-client'
 
 export function DataTableViewOptions() {
   return (
@@ -22,10 +24,9 @@ export function DataTableViewOptions() {
           View
         </Button>
       </DropdownMenuTrigger>
-      <Button className="h-8 mx-2 px-2 lg:px-3">
-        Add new
-        <PlusCircle className="ml-2 h-4 w-4" />
-      </Button>
+
+      <AddNewClient />
+
       <DropdownMenuContent align="end" className="w-[150px]">
         <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
         <DropdownMenuSeparator />

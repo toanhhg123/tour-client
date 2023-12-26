@@ -26,6 +26,7 @@ export function DataTableToolbar() {
           Reset
           <ResetIcon className="ml-2 h-4 w-4" />
         </Button>
+
       </div>
       <DataTableViewOptions />
     </div>

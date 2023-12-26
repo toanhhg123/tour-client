@@ -8,6 +8,7 @@ import { Client } from '@/features/booking/type'
 import { cn } from '@/lib/utils'
 import { DataTableRowActions } from './table-row-actions'
 
+
 export const columns: ColumnDef<Client>[] = [
   {
     id: 'select',

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 export interface IBooking {
   _id: string
   operatorId: string
@@ -182,15 +183,35 @@ export const initBookingPaxForm: BookingPaxForm = {
   note: '',
 }
 
-export type ClientType = 'LEAD' | 'CUSTOMER'
+export enum ClientType {
+  LEAD = 'LEAD',
+  CUSTOMER = 'CUSTOMER',
+  ENTERPRISE = 'ENTERPRISE',
+  AGENT_OF_PARTNER = 'AGENT_OF_PARTNER',
+  COLLABORATORS = 'COLLABORATORS',
+}
+
+export enum EClassification {
+  OLD = 'OLD',
+  NEW = 'NEW',
+  LOYAL = 'LOYAL',
+  VIP = 'VIP',
+}
 
 export type Client = {
   _id: string
-  name?: string
+  name: string
   email?: string
   phone?: string
-  operatorId?: string
-  address?: string
-  type: ClientType
+  operatorId: string
+  userCreatedId?: string
+  type?: ClientType
   note?: string
+  commonName?: string
+  dob?: string
+  linkProfile?: string
+  address?: string
+  classification?: EClassification
+  createdAt?: string
+  updatedAt?: string
 }

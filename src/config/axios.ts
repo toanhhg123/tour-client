@@ -36,11 +36,14 @@ const handleRequest = (config: InternalAxiosRequestConfig<any>) => {
 const axiosInstance = axios.create({})
 
 const url =
-  process.env.NODE_ENV === 'production'
-    ? 'http://103.98.160.26'
-    : 'http://127.0.0.1'
+  // process.env.NODE_ENV === 'production'
+  //   ? 'http://103.98.160.26'
+  //   : 'http://127.0.0.1'
+  'http://103.98.160.26'
 
-const portAuth = process.env.NODE_ENV === 'production' ? 8090 : 8081
+
+//const portAuth = process.env.NODE_ENV === 'production' ? 8090 : 8081
+const portAuth = 8090
 
 export const URL_AUTH_API = `${url}:${portAuth}`
 export const URL_TOUR_API = `${url}:8082`
