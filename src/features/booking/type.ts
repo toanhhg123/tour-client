@@ -208,7 +208,7 @@ export type Client = {
   type?: ClientType
   note?: string
   commonName?: string
-  dob?: string
+  dob?: Date
   linkProfile?: string
   address?: string
   classification?: EClassification

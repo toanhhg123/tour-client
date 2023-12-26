@@ -13,13 +13,18 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
-export function DataTableRowActions() {
+import { useDeleteClientMutation } from './client-api'
+
+export function DataTableRowActions({ id }: { id: string }) {
   const [dialogContent] = useState<React.ReactNode | null>(null)
   const [openToastDelete, setOpenToastDelete] = useState(false)
   const toggleToastDelete = () => setOpenToastDelete(!openToastDelete)
 
-  const handleDelete = () => {
+  const [deleteClient] = useDeleteClientMutation();
+
+  const handleDelete = (id: string) => {
     toggleToastDelete()
+    deleteClient(id)
   }
 
   return (
@@ -67,7 +72,7 @@ export function DataTableRowActions() {
       <ToastDelete
         open={openToastDelete}
         onOpenChange={toggleToastDelete}
-        onAccept={handleDelete}
+        onAccept={() => handleDelete(id)}
         title="Do you want delete client ?"
         desc=""
       />

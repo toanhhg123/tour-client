@@ -8,7 +8,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 
-import { ClientType, EClassification } from '@/features/booking/type'
+import { Client, ClientType, EClassification } from '@/features/booking/type'
 
 import {
   caseworkers,
@@ -58,25 +58,30 @@ import FormFieldSelect from '@/components/form-field-select'
 import FormFieldText from '@/components/form-field-text'
 import FormFieldDate from '@/components/FormFieldDate'
 import FormFieldTextArea from '@/components/form-field-textarea'
+import { useAddClientMutation } from './client-api'
+import { useMemo } from 'react'
+
+type DefaultValues = Omit<Client, '_id'>;
+
+// Giá trị mặc định cho initData
+const initData: DefaultValues = {
+  name: '',
+  operatorId: '',
+  address: '',
+  classification: undefined,
+  commonName: '',
+  dob: new Date,
+  email: '',
+  linkProfile: '',
+  note: '',
+  phone: '',
+  type: undefined,
+  updatedAt: '',
+  createdAt: '',
+  userCreatedId: ''
+};
 
 
-const formSchema = z.object({
-  _id: z.string(),
-  name: z.string(),
-  email: z.string(),
-  phone: z.string(),
-  operatorId: z.string(),
-  userCreatedId: z.string(),
-  type: z.string(),
-  note: z.string(),
-  commonName: z.string(),
-  dob: z.date(),
-  linkProfile: z.string(),
-  address: z.string(),
-  classification: z.string(),
-  createdAt: z.string(),
-  updatedAt: z.string()
-})
 
 export function AddNewClient() {
 
@@ -96,30 +101,20 @@ export function AddNewClient() {
 
   const classifications: TypeSelectItem[] = Object.values(EClassification).map(mapToSelectItem);
 
+  const [addClient, addClientResult] = useAddClientMutation()
+
+  const defaultValues = useMemo<DefaultValues>(() => ({ ...initData }), []);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      _id: '',
-      name: '',
-      email: '',
-      phone: '',
-      operatorId: '',
-      userCreatedId: '',
-      type: '',
-      note: '',
-      commonName: '',
-      dob: new Date(),
-      linkProfile: '',
-      address: '',
-      classification: '',
-      createdAt: '',
-      updatedAt: ''
-    },
+    defaultValues: defaultValues
+
   })
 
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values)
+    addClient(values as Omit<Client, '_id'>)
   }
 
 
@@ -279,3 +274,20 @@ export function AddNewClient() {
     </Dialog>
   )
 }
+
+const formSchema = z.object({
+  name: z.string(),
+  email: z.string(),
+  phone: z.string(),
+  operatorId: z.string().optional(),
+  userCreatedId: z.string().optional(),
+  type: z.string().optional(),
+  note: z.string().optional(),
+  commonName: z.string().optional(),
+  dob: z.date().optional(),
+  linkProfile: z.string().optional(),
+  address: z.string().optional(),
+  classification: z.string().optional(),
+  createdAt: z.string().optional(),
+  updatedAt: z.string().optional()
+})

@@ -95,8 +95,8 @@ export const columns: ColumnDef<Client>[] = [
   {
     id: 'actions',
     header: () => <div>Actions</div>,
-    cell: () => {
-      return <DataTableRowActions />
+    cell: ({ row }) => {
+      return <DataTableRowActions id={row.original._id} />
     },
   },
 ]

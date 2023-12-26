@@ -35,15 +35,28 @@ export const clientApi = createApi({
       }),
       providesTags: [TAG_TYPES],
     }),
-
-    addClient: builder.mutation<any, Client>({
-      query: (newEntity) => ({
-        url: 'client/operator',
+    addClient: builder.mutation<Client, Omit<Client, '_id'>>({
+      query: (client) => ({
+        url: 'client',
         method: 'POST',
-        body: newEntity,
+        body: client,
       }),
       invalidatesTags: [TAG_TYPES],
     }),
+    updateClient: builder.mutation<Client, { id: string, body: Client }>({
+      query: (client) => ({
+        url: 'client',
+        method: 'PATCH',
+        body: client,
+      }),
+      invalidatesTags: [TAG_TYPES],
+    }),
+    deleteClient: builder.mutation<{}, string>({
+      query: (id) => ({
+        url: `client/${id}`,
+        method: 'DELETE',
+      }),
+    }),
   }),
 })
-export const { useGetPokemonByNameQuery, useAddClientMutation } = clientApi
+export const { useGetPokemonByNameQuery, useAddClientMutation, useUpdateClientMutation, useDeleteClientMutation } = clientApi
