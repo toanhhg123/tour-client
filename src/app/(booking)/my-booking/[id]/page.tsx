@@ -9,6 +9,7 @@ import Loading from './loading'
 import { useGetMyBookingDetailsQuery } from './my-booking-details-api'
 import Head from './head'
 import Tabs from '@/components/tabs'
+import ClientBookingPax from './client-booking-pax'
 
 interface Props {
   params: { id: string }
@@ -36,7 +37,7 @@ const Page = ({ params }: Props) => {
             {
               labelHead: 'Client & Pax Information',
               value: 'client',
-              component: <h3>client</h3>,
+              component: <ClientBookingPax booking={booking} />,
             },
             {
               labelHead: 'Price & Booking',

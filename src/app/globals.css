@@ -62,6 +62,10 @@ h2 {
   font-size: x-large;
 }
 
+body {
+  background-color: #f9fafb;
+}
+
 h3 {
   font-size: large;
 }

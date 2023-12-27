@@ -2,12 +2,12 @@
 import { DataTable } from '@/components/data-table'
 import PrivateRoute from '@/context/PrivateRouteContext'
 import Loading from '../loading'
-import { useGetPokemonByNameQuery } from './client-api'
+import { useGetClientQuery } from './client-api'
 import { columns } from './column-table'
 import { DataTableToolbar } from './table-toolbar'
 
 const Page = () => {
-  const { isLoading, isFetching, data } = useGetPokemonByNameQuery({})
+  const { isLoading, isFetching, data } = useGetClientQuery({})
 
   return (
     <PrivateRoute>

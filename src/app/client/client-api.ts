@@ -24,7 +24,7 @@ export const clientApi = createApi({
   tagTypes: [TAG_TYPES],
 
   endpoints: (builder) => ({
-    getPokemonByName: builder.query<
+    getClient: builder.query<
       IResponsePagination<Client>,
       { pageIndex?: number; keyword?: string }
     >({
@@ -43,7 +43,7 @@ export const clientApi = createApi({
       }),
       invalidatesTags: [TAG_TYPES],
     }),
-    updateClient: builder.mutation<Client, { id: string, body: Client }>({
+    updateClient: builder.mutation<Client, { id: string; body: Client }>({
       query: (client) => ({
         url: 'client',
         method: 'PATCH',
@@ -59,4 +59,9 @@ export const clientApi = createApi({
     }),
   }),
 })
-export const { useGetPokemonByNameQuery, useAddClientMutation, useUpdateClientMutation, useDeleteClientMutation } = clientApi
+export const {
+  useGetClientQuery,
+  useAddClientMutation,
+  useUpdateClientMutation,
+  useDeleteClientMutation,
+} = clientApi
