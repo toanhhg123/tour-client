@@ -1,15 +1,12 @@
 'use client'
 import { Empty } from '@/components/empty'
+import Tabs from '@/components/tabs'
 import PrivateRoute from '@/context/PrivateRouteContext'
-import { UserCheck, UserPlus2 } from 'lucide-react'
-import BookingPaxes from './booking-pax'
-import ClientBooking from './client-booking'
-import DetailsBooking from './details-booking'
+import ClientBookingPax from './client-booking-pax'
+import Head from './head'
 import Loading from './loading'
 import { useGetMyBookingDetailsQuery } from './my-booking-details-api'
-import Head from './head'
-import Tabs from '@/components/tabs'
-import ClientBookingPax from './client-booking-pax'
+import PriceBookings from './price-bookings'
 
 interface Props {
   params: { id: string }
@@ -42,7 +39,7 @@ const Page = ({ params }: Props) => {
             {
               labelHead: 'Price & Booking',
               value: 'price',
-              component: <h3>booking</h3>,
+              component: <PriceBookings booking={booking} />,
             },
             {
               labelHead: 'Visa & Visa Fee',
@@ -56,24 +53,6 @@ const Page = ({ params }: Props) => {
             },
           ]}
         />
-      </div>
-      <DetailsBooking booking={booking} />
-
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 my-8 gap-4">
-        <div>
-          <h3 className="text-primary font-bold flex mb-2 items-center">
-            <UserCheck className="mr-2" />
-            Client
-          </h3>
-          <ClientBooking booking={booking} />
-        </div>
-      </div>
-      <div className="col-span-2 my-10">
-        <h3 className="text-primary font-bold flex mb-2 items-center">
-          <UserPlus2 className="mr-2" />
-          Booking Paxes
-        </h3>
-        <BookingPaxes booking={booking} />
       </div>
     </PrivateRoute>
   )

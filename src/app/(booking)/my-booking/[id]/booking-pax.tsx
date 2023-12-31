@@ -1,18 +1,14 @@
 import CreateBookingPax from '@/components/bookingPax/create-booking-pax'
+import { DataTable } from '@/components/data-table'
 import Loader from '@/components/loader'
+import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
 import { QUERY_GET_BOOKING_PAX_BY_BOOKING_ID } from '@/config/query-consts'
 import { IBooking, IBookingPax } from '@/features/booking/type'
+import { formatDateDDMMYYYY } from '@/lib/utils'
 import { getBookingPaxByBookingId } from '@/services/booking'
+import { ColumnDef } from '@tanstack/react-table'
+import { Edit2, Trash2 } from 'lucide-react'
 import { useQuery } from 'react-query'
 
 interface Props {
@@ -33,8 +29,6 @@ const BookingPaxes = ({ booking }: Props) => {
 
   const bookingPaxes = resBookings?.data.element
 
-  console.log(bookingPaxes)
-
   return (
     <Card>
       <CardHeader className="text-sm text-gray-600 font-semibold">
@@ -47,40 +41,69 @@ const BookingPaxes = ({ booking }: Props) => {
       <CardContent className="relative">
         {(isFetching || isLoading) && <Loader />}
 
-        <Table>
-          <TableCaption>A list of your recent invoices.</TableCaption>
-          <TableHeader>
-            <TableRow className="bg-blue-100">
-              <TableHead className="border font-semibold">Name</TableHead>
-              <TableHead className="border font-semibold">Phone</TableHead>
-              <TableHead className="border font-semibold">Nation</TableHead>
-              <TableHead className="border font-semibold">Passport</TableHead>
-              <TableHead className="border font-semibold">Type</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {bookingPaxes?.map((bookingPax) => (
-              <RowBookingPax key={bookingPax._id} bookingPax={bookingPax} />
-            ))}
-          </TableBody>
-        </Table>
+        <DataTable columns={columns} data={bookingPaxes || []} />
       </CardContent>
     </Card>
   )
 }
 
-export const RowBookingPax = ({ bookingPax }: { bookingPax: IBookingPax }) => {
-  return (
-    <TableRow>
-      <TableCell className="font-medium border">{bookingPax.name}</TableCell>
-      <TableCell className="font-medium border">{bookingPax.phone}</TableCell>
-      <TableCell className="font-medium border">{bookingPax.nation}</TableCell>
-      <TableCell className="font-medium border">
-        {bookingPax.passport}
-      </TableCell>
-      <TableCell className="font-medium border">{bookingPax.type}</TableCell>
-    </TableRow>
-  )
-}
+export const columns: ColumnDef<IBookingPax>[] = [
+  {
+    accessorKey: 'name',
+    header: 'Name',
+    cell: ({ row }) => {
+      return (
+        <div className="text-semibold">{row.original.name || 'No Name'}</div>
+      )
+    },
+  },
+  {
+    accessorKey: 'phone',
+    header: 'Phone',
+    cell: ({ row }) => {
+      return (
+        <div className="text-semibold">{row.original.phone || 'No Phone'}</div>
+      )
+    },
+  },
+  {
+    accessorKey: 'nation',
+    header: 'Nation',
+    cell: ({ row }) => {
+      return (
+        <div className="text-semibold">
+          {row.original.nation || 'No Nation'}
+        </div>
+      )
+    },
+  },
+  {
+    accessorKey: 'dob',
+    header: 'DOB',
+    cell: ({ row }) => {
+      return (
+        <div className="text-semibold">
+          {formatDateDDMMYYYY(row.original.dob) || 'No Date Of Birth'}
+        </div>
+      )
+    },
+  },
+  {
+    accessorKey: 'actions',
+    header: 'Actions',
+    cell: () => {
+      return (
+        <div className="flex gap-2 text-semibold">
+          <Button variant={'outline'} size={'icon'}>
+            <Edit2 />
+          </Button>
+          <Button variant={'destructive'} size={'icon'}>
+            <Trash2 />
+          </Button>
+        </div>
+      )
+    },
+  },
+]
 
 export default BookingPaxes

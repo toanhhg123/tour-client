@@ -71,3 +71,21 @@ export const showToastSuccess = (message: string = 'success') => {
     duration: 2000,
   })
 }
+
+export const calculatePricePaxes = ({
+  adultPax,
+  childrenPax,
+  infanlPax,
+  price,
+}: {
+  adultPax: number
+  childrenPax: number
+  infanlPax: number
+  price: number
+}) => {
+  return {
+    adultPrice: price * adultPax,
+    childrenPrice: price * 0.3 * childrenPax,
+    infantPrice: price * 0.8 * infanlPax,
+  }
+}

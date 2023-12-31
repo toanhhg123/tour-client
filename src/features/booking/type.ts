@@ -41,6 +41,8 @@ export const vniStatus = {
   done: 'Hoàn thành',
 }
 
+export type BookingStatus = 'deposit' | 'reservations' | 'paid' | 'done'
+
 export type BookingCreate = {
   tour: {
     _id: string
@@ -55,7 +57,7 @@ export type BookingCreate = {
   expireDate?: Date
   vat?: number
   note?: string
-  status?: 'deposit' | 'reservations' | 'paid' | 'done'
+  status?: BookingStatus
   price?: number
   singleFee?: number
   foreignFee?: number

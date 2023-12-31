@@ -1,9 +1,9 @@
 'use client'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Client, IBooking } from '@/features/booking/type'
 import { cn } from '@/lib/utils'
-import { ChevronsDown, User } from 'lucide-react'
+import { ChevronsDown, Loader2, User } from 'lucide-react'
 
 import { useGetClientQuery } from '@/app/client/client-api'
 import { Badge } from '@/components/ui/badge'
@@ -14,13 +14,35 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { useDebounce } from '@/hooks/useDebounce'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import CardBookingPax from './card-booking-pax'
+import BookingPaxes from './booking-pax'
+import { useUpdateMutation } from './my-booking-details-api'
+import { handleToastSuccess, handleToastErrorRTK } from '@/utils'
 
 interface Props {
   booking: IBooking
 }
 
 const ClientBookingPax = ({ booking }: Props) => {
+  const [client, setClient] = useState<Client>()
+
+  const [update, { isLoading, error, isSuccess }] = useUpdateMutation()
+
+  const handleUpdateClient = () => {
+    if (client) update({ body: { client: client._id }, id: booking._id })
+  }
+
+  useEffect(() => {
+    if (isSuccess) {
+      handleToastSuccess('update success')
+    }
+    if (error) {
+      console.log(error)
+      handleToastErrorRTK(error)
+    }
+  }, [isSuccess, error])
+
   return (
     <div className="grid lg:grid-cols-2 gap-8 text-gray-700">
       <Card>
@@ -58,8 +80,16 @@ const ClientBookingPax = ({ booking }: Props) => {
               <div className="text-sm font-semibold text-gray-600 my-4">
                 <h6 className="my-2">Select Client: </h6>
                 <div className="flex gap-2 items-center">
-                  <GetClient />
-                  <Button>Update</Button>
+                  <GetClient onGetClient={setClient} />
+                  <Button
+                    onClick={handleUpdateClient}
+                    disabled={
+                      isLoading || !client || client._id === booking.client?._id
+                    }
+                  >
+                    {isLoading && <Loader2 className="w-4 mr-2 animate-spin" />}
+                    Update
+                  </Button>
                 </div>
               </div>
               <div className="grid lg:grid-cols-2 gap-4">
@@ -83,19 +113,22 @@ const ClientBookingPax = ({ booking }: Props) => {
             </CardContent>
           </Card>
         </CardContent>
-        <CardFooter className=" justify-end gap-4">
-          <Button>Update</Button>
-        </CardFooter>
       </Card>
 
-      <Card>
-        <CardContent className="py-4">Client</CardContent>
-      </Card>
+      <CardBookingPax booking={booking} />
+
+      <div className="col-span-2">
+        <BookingPaxes booking={booking} />
+      </div>
     </div>
   )
 }
 
-const GetClient = () => {
+const GetClient = ({
+  onGetClient,
+}: {
+  onGetClient: (_client: Client) => void
+}) => {
   const [open, setOpen] = React.useState(false)
   const [value, setValue] = React.useState<Client>()
   const [search, setSearch] = React.useState('')
@@ -134,6 +167,7 @@ const GetClient = () => {
                   onClick={() => {
                     setValue(client)
                     setOpen(false)
+                    onGetClient(client)
                   }}
                 >
                   <div>
