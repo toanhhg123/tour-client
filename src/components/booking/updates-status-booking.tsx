@@ -1,8 +1,7 @@
 import { useUpdateMutation } from '@/app/(booking)/my-booking/[id]/my-booking-details-api'
 import { BookingStatus, IBooking } from '@/features/booking/type'
-import { handleToastErrorRTK, handleToastSuccess } from '@/utils'
+import useToastRTK from '@/hooks/useToastRTK'
 import { Check, Loader2 } from 'lucide-react'
-import { useEffect } from 'react'
 import { Button } from '../ui/button'
 
 interface Props {
@@ -23,15 +22,7 @@ const UpdateStatusBooking = ({ booking }: Props) => {
     })
   }
 
-  useEffect(() => {
-    if (isSuccess) {
-      handleToastSuccess('update success')
-    }
-    if (error) {
-      console.log(error)
-      handleToastErrorRTK(error)
-    }
-  }, [isSuccess, error])
+  useToastRTK({ isSuccess, error, messageSuccess: 'update success' })
 
   return (
     <div className="flex gap-2">
