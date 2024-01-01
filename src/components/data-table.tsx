@@ -24,6 +24,7 @@ import {
   Table,
 } from './ui/table'
 import { DataTablePagination } from './data-table-pagination'
+import { LIMIT_PAGE } from '@/config/consts'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -52,6 +53,11 @@ export function DataTable<TData, TValue>({
       columnVisibility,
       rowSelection,
       columnFilters,
+    },
+    initialState: {
+      pagination: {
+        pageSize: LIMIT_PAGE,
+      },
     },
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,

@@ -26,11 +26,11 @@ export const clientApi = createApi({
   endpoints: (builder) => ({
     getClient: builder.query<
       IResponsePagination<Client>,
-      { pageIndex?: number; keyword?: string }
+      { pageIndex?: number; keyword?: string; type?: string }
     >({
-      query: ({ pageIndex, keyword }) => ({
+      query: ({ pageIndex, keyword, type }) => ({
         url: `client/operator`,
-        params: { pageIndex, keyword },
+        params: { pageIndex, keyword, type },
         method: 'GET',
       }),
       providesTags: [TAG_TYPES],

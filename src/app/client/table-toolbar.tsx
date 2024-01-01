@@ -2,19 +2,38 @@ import { Input } from '@/components/ui/input'
 
 import { DataTableFacetedFilter } from '@/components/data-table-faceted-filter'
 import { Button } from '@/components/ui/button'
+import { useDebounce } from '@/hooks/useDebounce'
+import useNavigateParams from '@/hooks/useNavigateParams'
 import { ResetIcon } from '@radix-ui/react-icons'
 import { User, UserCheck2 } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { DataTableViewOptions } from './table-view-options'
 
 export function DataTableToolbar() {
+  const [input, setInput] = useState('')
+
+  const { navigate, record } = useNavigateParams(['keyword', 'type'])
+
+  const keyword = useDebounce(input) || ''
+
+  const handleSelect = (value: string) => {
+    navigate({ ...record, type: value })
+  }
+
+  useEffect(() => {
+    navigate({ ...record, keyword })
+  }, [keyword, navigate, record])
+
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
         <Input
+          onChange={(e) => setInput(e.target.value)}
           placeholder="Search name or email..."
           className="h-8 w-[150px] lg:w-[250px]"
         />
         <DataTableFacetedFilter
+          onSelect={handleSelect}
           title="Type"
           options={[
             { value: 'LEAD', label: 'LEAD', icon: User },
@@ -26,7 +45,6 @@ export function DataTableToolbar() {
           Reset
           <ResetIcon className="ml-2 h-4 w-4" />
         </Button>
-
       </div>
       <DataTableViewOptions />
     </div>
