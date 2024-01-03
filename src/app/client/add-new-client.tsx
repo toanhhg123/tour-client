@@ -10,8 +10,6 @@ import {
 
 import { Client, ClientType, EClassification } from '@/features/booking/type'
 
-import { caseworkers } from './fake-data'
-
 import * as React from 'react'
 import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons'
 
@@ -207,9 +205,9 @@ export function AddNewClient() {
                               >
                                 {field.value
                                   ? caseworkers.find(
-                                      (caseworker) =>
-                                        caseworker.value === field.value,
-                                    )?.name
+                                    (caseworker) =>
+                                      caseworker.value === field.value,
+                                  )?.name
                                   : '-- Select --'}
                                 <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                               </Button>

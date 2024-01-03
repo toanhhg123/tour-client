@@ -22,14 +22,14 @@ import {
   TableBody,
   TableCell,
   Table,
-} from './ui/table'
-import { DataTablePagination } from './data-table-pagination'
+} from '@/components/ui/table'
+import { DataTablePagination } from './table-pagination'
 import { LIMIT_PAGE } from '@/config/consts'
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
-  DataTableToolbar?: React.ReactNode,
+  columns: ColumnDef<TData, TValue>[],
+  data: any,
+  DataTableToolbar?: React.ReactNode
 }
 
 export function DataTable<TData, TValue>({
@@ -46,8 +46,9 @@ export function DataTable<TData, TValue>({
   const [sorting, setSorting] = React.useState<SortingState>([])
 
   const table = useReactTable({
-    data,
+    data: data.list,
     columns,
+    pageCount: data.totalPage,
     state: {
       sorting,
       columnVisibility,
@@ -71,7 +72,6 @@ export function DataTable<TData, TValue>({
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
   })
-
 
   return (
     <div className="space-y-4">

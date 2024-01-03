@@ -9,8 +9,6 @@ import {
 import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu'
 import { LucideIndent } from 'lucide-react'
 
-import { AddNewClient } from './add-new-client'
-
 export function DataTableViewOptions() {
   return (
     <DropdownMenu>
@@ -24,8 +22,6 @@ export function DataTableViewOptions() {
           View
         </Button>
       </DropdownMenuTrigger>
-
-      <AddNewClient />
 
       <DropdownMenuContent align="end" className="w-[150px]">
         <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
