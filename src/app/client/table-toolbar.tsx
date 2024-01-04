@@ -18,7 +18,7 @@ export function DataTableToolbar() {
 
   useEffect(() => {
     navigate({ ...record, keyword, type: selectedFilter })
-  }, [keyword, navigate, record])
+  }, [keyword, navigate, record, selectedFilter])
 
   const resetFilter = () => {
     setInput('')

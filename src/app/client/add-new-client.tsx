@@ -11,21 +11,7 @@ import {
 import { Client, ClientType, EClassification } from '@/features/booking/type'
 
 import * as React from 'react'
-import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons'
-
-import { cn } from '@/lib/utils'
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from '@/components/ui/command'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
+import { CaretSortIcon } from '@radix-ui/react-icons'
 
 import {
   Collapsible,
@@ -33,19 +19,16 @@ import {
   CollapsibleTrigger,
 } from '@/components/ui/collapsible'
 
-import { PlusCircle } from 'lucide-react'
+import {
+  PlusCircle,
+} from 'lucide-react'
 import { Separator } from '@/components/ui/separator'
 
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+  Form
 } from '@/components/ui/form'
 
 import FormFieldSelect from '@/components/form-field-select'
@@ -54,92 +37,104 @@ import FormFieldDate from '@/components/FormFieldDate'
 import FormFieldTextArea from '@/components/form-field-textarea'
 import { useAddClientMutation } from './client-api'
 import { useMemo } from 'react'
+import useToastRTK from '@/hooks/useToastRTK'
+import Loading from '@/components/loading'
 
-type DefaultValues = Omit<Client, '_id'>
+
+type DefaultValues = Omit<Client, '_id' | 'userCreatedId' | 'updatedAt' | 'operatorId'>;
 
 // Giá trị mặc định cho initData
 const initData: DefaultValues = {
   name: '',
-  operatorId: '',
   address: '',
   classification: undefined,
   commonName: '',
-  dob: new Date(),
+  dob: new Date,
   email: '',
   linkProfile: '',
   note: '',
   phone: '',
   type: undefined,
-  updatedAt: '',
-  createdAt: '',
-  userCreatedId: '',
+  createdAt: new Date + ''
 }
 
+const formSchema = z.object({
+  name: z.string(),
+  email: z.string(),
+  phone: z.string(),
+  type: z.string().optional(),
+  note: z.string().optional(),
+  commonName: z.string().optional(),
+  dob: z.date().optional(),
+  linkProfile: z.string().optional(),
+  address: z.string().optional(),
+  classification: z.string().optional(),
+  createdAt: z.string().optional(),
+})
+
 export function AddNewClient() {
-  const [caseworkerOpen, setCaseworkerOpen] = React.useState(false)
-
   // Collapse State
-  const [isOpen, setIsOpen] = React.useState(false)
+  const [isOpen, setIsOpen] = React.useState(true)
 
-  type TypeSelectItem = { _id: string; value: ClientType }
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false)
+
+  type TypeSelectItem = { _id: string; value: ClientType };
 
   const mapToSelectItem = (type: any): TypeSelectItem => ({
     _id: type,
     value: type,
-  })
+  });
 
-  const clientTypes: TypeSelectItem[] =
-    Object.values(ClientType).map(mapToSelectItem)
+  const clientTypes: TypeSelectItem[] = Object.values(ClientType).map(mapToSelectItem);
 
-  const classifications: TypeSelectItem[] =
-    Object.values(EClassification).map(mapToSelectItem)
+  const classifications: TypeSelectItem[] = Object.values(EClassification).map(mapToSelectItem);
 
-  const [addClient, addClientResult] = useAddClientMutation()
+  const [addClient, { isLoading, isSuccess, error }] = useAddClientMutation()
 
-  const defaultValues = useMemo<DefaultValues>(() => ({ ...initData }), [])
+  useToastRTK({ isSuccess, error, messageSuccess: 'Update Success' })
+
+  const defaultValues = useMemo<DefaultValues>(() => ({ ...initData }), []);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: defaultValues,
   })
 
+
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
-    addClient(values as Omit<Client, '_id'>)
+    addClient(values as Omit<Client, '_id' | 'userCreatedId' | 'updatedAt' | 'operatorId'>)
+    setIsDialogOpen(false)
   }
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button className="h-8 mx-2 px-2 lg:px-3">
+    <Dialog open={isDialogOpen} onOpenChange={() => setIsDialogOpen(!isDialogOpen)}>
+      {isLoading && <Loading />}
+      <DialogTrigger asChild onClick={() => setIsDialogOpen(true)}>
+        <Button className="h-8 mx-2 px-2 lg:px-3" onClick={() => setIsDialogOpen(true)}>
           {' '}
           Add new
           <PlusCircle className="ml-2 h-4 w-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[800px]">
+      <DialogContent className="max-h-full lg:max-w-screen-lg overflow-y-scroll">
         <DialogHeader>
           <DialogTitle>Add new customer</DialogTitle>
         </DialogHeader>
         <Separator />
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormFieldSelect
-              form={form}
-              label="Customer Type"
-              name="type"
-              selects={clientTypes}
-            />
 
-            <FormFieldText form={form} label="Full Name" name="name" />
+            <FormFieldSelect form={form} label='Customer Type' name='type' selects={clientTypes} />
 
-            <div className="grid grid-cols-2 gap-4">
-              <FormFieldText form={form} label="Phone Number" name="phone" />
+            <FormFieldText form={form} label='Full Name' name='name' />
 
-              <FormFieldText form={form} label="Email" name="email" />
+            <div className="grid lg:grid-cols-2 sm:grid-cols-1 gap-4">
+              <FormFieldText form={form} label='Phone Number' name='phone' />
+
+              <FormFieldText form={form} label='Email' name='email' />
             </div>
 
-            <FormFieldTextArea form={form} label="Note" name="note" />
+            <FormFieldTextArea form={form} label='Note' name='note' />
 
             <Collapsible
               open={isOpen}
@@ -161,141 +156,29 @@ export function AddNewClient() {
               </div>
 
               <CollapsibleContent className="space-y-2">
-                <div className="grid grid-cols-2 gap-4">
-                  <FormFieldText
-                    form={form}
-                    label="Common name"
-                    name="commonName"
-                  />
 
-                  <FormFieldText
-                    form={form}
-                    label="Operator ID"
-                    name="operatorId"
-                  />
+                <FormFieldText form={form} label='Common name' name='commonName' />
+                <div className="grid md:grid-cols-2 sm:grid-cols-1 gap-4">
+
+                  <FormFieldDate form={form} label='Date of birth' name='dob' />
+
+                  <FormFieldSelect form={form} label='Classification' name='classification' selects={classifications} />
                 </div>
 
-                <div className="grid grid-cols-3 gap-4">
-                  <FormFieldDate form={form} label="Date of birth" name="dob" />
+                <FormFieldText form={form} label='Link Profile' name='linkProfile' />
 
-                  <FormFieldSelect
-                    form={form}
-                    label="Classification"
-                    name="classification"
-                    selects={classifications}
-                  />
+                <FormFieldText form={form} label='Address' name='address' />
 
-                  <FormField
-                    control={form.control}
-                    name="userCreatedId"
-                    render={({ field }) => (
-                      <FormItem className="flex justify-between flex-1 flex-col">
-                        <FormLabel>User Create</FormLabel>
-                        <FormControl>
-                          <Popover
-                            open={caseworkerOpen}
-                            onOpenChange={setCaseworkerOpen}
-                          >
-                            <PopoverTrigger asChild>
-                              <Button
-                                variant="outline"
-                                role="combobox"
-                                aria-expanded={caseworkerOpen}
-                                className="justify-between h-9"
-                              >
-                                {field.value
-                                  ? caseworkers.find(
-                                    (caseworker) =>
-                                      caseworker.value === field.value,
-                                  )?.name
-                                  : '-- Select --'}
-                                <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-full p-0">
-                              <Command>
-                                <CommandInput
-                                  placeholder="Search user create..."
-                                  className="h-9"
-                                />
-                                <CommandEmpty>
-                                  No caseworker found.
-                                </CommandEmpty>
-                                <CommandGroup>
-                                  {caseworkers.map((caseworker) => (
-                                    <CommandItem
-                                      key={caseworker.value}
-                                      value={caseworker.value}
-                                      onSelect={(currentValue) => {
-                                        field.onChange(
-                                          currentValue === field.value
-                                            ? ''
-                                            : currentValue,
-                                        )
-                                        setCaseworkerOpen(false)
-                                      }}
-                                    >
-                                      <div>
-                                        <p className="font-medium">
-                                          {caseworker.name}
-                                        </p>
-                                        <p>{caseworker.email}</p>
-                                      </div>
-
-                                      <CheckIcon
-                                        className={cn(
-                                          'ml-auto h-4 w-4',
-                                          field.value === caseworker.value
-                                            ? 'opacity-100'
-                                            : 'opacity-0',
-                                        )}
-                                      />
-                                    </CommandItem>
-                                  ))}
-                                </CommandGroup>
-                              </Command>
-                            </PopoverContent>
-                          </Popover>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <FormFieldText
-                  form={form}
-                  label="Link Profile"
-                  name="linkProfile"
-                />
-
-                <FormFieldText form={form} label="Address" name="address" />
               </CollapsibleContent>
             </Collapsible>
 
             <Button className="float-right" type="submit">
               Create customer
             </Button>
+
           </form>
         </Form>
       </DialogContent>
     </Dialog>
   )
 }
-
-const formSchema = z.object({
-  name: z.string(),
-  email: z.string(),
-  phone: z.string(),
-  operatorId: z.string().optional(),
-  userCreatedId: z.string().optional(),
-  type: z.string().optional(),
-  note: z.string().optional(),
-  commonName: z.string().optional(),
-  dob: z.date().optional(),
-  linkProfile: z.string().optional(),
-  address: z.string().optional(),
-  classification: z.string().optional(),
-  createdAt: z.string().optional(),
-  updatedAt: z.string().optional(),
-})

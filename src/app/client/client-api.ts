@@ -26,28 +26,28 @@ export const clientApi = createApi({
   endpoints: (builder) => ({
     getClient: builder.query<
       IResponsePagination<Client>,
-      { pageIndex?: number; keyword?: string; type?: string }
+      { pageIndex?: number; type?: string; keyword?: string }
     >({
-      query: ({ pageIndex, keyword, type }) => ({
+      query: ({ pageIndex, type, keyword }) => ({
         url: `client/operator`,
-        params: { pageIndex, keyword, type },
+        params: { pageIndex, type, keyword },
         method: 'GET',
       }),
       providesTags: [TAG_TYPES],
     }),
-    addClient: builder.mutation<Client, Omit<Client, '_id'>>({
-      query: (client) => ({
+    addClient: builder.mutation<Client, Omit<Client, '_id' | 'userCreatedId' | 'updatedAt' | 'operatorId'>>({
+      query: (newEntity) => ({
         url: 'client',
         method: 'POST',
-        body: client,
+        body: newEntity,
       }),
       invalidatesTags: [TAG_TYPES],
     }),
-    updateClient: builder.mutation<Client, { id: string; body: Client }>({
-      query: (client) => ({
-        url: 'client',
+    updateClient: builder.mutation<Client, { id: string, body: Omit<Client, '_id' | 'userCreatedId' | 'createdAt' | 'operatorId'> }>({
+      query: (data) => ({
+        url: `client/${data.id}`,
         method: 'PATCH',
-        body: client,
+        body: data.body,
       }),
       invalidatesTags: [TAG_TYPES],
     }),
@@ -56,12 +56,9 @@ export const clientApi = createApi({
         url: `client/${id}`,
         method: 'DELETE',
       }),
+      invalidatesTags: [TAG_TYPES],
     }),
   }),
 })
-export const {
-  useGetClientQuery,
-  useAddClientMutation,
-  useUpdateClientMutation,
-  useDeleteClientMutation,
-} = clientApi
+
+export const { useGetClientQuery, useAddClientMutation, useUpdateClientMutation, useDeleteClientMutation } = clientApi

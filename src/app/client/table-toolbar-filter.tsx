@@ -24,8 +24,6 @@ export function TableToolbarFilter({
         onSelect(value);
     }
 
-    console.log('value', value)
-
     return (
         <Select onValueChange={value => handleSelect(value)} value={value} >
             <SelectTrigger className="h-8 border-dashed w-max">
