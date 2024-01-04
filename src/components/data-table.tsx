@@ -25,18 +25,23 @@ import {
 } from './ui/table'
 import { DataTablePagination } from './data-table-pagination'
 import { LIMIT_PAGE } from '@/config/consts'
+import { Loader2 } from 'lucide-react'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
-  DataTableToolbar?: React.ReactNode,
+  DataTableToolbar?: React.ReactNode
+  isLoading?: boolean
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  DataTableToolbar
+  DataTableToolbar,
+  isLoading,
 }: DataTableProps<TData, TValue>) {
+  const [dataRows, setDataRows] = React.useState(data)
+
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
@@ -46,13 +51,28 @@ export function DataTable<TData, TValue>({
   const [sorting, setSorting] = React.useState<SortingState>([])
 
   const table = useReactTable({
-    data,
+    data: dataRows,
     columns,
     state: {
       sorting,
       columnVisibility,
       rowSelection,
       columnFilters,
+    },
+    meta: {
+      updateData: (rowIndex: number, columnId: string, value: unknown) => {
+        setDataRows((old) =>
+          old.map((row, index) => {
+            if (index === rowIndex) {
+              return {
+                ...old[rowIndex],
+                [columnId]: value,
+              }
+            }
+            return row
+          }),
+        )
+      },
     },
     initialState: {
       pagination: {
@@ -72,12 +92,17 @@ export function DataTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   })
 
-
   return (
     <div className="space-y-4">
       {DataTableToolbar}
 
-      <div className="rounded-md border">
+      <div className="rounded-md border relative">
+        {isLoading && (
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-[100%] border gap-2 p-4 flex items-center bg-white justify-center text-gray-600 rounded-t">
+            <Loader2 className="animate-spin" />
+            Loading ...
+          </div>
+        )}
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -88,9 +113,9 @@ export function DataTable<TData, TValue>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
                     </TableHead>
                   )
                 })}

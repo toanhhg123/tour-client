@@ -25,17 +25,20 @@ import {
 } from '@/components/ui/table'
 import { DataTablePagination } from './table-pagination'
 import { LIMIT_PAGE } from '@/config/consts'
+import { Loader2 } from 'lucide-react'
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[],
-  data: any,
+  columns: ColumnDef<TData, TValue>[]
+  data: any
   DataTableToolbar?: React.ReactNode
+  isLoading: boolean
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  DataTableToolbar
+  DataTableToolbar,
+  isLoading,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
@@ -77,8 +80,15 @@ export function DataTable<TData, TValue>({
     <div className="space-y-4">
       {DataTableToolbar}
 
-      <div className="rounded-md border">
-        <Table>
+      <div className="rounded-md border relative">
+        {isLoading && (
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-[100%] border gap-2 p-4 flex items-center bg-white justify-center text-gray-600 rounded-t">
+            <Loader2 className="animate-spin" />
+            Loading ...
+          </div>
+        )}
+
+        <Table className="bg-white">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -88,9 +98,9 @@ export function DataTable<TData, TValue>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
                     </TableHead>
                   )
                 })}

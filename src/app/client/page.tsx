@@ -12,17 +12,15 @@ const Page = () => {
 
   const { isLoading, isFetching, data } = useGetClientQuery(record)
 
-  console.log('data', data)
-
   return (
     <PrivateRoute>
       {(isLoading || isFetching) && <Loading />}
 
       <DataTable
+        isLoading={isLoading}
         columns={columns}
         data={data?.element || { list: [], totalPage: 0 }}
         DataTableToolbar={<DataTableToolbar />}
-
       />
     </PrivateRoute>
   )
