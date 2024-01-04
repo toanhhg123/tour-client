@@ -11,6 +11,7 @@ import FormTourUpdate from './form-tour-update'
 import HeadPage from './head-page'
 import Service from './services'
 import FormTourSchedule from './tour-schedule'
+import PaxesSetup from './paxes-setup'
 
 type Props = {
   params: {
@@ -24,7 +25,7 @@ const Page = ({ params }: Props) => {
   })
 
   return (
-    <PrivateRoute>
+    <PrivateRoute roles={['TourMan']}>
       <div>
         <div className="p-5 border-b">
           <HeadPage id={params.id} />
@@ -52,7 +53,7 @@ const Page = ({ params }: Props) => {
             </TabsContent>
 
             <TabsContent value="Paxes-Setup">
-              {/* {data && <PaxesSetup tour={data} />} */}
+              {data && <PaxesSetup tour={data} />}
             </TabsContent>
 
             <TabsContent value="combo">
