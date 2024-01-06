@@ -7,6 +7,7 @@ import booking from '@/features/booking'
 import { clientApi } from '@/app/client/client-api'
 import { myBookingDetailsApi } from '@/app/(booking)/my-booking/[id]/my-booking-details-api'
 import { tourApi } from '@/app/tours/tour-api'
+import { agentApi } from '@/app/(agent)/agent-operSales/agent-api'
 
 export const store = configureStore({
   reducer: {
@@ -18,12 +19,15 @@ export const store = configureStore({
     [clientApi.reducerPath]: clientApi.reducer,
     [myBookingDetailsApi.reducerPath]: myBookingDetailsApi.reducer,
     [tourApi.reducerPath]: tourApi.reducer,
+    [agentApi.reducerPath]: agentApi.reducer,
+    
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
       clientApi.middleware,
       myBookingDetailsApi.middleware,
       tourApi.middleware,
+      agentApi.middleware,
     ),
 })
 

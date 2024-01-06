@@ -34,6 +34,8 @@ const Page = ({ params }: Props) => {
     curForm?: IUserForm
   }>({})
 
+  console.log(usersInOperator, agents)
+
   const agent = agents.find((agent) => agent._id === params.agentId)
 
   const handleCloseSheet = () => setSheet({})
