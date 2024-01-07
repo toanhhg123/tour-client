@@ -1,4 +1,3 @@
-import { useGetTourByIdQuery } from '@/app/tours/tour-api'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
@@ -9,6 +8,7 @@ import { calculatePricePaxes } from '@/lib/utils'
 import { convertToVnd } from '@/utils'
 import { DollarSign, LucideInfo } from 'lucide-react'
 import CardUpdateFee from './cart-update-fee'
+import { useGetTourByIdQuery } from '@/api/tour'
 
 interface Props {
   booking: IBooking
