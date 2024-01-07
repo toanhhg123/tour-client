@@ -10,56 +10,14 @@ import { ButtonIcon, DesktopIcon } from '@radix-ui/react-icons'
 import { useEffect } from 'react'
 import { PaxInfoColumn, columns } from './column'
 import DataTableToolbar from './data-table-toolbar'
+import useNavigateParams from '@/hooks/useNavigateParams'
 
 const Page = () => {
-  const { data, isLoading, error, isFetching } = useGetsQuery({})
+  const { record } = useNavigateParams(['search', 'fromDate', 'endDate'])
+  const { data, isLoading, error, isFetching } = useGetsQuery(record)
   const [trigger, { data: bookings }] = useLazyGetByListTourQuery()
 
   const tours = data?.element.list
-
-  console.log(bookings)
-
-  // const handleSave = async (booking: BookingForm) => {
-  //   if (sheet?.type === 'create' && sheet.curTour) {
-  //     const tour = sheet.curTour
-
-  //     const { childrenPax, adultPax, infanlPax, clientEmail, clientPhone } =
-  //       booking
-
-  //     const paxNum = childrenPax + adultPax + infanlPax
-
-  //     const { totalBooking } = analysisBooking(
-  //       bookingByListTours.filter((booking) => booking.tour._id === tour._id) ||
-  //         [],
-  //     )
-
-  //     if (paxNum + totalBooking > tour.totalPax) {
-  //       toast({
-  //         variant: 'destructive',
-  //         title: 'Uh oh! thao tác lỗi.',
-  //         description: `vui lòng chọn lại số chỗ booking`,
-  //         duration: 6000,
-  //       })
-  //       return
-  //     }
-
-  //     const bookingCreate: BookingCreate = {
-  //       tour: {
-  //         _id: tour._id,
-  //         name: tour.name,
-  //       },
-  //       childrenPax,
-  //       adultPax,
-  //       infanlPax,
-  //       clientEmail,
-  //       clientPhone,
-  //     }
-
-  //     await dispatchAsyncThunk(createBookingThunks(bookingCreate), 'success')
-  //     await dispatchAsyncThunk(getToursThunk())
-  //     setSheet({})
-  //   }
-  // }
 
   useEffect(() => {
     if (tours?.length) trigger(tours.map((tour) => tour._id))

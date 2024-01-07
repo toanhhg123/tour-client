@@ -125,12 +125,19 @@ const CreateBooking = ({ tour }: Props) => {
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
-      <AlertDialogTrigger asChild>
-        <Button>
-          <Pen className="w-4 mr-2" />
-          Booking
-        </Button>
-      </AlertDialogTrigger>
+      {blank > 0 ? (
+        <AlertDialogTrigger asChild>
+          <Button size={'lg'}>
+            <Pen className="w-4 mr-2" />
+            Booking
+          </Button>
+        </AlertDialogTrigger>
+      ) : (
+        <div className="flex items-center gap-2 font-semibold text-red-500">
+          <span className="w-2 h-2 rounded-full bg-red-600 block"></span>
+          Full Slot
+        </div>
+      )}
       <AlertDialogContent className="sm:min-w-[600px]">
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           <Form {...form}>
