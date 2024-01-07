@@ -40,8 +40,6 @@ export function DataTable<TData, TValue>({
   DataTableToolbar,
   isLoading,
 }: DataTableProps<TData, TValue>) {
-  const [dataRows, setDataRows] = React.useState(data)
-
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
@@ -51,28 +49,13 @@ export function DataTable<TData, TValue>({
   const [sorting, setSorting] = React.useState<SortingState>([])
 
   const table = useReactTable({
-    data: dataRows,
+    data,
     columns,
     state: {
       sorting,
       columnVisibility,
       rowSelection,
       columnFilters,
-    },
-    meta: {
-      updateData: (rowIndex: number, columnId: string, value: unknown) => {
-        setDataRows((old) =>
-          old.map((row, index) => {
-            if (index === rowIndex) {
-              return {
-                ...old[rowIndex],
-                [columnId]: value,
-              }
-            }
-            return row
-          }),
-        )
-      },
     },
     initialState: {
       pagination: {
@@ -96,14 +79,14 @@ export function DataTable<TData, TValue>({
     <div className="space-y-4">
       {DataTableToolbar}
 
-      <div className="rounded-md border relative">
+      <div className="rounded border relative">
         {isLoading && (
           <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-[100%] border gap-2 p-4 flex items-center bg-white justify-center text-gray-600 rounded-t">
             <Loader2 className="animate-spin" />
             Loading ...
           </div>
         )}
-        <Table>
+        <Table className="bg-white rounded-md">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>

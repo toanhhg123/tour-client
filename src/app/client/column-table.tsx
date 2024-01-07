@@ -2,12 +2,10 @@ import { ColumnDef } from '@tanstack/react-table'
 
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
-
 import { Badge } from '@/components/ui/badge'
 import { Client } from '@/features/booking/type'
 import { cn } from '@/lib/utils'
 import { DataTableRowActions } from './table-row-actions'
-
 
 export const columns: ColumnDef<Client>[] = [
   {

@@ -1,7 +1,8 @@
-import { URL_TOUR_AGENT, URL_TOUR_API } from '@/config/axios'
+import { URL_TOUR_API } from '@/config/axios'
 import { KEY_AUTH_LOCAL } from '@/features/role/type'
 import { ITour } from '@/features/tour/type'
 import { IResponse } from '@/types'
+import { IPaginationResponse, ITourQuery } from '@/utils'
 import LocalStore from '@/utils/localStore'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
@@ -22,7 +23,15 @@ export const tourApi = createApi({
     },
   }),
   tagTypes: [TAG_TYPES],
+
   endpoints: (builder) => ({
+    gets: builder.query<IResponse<IPaginationResponse<ITour[]>>, ITourQuery>({
+      query: (params) => ({
+        url: `tour`,
+        method: 'GET',
+        params,
+      }),
+    }),
     getTourById: builder.query<IResponse<ITour>, string>({
       query: (id) => ({
         url: `tour/${id}`,
@@ -35,4 +44,4 @@ export const tourApi = createApi({
   }),
 })
 
-export const { useGetTourByIdQuery } = tourApi
+export const { useGetsQuery, useGetTourByIdQuery } = tourApi

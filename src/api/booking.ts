@@ -3,7 +3,8 @@ import { IBooking } from '@/features/booking/type'
 import { KEY_AUTH_LOCAL } from '@/features/role/type'
 import { IResponse } from '@/types'
 import LocalStore from '@/utils/localStore'
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { createApi } from '@reduxjs/toolkit/dist/query/react'
+import { fetchBaseQuery } from '@reduxjs/toolkit/query'
 
 export const TAG_TYPES = 'BOOKING_API'
 export const REDUCER_PATH = 'BOOKING_API'
@@ -33,7 +34,24 @@ export const bookingApi = createApi({
       }),
       providesTags: (result, error, id) => [{ type: TAG_TYPES, id }],
     }),
+    getByListTour: builder.query<IResponse<IBooking[]>, string[]>({
+      query: (ids) => {
+        const [first, ...rest] = ids
+
+        const query = rest.map((id) => `id[]=${id}`)
+
+        return {
+          url: `/booking/listTour?id[]=${first}&${query.join('&')}`,
+
+          method: 'GET',
+        }
+      },
+    }),
   }),
 })
 
-export const { useGetBookingByTourIdQuery } = bookingApi
+export const {
+  useGetBookingByTourIdQuery,
+  useGetByListTourQuery,
+  useLazyGetByListTourQuery,
+} = bookingApi
