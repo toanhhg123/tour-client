@@ -7,11 +7,23 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { RoleType } from '@/features/role/type'
+import { navs } from './header'
 import { useAppSelector } from '@/store/hooks'
+import { Button } from "@/components/ui/button"
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+import { Menu } from 'lucide-react'
+import React from 'react'
 
-export function Header() {
+export function HeaderMobile() {
   const { userDetails } = useAppSelector((state) => state.auth)
+  const [open, setOpen] = React.useState(false)
 
   const listMenu = navs.filter((x) => {
     if (x.roles) {
@@ -21,7 +33,16 @@ export function Header() {
   })
 
   return (
-    <nav className={'flex items-center space-x-4 lg:space-x-6'}>
+    <>
+    <Sheet open={open} onOpenChange={() => setOpen(!open)}>
+          <SheetTrigger asChild>
+            <Button variant="outline"><Menu /></Button>
+          </SheetTrigger>
+          <SheetContent side={'left'} className="w-3/4">
+            <SheetHeader className='mb-8'>
+              <SheetTitle>Menu</SheetTitle>
+            </SheetHeader>
+    <nav className={'flex flex-col items-center space-y-10'}>
       {listMenu.map((nav) => {
         if (nav.childrens)
           return (
@@ -49,7 +70,9 @@ export function Header() {
           )
 
         return (
+            
           <Link
+            onClick={() => setOpen(!open)}
             key={nav.label}
             href={nav.href}
             className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
@@ -59,65 +82,10 @@ export function Header() {
         )
       })}
     </nav>
+          <SheetClose />
+          </SheetContent>
+        </Sheet>
+
+    </>
   )
 }
-
-export interface INavItem {
-  href: string
-  label: string
-  childrens?: INavItem[]
-  roles?: RoleType[]
-}
-
-export const navs: INavItem[] = [
-  {
-    href: '/tours',
-    label: 'Danh sách tour',
-    roles: ['TourMan'],
-  },
-  {
-    href: '/user',
-    label: 'User Manager',
-    roles: ['Oper.Admin', 'Manager'],
-  },
-  {
-    href: '/supplier',
-    label: 'Supplier',
-    roles: ['Oper.Admin', 'Manager'],
-  },
-  {
-    href: '/operadmin-tourmanager',
-    label: 'Tour Manager(oper-admin)',
-    roles: ['Oper.Admin', 'Manager'],
-  },
-  {
-    href: '/agentManager',
-    label: 'Agent Manager',
-    roles: ['Oper.Admin', 'Manager'],
-  },
-  {
-    href: '/agentMan',
-    label: 'Người dùng Agent',
-    roles: ['Agent.Manager'],
-  },
-  {
-    href: '/agent-operSales',
-    label: 'Agent Manager',
-    roles: ['Oper.Sales'],
-  },
-  {
-    href: '/reservations',
-    label: 'Booking Now',
-    roles: ['Agent.Sales', 'Agent.Manager', 'Oper.Sales'],
-  },
-  {
-    href: '/my-booking',
-    label: 'Lịch sử giữ chỗ',
-    roles: ['Agent.Sales', 'Agent.Manager', 'Oper.Sales'],
-  },
-  {
-    href: '/client',
-    label: 'Client ',
-    roles: ['Agent.Sales', 'Agent.Manager', 'Oper.Sales', 'Oper.Admin'],
-  },
-]

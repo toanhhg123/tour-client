@@ -9,6 +9,7 @@ import { myBookingDetailsApi } from '@/app/(booking)/my-booking/[id]/my-booking-
 import { bookingApi } from '@/api/booking'
 import { bookingPaxApi } from '@/api/booking-pax'
 import { tourApi } from '@/api/tour'
+import { agentApi } from '@/app/(agent)/agent-operSales/agent-api'
 
 export const store = configureStore({
   reducer: {
@@ -22,6 +23,7 @@ export const store = configureStore({
     [bookingPaxApi.reducerPath]: bookingPaxApi.reducer,
     [bookingApi.reducerPath]: bookingApi.reducer,
     [tourApi.reducerPath]: tourApi.reducer,
+    [agentApi.reducerPath]: agentApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -30,6 +32,7 @@ export const store = configureStore({
       bookingApi.middleware,
       bookingPaxApi.middleware,
       tourApi.middleware,
+      agentApi.middleware,
     ),
 })
 

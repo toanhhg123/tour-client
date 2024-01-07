@@ -2,7 +2,6 @@
 import { DataTable } from './data-table'
 import PrivateRoute from '@/context/PrivateRouteContext'
 import useNavigateParams from '@/hooks/useNavigateParams'
-import Loading from '../loading'
 import { useGetClientQuery } from './client-api'
 import { columns } from './column-table'
 import { DataTableToolbar } from './table-toolbar'
@@ -10,12 +9,10 @@ import { DataTableToolbar } from './table-toolbar'
 const Page = () => {
   const { record } = useNavigateParams(['keyword', 'type', 'pageIndex'])
 
-  const { isLoading, isFetching, data } = useGetClientQuery(record)
+  const { isLoading, data } = useGetClientQuery(record)
 
   return (
     <PrivateRoute>
-      {(isLoading || isFetching) && <Loading />}
-
       <DataTable
         isLoading={isLoading}
         columns={columns}
